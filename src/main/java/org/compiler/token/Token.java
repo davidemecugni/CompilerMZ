@@ -1,4 +1,4 @@
-package org.compiler;
+package org.compiler.token;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,11 +7,13 @@ import java.util.Map;
  * Represents a token in the source code
  * A token is a pair consisting of a token name and an optional token value
  * The token name is an enumeration of the possible types of tokens
- * The token value is the actual value of the token in the source code
+ * The token value is the actual value of the token in the source code(ex. int_lit -> 42)
  */
 public class Token {
     private final TokenType type;
     private String value=null;
+
+    // Map to convert alphabetic tokens to their corresponding TokenType
     private static final Map<Object, TokenType> wordToTokenMap;
     static {
         wordToTokenMap = new HashMap<>();
@@ -35,7 +37,11 @@ public class Token {
     public String getValue() {
         return value;
     }
-
+    /**
+     * Converts an alphabetic token to a TokenType
+     * @param word used to identify the TokenType
+     * @return the corresponding TokenType
+     */
     public static Token of(Object word){
         if(wordToTokenMap.containsKey(word)){
             return new Token(wordToTokenMap.get(word));

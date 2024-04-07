@@ -3,6 +3,10 @@ package org.compiler.peekers;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ * The implementation of PeekIterator for characters
+ * @see PeekIterator
+ */
 public class PeekIteratorChar implements PeekIterator<Character> {
     private final Iterator<Character> iterator;
     private boolean peeked = false;
@@ -19,7 +23,10 @@ public class PeekIteratorChar implements PeekIterator<Character> {
     public boolean hasNext (){
         return peeked;
     }
-
+    /**
+     * Returns the next non-whitespace character
+     * @return the next non-whitespace character
+     */
     private Character getNextNonWhitespaceChar() {
         Character value = null;
         if (iterator.hasNext()) {
@@ -28,12 +35,13 @@ public class PeekIteratorChar implements PeekIterator<Character> {
                 if (iterator.hasNext()) {
                     value = iterator.next();
                 } else {
-                    value = null;
+                    throw new NoSuchElementException();
                 }
             }
         }
         return value;
     }
+
 
     public Character next() {
         if (!peeked) {

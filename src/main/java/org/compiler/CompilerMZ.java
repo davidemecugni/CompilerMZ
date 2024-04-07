@@ -6,13 +6,26 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import org.compiler.nodes.*;
+import org.compiler.token.Tokenizer;
+
+/**
+ * The main class of the compiler
+ */
 public class CompilerMZ {
+    /**
+     * The main method of the compiler
+     * @param args eventual input and output files, default fausto.mz and output.asm
+     */
     public static void main(String[] args) {
         System.out.println("MZ Compiler by Davide Mecugni, Andrea Zanasi\n");
+
+        String fileIn;
         if (args.length < 1) {
-            throw new IllegalArgumentException("Incorrect usage, provide a .mz file as an argument and an eventual output file");
+            fileIn = "Risorse/fausto.mz";
         }
-        String fileIn = args[0];
+        else{
+            fileIn = args[0];
+        }
         String content;
         try {
             content = readFile(fileIn);

@@ -3,9 +3,15 @@ package org.compiler;
 
 import org.compiler.nodes.*;
 import org.compiler.peekers.PeekIteratorToken;
+import org.compiler.token.Token;
+import org.compiler.token.TokenType;
 
 import java.util.ArrayList;
 
+/**
+ * Represents a parser
+ * @see PeekIteratorToken
+ */
 public class Parser {
     private final PeekIteratorToken it;
 

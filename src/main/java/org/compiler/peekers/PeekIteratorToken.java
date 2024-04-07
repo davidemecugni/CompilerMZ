@@ -1,6 +1,6 @@
 package org.compiler.peekers;
 
-import org.compiler.Token;
+import org.compiler.token.Token;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

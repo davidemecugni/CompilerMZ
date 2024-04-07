@@ -1,4 +1,5 @@
-package org.compiler;
+package org.compiler.token;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

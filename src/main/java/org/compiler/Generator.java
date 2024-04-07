@@ -1,5 +1,9 @@
 package org.compiler;
 import org.compiler.nodes.Exit;
+
+/**
+ * Generates a string representation of the assembly code
+ */
 public class Generator {
     private final Exit m_root;
     public Generator(Exit exit){
