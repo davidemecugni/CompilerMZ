@@ -12,4 +12,11 @@ public class Expression {
     public Token getInt_literal() {
         return int_literal;
     }
+
+    @Override
+    public String toString() {
+        return "Expression{" +
+                "int_literal=" + int_literal +
+                '}';
+    }
 }

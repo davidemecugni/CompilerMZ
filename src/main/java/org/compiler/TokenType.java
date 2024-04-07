@@ -1,7 +1,7 @@
 package org.compiler;
 
 public enum TokenType {
-    _return,
+    _exit,
     int_lit,
     semi
 }

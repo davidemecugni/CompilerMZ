@@ -1,4 +1,4 @@
-package org.compiler;
+package org.compiler.peekers;
 
 import java.util.Iterator;
 

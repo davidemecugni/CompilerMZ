@@ -15,7 +15,7 @@ public class Token {
     private static final Map<Object, TokenType> wordToTokenMap;
     static {
         wordToTokenMap = new HashMap<>();
-        wordToTokenMap.put("return", TokenType._return);
+        wordToTokenMap.put("exit", TokenType._exit);
         wordToTokenMap.put(';', TokenType.semi);
         // Add more entries as needed
     }

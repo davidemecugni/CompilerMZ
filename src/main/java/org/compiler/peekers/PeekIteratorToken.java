@@ -1,6 +1,9 @@
-package org.compiler;
+package org.compiler.peekers;
+
+import org.compiler.Token;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class PeekIteratorToken implements PeekIterator<Token>{
     private final Iterator<Token> iterator;
@@ -9,36 +12,36 @@ public class PeekIteratorToken implements PeekIterator<Token>{
 
     public PeekIteratorToken(Iterator<Token> iterator) {
         this.iterator = iterator;
+        if(iterator.hasNext()){
+            peeked_value = iterator.next();
+            peeked = true;
+        }
     }
 
     @Override
     public boolean hasNext() {
-        return iterator.hasNext() || peeked;
+        return peeked;
     }
     @Override
     public Token next(){
         if(!peeked){
-            peeked = true;
-            peeked_value = getNext();
+            throw new NoSuchElementException();
         }
-        return peeked_value;
+        Token value = peeked_value;
+        if(iterator.hasNext()){
+            peeked_value = iterator.next();
+        }
+        else{
+            peeked = false;
+        }
+        return value;
     }
 
     @Override
     public Token peek() {
         if(!peeked){
-            peeked = true;
-            peeked_value = getNext();
+            throw new NoSuchElementException();
         }
         return peeked_value;
     }
-
-    private Token getNext(){
-        Token value = null;
-        if(iterator.hasNext()){
-            value = iterator.next();
-        }
-        return value;
-    }
-
 }

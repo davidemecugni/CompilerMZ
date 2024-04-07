@@ -1,5 +1,7 @@
 package org.compiler;
 
+import org.compiler.peekers.PeekIteratorChar;
+
 import java.util.ArrayList;
 
 public class Tokenizer {
@@ -52,5 +54,12 @@ public class Tokenizer {
     }
     private void AddToken(Token token) {
         tokens.add(token);
+    }
+
+    @Override
+    public String toString() {
+        return "Tokenizer{" +
+                "tokens=" + tokens +
+                '}';
     }
 }
