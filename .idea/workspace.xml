@@ -4,13 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="73b9d148-afea-4257-979e-cd0c7ef9eaf7" name="Changes" comment="Added comments">
-      <change afterPath="$PROJECT_DIR$/src/test/java/org/compiler/peekers/TestPeekIteratorChar.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/org/compiler/peekers/TestPeekIteratorToken.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="73b9d148-afea-4257-979e-cd0c7ef9eaf7" name="Changes" comment="Improved gitignore">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/peekers/PeekIteratorChar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/peekers/PeekIteratorChar.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/org/compiler/TestTokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/compiler/token/TestTokenizer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,6 +34,14 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="recentNewPullRequestHead">
+      <RepoCoordinatesHolder>
+        <option name="owner" value="davidemecugni" />
+        <option name="repository" value="CompilerMZ" />
+      </RepoCoordinatesHolder>
+    </option>
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -59,6 +63,7 @@
     "JUnit.TestPeekIteratorChar.testPeekIteratorChar.executor": "Run",
     "JUnit.TestTokenizer.executor": "Run",
     "JUnit.TestTokenizer.testTokenizer.executor": "Run",
+    "JUnit.org.compiler in CompilerMZ.executor": "Coverage",
     "JUnit.org.compiler.peekers in CompilerMZ.executor": "Coverage",
     "JUnit.org.compiler.token in CompilerMZ.executor": "Coverage",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
@@ -282,7 +287,23 @@
       <option name="project" value="LOCAL" />
       <updated>1712509321987</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Added tests">
+      <option name="closed" value="true" />
+      <created>1712511192268</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1712511192268</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Improved gitignore">
+      <option name="closed" value="true" />
+      <created>1712511475860</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1712511475860</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -323,9 +344,14 @@
     <MESSAGE value="Added tester.sh utility" />
     <MESSAGE value="Modified tester.sh" />
     <MESSAGE value="Added comments" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added comments" />
+    <MESSAGE value="Added tests" />
+    <MESSAGE value="Improved gitignore" />
+    <option name="LAST_COMMIT_MESSAGE" value="Improved gitignore" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/CompilerMZ$org_compiler_in_CompilerMZ.ic" NAME="org.compiler in CompilerMZ Coverage Results" MODIFIED="1712511155889" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>org.compiler.*</FILTER>
+    </SUITE>
     <SUITE FILE_PATH="coverage/CompilerMZ$TestTokenizer.ic" NAME="TestTokenizer Coverage Results" MODIFIED="1712510075364" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>org.compiler.parsers.*</FILTER>
     </SUITE>
