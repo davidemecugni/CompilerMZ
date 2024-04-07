@@ -4,19 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="73b9d148-afea-4257-979e-cd0c7ef9eaf7" name="Changes" comment="Pretesting">
+    <list default="true" id="73b9d148-afea-4257-979e-cd0c7ef9eaf7" name="Changes" comment="Working">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/errore.mz" beforeDir="false" afterPath="$PROJECT_DIR$/Risorse/errore.mz" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/CompilerMZ.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/CompilerMZ.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/Generator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/Generator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/Parser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/PeekIterator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/peekers/PeekIterator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/PeekIteratorChar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/peekers/PeekIteratorChar.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/PeekIteratorToken.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/peekers/PeekIteratorToken.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/Token.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/TokenType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/TokenType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/Tokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/Tokenizer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/nodes/Expression.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/nodes/Expression.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/org/compiler/TestTokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/compiler/TestTokenizer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,31 +38,33 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.CompilerMZ.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TestTokenizer.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TestTokenizer.testTokenizer.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;coverage&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.CompilerMZ.executor": "Run",
+    "Application.Main.executor": "Run",
+    "JUnit.TestTokenizer.executor": "Run",
+    "JUnit.TestTokenizer.testTokenizer.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "main",
+    "jdk.selected.JAVA_MODULE": "21",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "coverage",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Risorse" />
       <recent name="$PROJECT_DIR$/src" />
       <recent name="$PROJECT_DIR$/src/main/resources" />
     </key>
@@ -82,7 +76,7 @@
     <configuration name="CompilerMZ" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.compiler.CompilerMZ" />
       <module name="CompilerMZ" />
-      <option name="PROGRAM_PARAMETERS" value="$PROJECT_DIR$/src/fausto.mz" />
+      <option name="PROGRAM_PARAMETERS" value="Risorse/fausto.mz" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="org.compiler.parsers.*" />
@@ -155,7 +149,7 @@
       <workItem from="1712398075777" duration="1062000" />
       <workItem from="1712399151947" duration="6887000" />
       <workItem from="1712486054661" duration="10878000" />
-      <workItem from="1712498059917" duration="4746000" />
+      <workItem from="1712498059917" duration="8005000" />
     </task>
     <task id="LOCAL-00001" summary="Start">
       <option name="closed" value="true" />
@@ -197,7 +191,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712498081112</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Working">
+      <option name="closed" value="true" />
+      <created>1712503062202</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1712503062202</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -222,7 +224,8 @@
     <MESSAGE value="Peekiterator with whitespaces" />
     <MESSAGE value="Peekiterator without whitespaces" />
     <MESSAGE value="Pretesting" />
-    <option name="LAST_COMMIT_MESSAGE" value="Pretesting" />
+    <MESSAGE value="Working" />
+    <option name="LAST_COMMIT_MESSAGE" value="Working" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/CompilerMZ$TestTokenizer.ic" NAME="TestTokenizer Coverage Results" MODIFIED="1712490415581" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">

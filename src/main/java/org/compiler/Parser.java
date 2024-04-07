@@ -16,9 +16,7 @@ public class Parser {
         Exit exit = null;
         while(it.hasNext()){
             if(it.next().getType() == TokenType._exit){
-                System.out.println("Found exit");
                 Expression expr = parseExpression();
-                System.out.println("After parsing");
                 if(expr != null){
                     exit = new Exit(expr);
                 }
@@ -33,7 +31,6 @@ public class Parser {
         return exit;
     }
     private Expression parseExpression(){
-        System.out.println(it.toString());
         if(it.hasNext() && it.peek().getType() == TokenType.int_lit){
             return new Expression(it.next());
         }
