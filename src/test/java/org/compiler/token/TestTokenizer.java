@@ -1,7 +1,5 @@
-package org.compiler;
-import org.compiler.token.Token;
-import org.compiler.token.TokenType;
-import org.compiler.token.Tokenizer;
+package org.compiler.token;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

@@ -35,7 +35,7 @@ public class PeekIteratorChar implements PeekIterator<Character> {
                 if (iterator.hasNext()) {
                     value = iterator.next();
                 } else {
-                    value = null;
+                    throw new NoSuchElementException();
                 }
             }
         }
