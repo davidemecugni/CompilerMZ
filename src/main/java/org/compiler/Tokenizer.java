@@ -8,7 +8,7 @@ public class Tokenizer {
     private final ArrayList<Token> tokens = new ArrayList<>();
     private final PeekIteratorChar it;
     public Tokenizer(String input) {
-        this.it =  new PeekIteratorChar(input.chars().mapToObj(c -> (char) c).iterator());;
+        this.it =  new PeekIteratorChar(input.chars().mapToObj(c -> (char) c).iterator());
         tokenize();
     }
 

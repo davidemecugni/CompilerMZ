@@ -36,9 +36,6 @@ public class Token {
         return value;
     }
 
-    public boolean hasValue(){
-        return value != null;
-    }
     public static Token of(Object word){
         if(wordToTokenMap.containsKey(word)){
             return new Token(wordToTokenMap.get(word));

@@ -13,7 +13,7 @@ public class CompilerMZ {
             throw new IllegalArgumentException("Incorrect usage, provide a .mz file as an argument and an eventual output file");
         }
         String fileIn = args[0];
-        String content = null;
+        String content;
         try {
             content = readFile(fileIn);
         } catch (IOException e) {
