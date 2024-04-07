@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="73b9d148-afea-4257-979e-cd0c7ef9eaf7" name="Changes" comment="Start">
+    <list default="true" id="73b9d148-afea-4257-979e-cd0c7ef9eaf7" name="Changes" comment="Peekiterator with whitespaces">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/Token.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/PeekIterator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/PeekIterator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/Tokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/Tokenizer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/org/compiler/TestTokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/compiler/TestTokenizer.java" afterDir="false" />
     </list>
@@ -68,7 +68,7 @@
       <recent name="org.compiler" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.TestTokenizer">
+  <component name="RunManager" selected="JUnit.TestTokenizer.testTokenizer">
     <configuration name="CompilerMZ" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.compiler.CompilerMZ" />
       <module name="CompilerMZ" />
@@ -98,12 +98,30 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="TestTokenizer.testTokenizer" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="CompilerMZ" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.compiler.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.compiler" />
+      <option name="MAIN_CLASS_NAME" value="org.compiler.TestTokenizer" />
+      <option name="METHOD_NAME" value="testTokenizer" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <list>
       <item itemvalue="Application.CompilerMZ" />
+      <item itemvalue="JUnit.TestTokenizer.testTokenizer" />
       <item itemvalue="JUnit.TestTokenizer" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.TestTokenizer.testTokenizer" />
         <item itemvalue="JUnit.TestTokenizer" />
         <item itemvalue="Application.CompilerMZ" />
       </list>
@@ -126,7 +144,7 @@
       <updated>1712398074731</updated>
       <workItem from="1712398075777" duration="1062000" />
       <workItem from="1712399151947" duration="6887000" />
-      <workItem from="1712486054661" duration="3650000" />
+      <workItem from="1712486054661" duration="4807000" />
     </task>
     <task id="LOCAL-00001" summary="Start">
       <option name="closed" value="true" />
@@ -136,7 +154,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712398234777</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Peekiterator with whitespaces">
+      <option name="closed" value="true" />
+      <created>1712490859027</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1712490859027</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -155,7 +181,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Start" />
-    <option name="LAST_COMMIT_MESSAGE" value="Start" />
+    <MESSAGE value="Peekiterator with whitespaces" />
+    <option name="LAST_COMMIT_MESSAGE" value="Peekiterator with whitespaces" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -164,11 +191,6 @@
           <url>file://$PROJECT_DIR$/src/test/java/org/compiler/TestTokenizer.java</url>
           <line>9</line>
           <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/compiler/Tokenizer.java</url>
-          <line>13</line>
-          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

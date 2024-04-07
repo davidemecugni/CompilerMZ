@@ -1,9 +1,6 @@
 package org.compiler;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 public class Tokenizer {
     private final String input;
@@ -16,15 +13,11 @@ public class Tokenizer {
 
     public void tokenize() {
         StringBuilder buffer = new StringBuilder();
-        PeekIterator<Character> it = new PeekIterator<>(input.chars().mapToObj(c -> (char) c).iterator());
+        PeekIterator it = new PeekIterator(input.chars().mapToObj(c -> (char) c).iterator());
         while(it.peek() != null) {
              char c = it.next();
-             // Skip whitespaces
-             if(Character.isWhitespace(c)){
-                 continue;
-             }
              // Integer token
-             else if (Character.isDigit(c)) {
+             if (Character.isDigit(c)) {
                  buffer.append(c);
                  while(it.peek() != null && Character.isDigit(it.peek())){
                      buffer.append(it.next());
