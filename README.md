@@ -1,2 +1,0 @@
-# CompilerMZ
-Full custom compiler
