@@ -9,7 +9,6 @@ public class TestTokenizer {
     public void testTokenizer() {
         Tokenizer validExit = new Tokenizer("return 69;");
         assertEquals(validExit.getTokens(), List.of(new Token(TokenType._return, null), new Token(TokenType.int_lit, "69"), new Token(TokenType.semi, null)));
-        Tokenizer illegalToken = new Tokenizer("fartida");
-        assertThrows(IllegalArgumentException.class, () -> illegalToken.getTokens());
+        assertThrows(IllegalArgumentException.class, () -> new Tokenizer("fausto"));
     }
 }

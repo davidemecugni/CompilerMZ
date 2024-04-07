@@ -5,20 +5,20 @@ import java.util.Iterator;
 /**
  * An Iterator with a peek method for just one value.
  */
-public class PeekIterator<T> implements Iterator<T>
+public class PeekIterator<Character> implements Iterator<Character>
 {
-    private final Iterator<T> iterator;
+    private final Iterator<Character> iterator;
 
-    public PeekIterator (Iterator<T> iterator) { this.iterator = iterator; }
+    public PeekIterator (Iterator<Character> iterator) { this.iterator = iterator; }
 
     private boolean peeked = false;
-    private T peeked_value = null;
+    private Character peeked_value = null;
 
     public boolean hasNext () { return iterator.hasNext () || peeked; }
 
-    public T next ()
+    public Character next ()
     {
-        T value;
+        Character value;
         if (peeked) {
             peeked = false;
             value = peeked_value;
@@ -31,9 +31,9 @@ public class PeekIterator<T> implements Iterator<T>
         return value;
     }
 
-    public T peek ()
+    public Character peek ()
     {
-        T value;
+        Character value;
         if (peeked)
             value = peeked_value;
         else {

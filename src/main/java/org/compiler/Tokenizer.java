@@ -1,7 +1,9 @@
 package org.compiler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class Tokenizer {
     private final String input;
@@ -15,41 +17,35 @@ public class Tokenizer {
     public void tokenize() {
         StringBuilder buffer = new StringBuilder();
         PeekIterator<Character> it = new PeekIterator<>(input.chars().mapToObj(c -> (char) c).iterator());
-        while(it.peek()) {
+        while(it.peek() != null) {
              char c = it.next();
-             if(c == '\0'){
-                 System.out.println("Non funzia");
-             }
+             // Skip whitespaces
              if(Character.isWhitespace(c)){
                  continue;
              }
+             // Integer token
              else if (Character.isDigit(c)) {
                  buffer.append(c);
-                 while(Character.isDigit(it.peek())){
+                 while(it.peek() != null && Character.isDigit(it.peek())){
                      buffer.append(it.next());
                  }
                  AddToken(TokenType.int_lit, buffer.toString());
                  buffer.setLength(0);
              }
+             //Alphabetic token
              else if (Character.isAlphabetic(c)){
                  buffer.append(c);
-                 while(Character.isAlphabetic(it.peek())){
+                 while(it.peek() != null && Character.isAlphabetic(it.peek())){
                      buffer.append(it.next());
                  }
-                 System.out.println(buffer.toString());
-                 switch (buffer.toString()){
-                     case "return":
-                         AddToken(TokenType._return);
-                         break;
-                     default:
-                         System.out.printf(buffer.toString());
-                         throw new IllegalArgumentException("Illegal alphabetic token");
-                 }
+                 AddToken(Token.of(buffer.toString()));
                  buffer.setLength(0);
              }
-             else if(c == ';'){
-                 AddToken(TokenType.semi);
+             else{
+                 // Single character token
+                 AddToken(Token.of(c));
              }
+
         }
     }
 
@@ -62,5 +58,8 @@ public class Tokenizer {
     }
     private void AddToken(TokenType type, String value) {
         tokens.add(new Token(type, value));
+    }
+    private void AddToken(Token token) {
+        tokens.add(token);
     }
 }

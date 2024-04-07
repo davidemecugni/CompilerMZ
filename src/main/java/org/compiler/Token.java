@@ -1,5 +1,8 @@
 package org.compiler;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Represents a token in the source code
  * A token is a pair consisting of a token name and an optional token value
@@ -9,7 +12,13 @@ package org.compiler;
 public class Token {
     private final TokenType type;
     private String value=null;
-
+    private static Map<Object, TokenType> wordToTokenMap = new HashMap<>();
+    static {
+        wordToTokenMap = new HashMap<>();
+        wordToTokenMap.put("return", TokenType._return);
+        wordToTokenMap.put(';', TokenType.semi);
+        // Add more entries as needed
+    }
     public Token(TokenType type, String value) {
         this.type = type;
         this.value = value;
@@ -30,7 +39,12 @@ public class Token {
     public boolean hasValue(){
         return value != null;
     }
-
+    public static Token of(Object word){
+        if(wordToTokenMap.containsKey(word)){
+            return new Token(wordToTokenMap.get(word));
+        }
+        throw new IllegalArgumentException("Illegal alphabetic token not found in the map");
+    }
     @Override
     public String toString() {
         return "Token{" +

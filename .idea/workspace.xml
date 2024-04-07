@@ -5,17 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="73b9d148-afea-4257-979e-cd0c7ef9eaf7" name="Changes" comment="Start">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/errore.mz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/compiler/CompilerMZ.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/compiler/PeekIterator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/compiler/Token.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/compiler/TokenType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/compiler/Tokenizer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/org/compiler/TestTokenizer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/Token.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/Tokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/Tokenizer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/compiler/TestTokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/compiler/TestTokenizer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,6 +25,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
@@ -72,7 +68,7 @@
       <recent name="org.compiler" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.CompilerMZ">
+  <component name="RunManager" selected="JUnit.TestTokenizer">
     <configuration name="CompilerMZ" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.compiler.CompilerMZ" />
       <module name="CompilerMZ" />
@@ -108,8 +104,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.CompilerMZ" />
         <item itemvalue="JUnit.TestTokenizer" />
+        <item itemvalue="Application.CompilerMZ" />
       </list>
     </recent_temporary>
   </component>
@@ -130,6 +126,7 @@
       <updated>1712398074731</updated>
       <workItem from="1712398075777" duration="1062000" />
       <workItem from="1712399151947" duration="6887000" />
+      <workItem from="1712486054661" duration="3650000" />
     </task>
     <task id="LOCAL-00001" summary="Start">
       <option name="closed" value="true" />
@@ -160,8 +157,24 @@
     <MESSAGE value="Start" />
     <option name="LAST_COMMIT_MESSAGE" value="Start" />
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/org/compiler/TestTokenizer.java</url>
+          <line>9</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/compiler/Tokenizer.java</url>
+          <line>13</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/CompilerMZ$TestTokenizer.ic" NAME="TestTokenizer Coverage Results" MODIFIED="1712405706923" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+    <SUITE FILE_PATH="coverage/CompilerMZ$TestTokenizer.ic" NAME="TestTokenizer Coverage Results" MODIFIED="1712490415581" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>org.compiler.*</FILTER>
     </SUITE>
   </component>
