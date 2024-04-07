@@ -5,8 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="73b9d148-afea-4257-979e-cd0c7ef9eaf7" name="Changes" comment="Peekiterator without whitespaces">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/compiler/Generator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/compiler/Parser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/compiler/PeekIteratorChar.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/compiler/PeekIteratorToken.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/compiler/nodes/Exit.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/compiler/nodes/Expression.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/Token.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/PeekIterator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/PeekIterator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/Tokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/Tokenizer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,6 +24,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -54,7 +62,7 @@
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.keymap",
+    "settings.editor.selected.configurable": "coverage",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -67,11 +75,11 @@
       <recent name="org.compiler" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.TestTokenizer.testTokenizer">
+  <component name="RunManager" selected="JUnit.TestTokenizer">
     <configuration name="CompilerMZ" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.compiler.CompilerMZ" />
       <module name="CompilerMZ" />
-      <option name="PROGRAM_PARAMETERS" value="$PROJECT_DIR$/src/errore.mz" />
+      <option name="PROGRAM_PARAMETERS" value="$PROJECT_DIR$/src/fausto.mz" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="org.compiler.*" />
@@ -120,9 +128,9 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.TestTokenizer.testTokenizer" />
         <item itemvalue="JUnit.TestTokenizer" />
         <item itemvalue="Application.CompilerMZ" />
+        <item itemvalue="JUnit.TestTokenizer.testTokenizer" />
       </list>
     </recent_temporary>
   </component>
@@ -143,7 +151,7 @@
       <updated>1712398074731</updated>
       <workItem from="1712398075777" duration="1062000" />
       <workItem from="1712399151947" duration="6887000" />
-      <workItem from="1712486054661" duration="5113000" />
+      <workItem from="1712486054661" duration="10878000" />
     </task>
     <task id="LOCAL-00001" summary="Start">
       <option name="closed" value="true" />
@@ -169,7 +177,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712492010646</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Peekiterator without whitespaces">
+      <option name="closed" value="true" />
+      <created>1712492040486</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1712492040486</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
