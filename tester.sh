@@ -8,6 +8,8 @@ fi
 if test "$1" = '-h' -o "$1" = '--help'
 then
   echo "Uso: tester.sh [file_input file_output]"
+  echo "Genera il file output.asm a partire dal file input.mz"
+  echo "Genera il file oggetto output.o e il file eseguibile output"
   echo "Se non specificati"
   echo "fausto.md -> output.asm nella cartella Risorse"
   echo "Attenzione funziona solo su Linux e se il progetto è importato in IdeaProjects!"
