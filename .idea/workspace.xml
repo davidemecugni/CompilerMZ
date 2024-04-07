@@ -4,19 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="73b9d148-afea-4257-979e-cd0c7ef9eaf7" name="Changes" comment="Modified tester.sh">
+    <list default="true" id="73b9d148-afea-4257-979e-cd0c7ef9eaf7" name="Changes" comment="Added comments">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/CompilerMZ.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/CompilerMZ.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/Parser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/token/Token.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/TokenType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/token/TokenType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/Tokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/token/Tokenizer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/nodes/Exit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/nodes/Exit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/nodes/Expression.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/nodes/Expression.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/peekers/PeekIterator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/peekers/PeekIterator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/peekers/PeekIteratorChar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/peekers/PeekIteratorChar.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/peekers/PeekIteratorToken.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/peekers/PeekIteratorToken.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/org/compiler/TestTokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/compiler/TestTokenizer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/Generator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/Generator.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,11 +79,10 @@
       <recent name="org.compiler" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.TestTokenizer">
+  <component name="RunManager" selected="Application.CompilerMZ">
     <configuration name="CompilerMZ" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.compiler.CompilerMZ" />
       <module name="CompilerMZ" />
-      <option name="PROGRAM_PARAMETERS" value="Risorse/fausto.mz" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="org.compiler.parsers.*" />
@@ -141,8 +131,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.TestTokenizer" />
         <item itemvalue="Application.CompilerMZ" />
+        <item itemvalue="JUnit.TestTokenizer" />
         <item itemvalue="JUnit.TestTokenizer.testTokenizer" />
       </list>
     </recent_temporary>
@@ -231,7 +221,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712506965568</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Added comments">
+      <option name="closed" value="true" />
+      <created>1712509179851</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1712509179851</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -271,11 +269,12 @@
     <MESSAGE value="Working" />
     <MESSAGE value="Added tester.sh utility" />
     <MESSAGE value="Modified tester.sh" />
-    <option name="LAST_COMMIT_MESSAGE" value="Modified tester.sh" />
+    <MESSAGE value="Added comments" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added comments" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/CompilerMZ$TestTokenizer.ic" NAME="TestTokenizer Coverage Results" MODIFIED="1712490415581" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
-      <FILTER>org.compiler.*</FILTER>
+    <SUITE FILE_PATH="coverage/CompilerMZ$TestTokenizer.ic" NAME="TestTokenizer Coverage Results" MODIFIED="1712509137732" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>org.compiler.parsers.*</FILTER>
     </SUITE>
   </component>
 </project>

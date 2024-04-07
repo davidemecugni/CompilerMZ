@@ -21,9 +21,11 @@ public class CompilerMZ {
 
         String fileIn;
         if (args.length < 1) {
-            fileIn = "Risorse/input.mz";
+            fileIn = "Risorse/fausto.mz";
         }
-        fileIn = args[0];
+        else{
+            fileIn = args[0];
+        }
         String content;
         try {
             content = readFile(fileIn);
