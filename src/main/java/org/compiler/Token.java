@@ -12,7 +12,7 @@ import java.util.Map;
 public class Token {
     private final TokenType type;
     private String value=null;
-    private static Map<Object, TokenType> wordToTokenMap = new HashMap<>();
+    private static final Map<Object, TokenType> wordToTokenMap;
     static {
         wordToTokenMap = new HashMap<>();
         wordToTokenMap.put("return", TokenType._return);

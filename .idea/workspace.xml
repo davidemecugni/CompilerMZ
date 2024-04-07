@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="73b9d148-afea-4257-979e-cd0c7ef9eaf7" name="Changes" comment="Peekiterator with whitespaces">
+    <list default="true" id="73b9d148-afea-4257-979e-cd0c7ef9eaf7" name="Changes" comment="Peekiterator without whitespaces">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/PeekIterator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/PeekIterator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/Tokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/Tokenizer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/org/compiler/TestTokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/compiler/TestTokenizer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/compiler/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/compiler/Token.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,6 +40,7 @@
     "Application.CompilerMZ.executor": "Run",
     "Application.Main.executor": "Run",
     "JUnit.TestTokenizer.executor": "Run",
+    "JUnit.TestTokenizer.testTokenizer.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
@@ -144,7 +143,7 @@
       <updated>1712398074731</updated>
       <workItem from="1712398075777" duration="1062000" />
       <workItem from="1712399151947" duration="6887000" />
-      <workItem from="1712486054661" duration="4807000" />
+      <workItem from="1712486054661" duration="5113000" />
     </task>
     <task id="LOCAL-00001" summary="Start">
       <option name="closed" value="true" />
@@ -162,7 +161,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712490859027</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Peekiterator without whitespaces">
+      <option name="closed" value="true" />
+      <created>1712492010646</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1712492010646</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -182,18 +189,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Start" />
     <MESSAGE value="Peekiterator with whitespaces" />
-    <option name="LAST_COMMIT_MESSAGE" value="Peekiterator with whitespaces" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/org/compiler/TestTokenizer.java</url>
-          <line>9</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="Peekiterator without whitespaces" />
+    <option name="LAST_COMMIT_MESSAGE" value="Peekiterator without whitespaces" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/CompilerMZ$TestTokenizer.ic" NAME="TestTokenizer Coverage Results" MODIFIED="1712490415581" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
