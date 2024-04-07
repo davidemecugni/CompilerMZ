@@ -1,7 +1,10 @@
 package org.compiler.nodes;
 
-import org.compiler.Token;
+import org.compiler.token.Token;
 
+/**
+ * Represents an expression TBC
+ */
 public class Expression {
     private final Token int_literal;
 

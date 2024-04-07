@@ -1,9 +1,13 @@
-package org.compiler;
+package org.compiler.token;
 
 import org.compiler.peekers.PeekIteratorChar;
 
 import java.util.ArrayList;
 
+/**
+ * Generates a list of tokens from a string input
+ *
+ */
 public class Tokenizer {
     private final ArrayList<Token> tokens = new ArrayList<>();
     private final PeekIteratorChar it;
