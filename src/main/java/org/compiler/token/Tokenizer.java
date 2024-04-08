@@ -39,10 +39,13 @@ public class Tokenizer {
                  AddToken(Token.of(buffer.toString()));
                  buffer.setLength(0);
              }
-             else{
+             else if(c == '@'){
                  // Single character token
-                 AddToken(Token.of(c));
+                 it.IgnoreComment();
              }
+             else{
+                 AddToken(Token.of(c));
+            }
 
         }
     }
@@ -51,9 +54,6 @@ public class Tokenizer {
         return tokens;
     }
 
-    private void AddToken(TokenType type) {
-        tokens.add(new Token(type));
-    }
     private void AddToken(Token token) {
         tokens.add(token);
     }

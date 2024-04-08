@@ -24,6 +24,35 @@ public class PeekIteratorChar implements PeekIterator<Character>{
         return non_whitespace_cursor < list.size();
     }
     /**
+     * Ignores the comment in the input
+     * [at] for a single line comment
+     * [at][at] for a multiline comment closed by [at][at]
+     * @throws NoSuchElementException if the comment is not closed
+     */
+    public void IgnoreComment() {
+        if(cursor >= list.size()){
+            return;
+        }
+        if(list.get(cursor) != '@'){
+            for(; cursor < list.size(); cursor++){
+                if(list.get(cursor) == '\n'){
+                    cursor++;
+                    break;
+                }
+            }
+        }
+        else {
+            cursor++;
+            while (cursor < list.size() && list.get(cursor) != '@') {
+                cursor++;
+            }
+            if( (cursor + 2) >= list.size() || list.get(cursor + 1) != '@') {
+                throw new NoSuchElementException("Multiline comment has not been closed");
+            }
+            cursor+=2;
+        }
+    }
+    /**
      * Returns the next non-whitespace character
      * @return the next non-whitespace character
      */

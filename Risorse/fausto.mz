@@ -1,1 +1,12 @@
-exit 90
+@ commento in linea
+
+
+@@
+commento
+multi
+linea
+@@
+
+exit 132;
+
+
