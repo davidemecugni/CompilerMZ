@@ -19,6 +19,7 @@ public class TestPeekIteratorChar {
             assertEquals(peek.next(), c);
         }
         assertFalse(peek.hasNext());
-        assertThrows(NoSuchElementException.class, peek::next);
+        assertNull(peek.peek());
+        assertNull(peek.next());
     }
 }

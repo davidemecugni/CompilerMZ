@@ -1,7 +1,7 @@
 package org.compiler.peekers;
 
 import org.compiler.token.*;
-import org.compiler.token.tokens.IntLit;
+import org.compiler.token.tokens.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -28,6 +28,7 @@ public class TestPeekIteratorToken {
         assertEquals(peek.peek(), new Token(TokenType.semi));
         assertEquals(peek.next(), new Token(TokenType.semi));
         assertFalse(peek.hasNext());
-        assertThrows(NoSuchElementException.class, peek::next);
+        assertNull(peek.peek());
+        assertNull(peek.next());
     }
 }

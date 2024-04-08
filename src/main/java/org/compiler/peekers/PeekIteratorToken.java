@@ -3,7 +3,6 @@ package org.compiler.peekers;
 import org.compiler.token.Token;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class PeekIteratorToken implements PeekIterator<Token>{
     private final List<Token> list;
@@ -20,7 +19,7 @@ public class PeekIteratorToken implements PeekIterator<Token>{
     @Override
     public Token next(){
         if(!hasNext()){
-            throw new NoSuchElementException("No next element");
+            return null;
         }
         return list.get(cursor++);
     }
@@ -28,7 +27,7 @@ public class PeekIteratorToken implements PeekIterator<Token>{
     @Override
     public Token peek() {
         if(!hasNext()){
-            throw new NoSuchElementException("No peekable element");
+            return null;
         }
         return list.get(cursor);
     }
@@ -36,7 +35,7 @@ public class PeekIteratorToken implements PeekIterator<Token>{
     @Override
     public Token peek(int offset){
         if(cursor + offset >= list.size()){
-            throw new NoSuchElementException("Offset is too large");
+            return null;
         }
         return list.get(cursor + offset);
     }
