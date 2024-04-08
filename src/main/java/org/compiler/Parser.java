@@ -16,7 +16,7 @@ public class Parser {
     private final PeekIteratorToken it;
 
     public Parser(ArrayList<Token> tokens) {
-        this.it = new PeekIteratorToken(tokens.iterator());
+        this.it = new PeekIteratorToken(tokens);
     }
     public Exit parse(){
         Exit exit = null;

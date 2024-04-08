@@ -19,6 +19,8 @@ public class Token {
         wordToTokenMap = new HashMap<>();
         wordToTokenMap.put("exit", TokenType._exit);
         wordToTokenMap.put(';', TokenType.semi);
+        wordToTokenMap.put('(', TokenType.open_paren);
+        wordToTokenMap.put(')', TokenType.close_paren);
         // Add more entries as needed
     }
     public Token(TokenType type, String value) {

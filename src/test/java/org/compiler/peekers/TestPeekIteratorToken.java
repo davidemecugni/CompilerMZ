@@ -4,6 +4,7 @@ import org.compiler.token.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 public class TestPeekIteratorToken {
@@ -15,16 +16,17 @@ public class TestPeekIteratorToken {
         tokens.add(new Token(TokenType.int_lit, "42"));
         tokens.add(new Token(TokenType.semi));
 
-        PeekIteratorToken pic = new PeekIteratorToken(tokens.iterator());
-        assertTrue(pic.hasNext());
-        assertEquals(pic.peek(), new Token(TokenType._exit));
-        assertEquals(pic.next(), new Token(TokenType._exit));
-        assertTrue(pic.hasNext());
-        assertEquals(pic.peek(), new Token(TokenType.int_lit, "42"));
-        assertEquals(pic.next(), new Token(TokenType.int_lit, "42"));
-        assertTrue(pic.hasNext());
-        assertEquals(pic.peek(), new Token(TokenType.semi));
-        assertEquals(pic.next(), new Token(TokenType.semi));
-        assertFalse(pic.hasNext());
+        PeekIteratorToken peek = new PeekIteratorToken(tokens);
+        assertTrue(peek.hasNext());
+        assertEquals(peek.peek(), new Token(TokenType._exit));
+        assertEquals(peek.next(), new Token(TokenType._exit));
+        assertTrue(peek.hasNext());
+        assertEquals(peek.peek(), new Token(TokenType.int_lit, "42"));
+        assertEquals(peek.next(), new Token(TokenType.int_lit, "42"));
+        assertTrue(peek.hasNext());
+        assertEquals(peek.peek(), new Token(TokenType.semi));
+        assertEquals(peek.next(), new Token(TokenType.semi));
+        assertFalse(peek.hasNext());
+        assertThrows(NoSuchElementException.class, peek::next);
     }
 }
