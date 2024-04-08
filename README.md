@@ -1,4 +1,5 @@
 # CompilerMZ
+![Compiler logo](READMESOURCES/logo.png) \
 A full custom compiler for the .mz(Mecugni Zanasi) language!
 
 To compile the file the steps made by the compiler are:
@@ -16,5 +17,11 @@ Added tester.sh utility to go from a .mz file to an executable file through:
   - Using nasm for the elf64 architecture
 - Linking
   - Using ld linker
+
+Example:
+```manz
+@commento@
+exit 42;
+```
 
   
