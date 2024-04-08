@@ -11,7 +11,6 @@ import java.util.Map;
  */
 public class Token {
     private final TokenType type;
-    private String value=null;
 
     // Map to convert alphabetic tokens to their corresponding TokenType
     private static final Map<Object, TokenType> wordToTokenMap;
@@ -23,21 +22,12 @@ public class Token {
         wordToTokenMap.put(')', TokenType.close_paren);
         // Add more entries as needed
     }
-    public Token(TokenType type, String value) {
-        this.type = type;
-        this.value = value;
-    }
-
     public Token(TokenType type) {
         this.type = type;
     }
 
     public TokenType getType() {
         return type;
-    }
-
-    public String getValue() {
-        return value;
     }
     /**
      * Converts an alphabetic token to a TokenType
@@ -54,7 +44,6 @@ public class Token {
     public String toString() {
         return "Token{" +
                 "type=" + type +
-                ", value='" + value + '\'' +
                 '}';
     }
 
@@ -67,9 +56,6 @@ public class Token {
             return false;
         }
         Token token = (Token) obj;
-        if(value == null){
-            return type == token.type && token.value == null;
-        }
-        return type == token.type && value.equals(token.value);
+        return type == token.type;
     }
 }

@@ -5,6 +5,7 @@ import org.compiler.nodes.*;
 import org.compiler.peekers.PeekIteratorToken;
 import org.compiler.token.Token;
 import org.compiler.token.TokenType;
+import org.compiler.token.tokens.IntLit;
 
 import java.util.ArrayList;
 
@@ -38,7 +39,7 @@ public class Parser {
     }
     private Expression parseExpression(){
         if(it.hasNext() && it.peek().getType() == TokenType.int_lit){
-            return new Expression(it.next());
+            return new Expression((IntLit) it.next());
         }
         else{
             return null;

@@ -1,6 +1,7 @@
 package org.compiler.peekers;
 
 import org.compiler.token.*;
+import org.compiler.token.tokens.IntLit;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public class TestPeekIteratorToken {
     public void testPeekIteratorChar() {
         ArrayList<Token> tokens = new ArrayList<>();
         tokens.add(new Token(TokenType._exit));
-        tokens.add(new Token(TokenType.int_lit, "42"));
+        tokens.add(new IntLit("42"));
         tokens.add(new Token(TokenType.semi));
 
         PeekIteratorToken peek = new PeekIteratorToken(tokens);
@@ -21,8 +22,8 @@ public class TestPeekIteratorToken {
         assertEquals(peek.peek(), new Token(TokenType._exit));
         assertEquals(peek.next(), new Token(TokenType._exit));
         assertTrue(peek.hasNext());
-        assertEquals(peek.peek(), new Token(TokenType.int_lit, "42"));
-        assertEquals(peek.next(), new Token(TokenType.int_lit, "42"));
+        assertEquals(peek.peek(), new IntLit("42"));
+        assertEquals(peek.next(), new IntLit("42"));
         assertTrue(peek.hasNext());
         assertEquals(peek.peek(), new Token(TokenType.semi));
         assertEquals(peek.next(), new Token(TokenType.semi));
