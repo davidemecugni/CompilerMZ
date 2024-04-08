@@ -1,20 +1,11 @@
 package org.compiler.nodes;
 
-import org.compiler.token.Token;
+import org.compiler.token.tokens.IntLit;
 
 /**
  * Represents an expression TBC
  */
-public class Expression {
-    private final Token int_literal;
-
-    public Expression(Token int_literal) {
-        this.int_literal = int_literal;
-    }
-
-    public Token getInt_literal() {
-        return int_literal;
-    }
+public record Expression(IntLit int_literal) {
 
     @Override
     public String toString() {

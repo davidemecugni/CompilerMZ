@@ -14,7 +14,7 @@ public class Generator {
         StringBuilder sb = new StringBuilder();
         sb.append("global _start\n_start:\n");
         sb.append("     mov rax, 60\n");
-        sb.append("     mov rdi, ").append(m_root.expr.getInt_literal().getValue()).append("\n");
+        sb.append("     mov rdi, ").append(m_root.expr.int_literal().getValue()).append("\n");
         sb.append("     syscall");
         return sb.toString();
     }
