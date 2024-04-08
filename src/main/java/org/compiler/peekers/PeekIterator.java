@@ -20,6 +20,12 @@ public interface PeekIterator<E> extends Iterator<E> {
      */
     E peek();
     /**
+     * Returns the next element with an offset without moving the iterator
+     * @param offset the offset
+     * @return the next element
+     */
+    E peek(int offset);
+    /**
      * Returns the next element and moves the iterator
      * @return the next element
      */

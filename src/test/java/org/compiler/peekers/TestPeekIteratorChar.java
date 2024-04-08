@@ -1,18 +1,22 @@
 package org.compiler.peekers;
 
 import org.junit.jupiter.api.Test;
+
+import java.util.NoSuchElementException;
+
 import static org.junit.jupiter.api.Assertions.*;
 public class TestPeekIteratorChar {
 
     @Test
     public void testPeekIteratorChar() {
         String s = "hello world!";
-        PeekIteratorChar pic = new PeekIteratorChar(s.chars().mapToObj(c -> (char) c).iterator());
-        assertTrue(pic.hasNext());
-        assertEquals(pic.peek(), 'h');
+        PeekIteratorChar peek = new PeekIteratorChar(s);
+        assertTrue(peek.hasNext());
+        assertEquals(peek.peek(), 'h');
         for (char c : new char[]{'h', 'e', 'l', 'l', 'o', 'w', 'o', 'r', 'l', 'd', '!'}) {
-            assertEquals(pic.next(), c);
+            assertEquals(peek.next(), c);
         }
-        assertFalse(pic.hasNext());
+        assertFalse(peek.hasNext());
+        assertThrows(NoSuchElementException.class, peek::next);
     }
 }

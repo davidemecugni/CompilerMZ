@@ -6,5 +6,7 @@ package org.compiler.token;
 public enum TokenType {
     _exit,
     int_lit,
-    semi
+    semi,
+    open_paren,
+    close_paren
 }

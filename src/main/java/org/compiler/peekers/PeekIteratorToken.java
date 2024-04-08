@@ -2,46 +2,43 @@ package org.compiler.peekers;
 
 import org.compiler.token.Token;
 
-import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 public class PeekIteratorToken implements PeekIterator<Token>{
-    private final Iterator<Token> iterator;
-    private boolean peeked = false;
-    private Token peeked_value = null;
-
-    public PeekIteratorToken(Iterator<Token> iterator) {
-        this.iterator = iterator;
-        if(iterator.hasNext()){
-            peeked_value = iterator.next();
-            peeked = true;
-        }
+    private final List<Token> list;
+    private int cursor;
+    public PeekIteratorToken(List<Token> list) {
+        this.list = list;
+        this.cursor = 0;
     }
 
     @Override
     public boolean hasNext() {
-        return peeked;
+        return cursor < list.size();
     }
     @Override
     public Token next(){
-        if(!peeked){
-            throw new NoSuchElementException();
+        if(!hasNext()){
+            throw new NoSuchElementException("No next element");
         }
-        Token value = peeked_value;
-        if(iterator.hasNext()){
-            peeked_value = iterator.next();
-        }
-        else{
-            peeked = false;
-        }
-        return value;
+        return list.get(cursor++);
     }
 
     @Override
     public Token peek() {
-        if(!peeked){
-            throw new NoSuchElementException();
+        if(!hasNext()){
+            throw new NoSuchElementException("No peekable element");
         }
-        return peeked_value;
+        return list.get(cursor);
     }
+
+    @Override
+    public Token peek(int offset){
+        if(cursor + offset >= list.size()){
+            throw new NoSuchElementException("Offset is too large");
+        }
+        return list.get(cursor + offset);
+    }
+
 }
