@@ -1,6 +1,6 @@
 package org.compiler.token;
 
-import org.compiler.token.tokens.Ident;
+import org.compiler.token.tokens.TokenIdent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,7 +43,7 @@ public class Token {
             return new Token(wordToTokenMap.get(word));
         }
         else{
-            return new Ident(word.toString());
+            return new TokenIdent(word.toString());
         }
     }
     @Override

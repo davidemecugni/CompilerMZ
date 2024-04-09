@@ -1,5 +1,4 @@
 global _start
 _start:
      mov rax, 60
-     mov rdi, 132
-     syscall
+     mov rdi, 0     syscall

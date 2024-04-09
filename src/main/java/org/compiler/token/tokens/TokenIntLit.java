@@ -5,15 +5,15 @@ import org.compiler.token.TokenType;
 
 import java.util.Objects;
 
-public class IntLit extends Token {
+public class TokenIntLit extends Token {
     private final int value;
 
-    public IntLit(int value) {
+    public TokenIntLit(int value) {
         super(TokenType.int_lit);
         this.value = value;
     }
 
-    public IntLit(String value){
+    public TokenIntLit(String value){
         super(TokenType.int_lit);
         this.value = Integer.parseInt(value);
     }
@@ -34,7 +34,7 @@ public class IntLit extends Token {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        IntLit intLit = (IntLit) o;
+        TokenIntLit intLit = (TokenIntLit) o;
         return value == intLit.value;
     }
 

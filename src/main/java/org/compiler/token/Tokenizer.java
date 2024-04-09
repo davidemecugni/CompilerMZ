@@ -1,7 +1,7 @@
 package org.compiler.token;
 
 import org.compiler.peekers.PeekIteratorChar;
-import org.compiler.token.tokens.IntLit;
+import org.compiler.token.tokens.TokenIntLit;
 
 import java.util.ArrayList;
 
@@ -27,7 +27,7 @@ public class Tokenizer {
                  while(it.hasNext() && Character.isDigit(it.peek())){
                      buffer.append(it.next());
                  }
-                 AddToken(new IntLit(Integer.parseInt(buffer.toString())));
+                 AddToken(new TokenIntLit(Integer.parseInt(buffer.toString())));
                  buffer.setLength(0);
              }
              //Alphabetic token
@@ -36,7 +36,8 @@ public class Tokenizer {
                  while(it.hasNext() && Character.isAlphabetic(it.peek())){
                      buffer.append(it.next());
                  }
-                 AddToken(Token.of(buffer.toString()));
+                 Token alphaToken = Token.of(buffer.toString());
+                 AddToken(alphaToken);
                  buffer.setLength(0);
              }
              else if(c == '@'){
