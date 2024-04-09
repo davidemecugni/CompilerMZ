@@ -1,6 +1,8 @@
 # CompilerMZ
 ![Compiler logo](READMESOURCES/logo.png) \
-A full custom compiler for the .mz(Mecugni Zanasi) language!
+A full custom compiler for the .mz(Mecugni Zanasi) language! \
+It generates an x86_64 assembly file. \
+The program can then by run by using nasm and ld or the assembler and linker of your choice.\
 
 To compile the file the steps made by the compiler are:
 - Tokenization  
@@ -20,8 +22,10 @@ Added tester.sh utility to go from a .mz file to an executable file through:
 
 Example:
 ```manz
-@commento@
+@commento
 exit 42;
 ```
-
-  
+# The idea
+![CompilerMZ](READMESOURCES/warning.png) \
+The project was born during a OOP course at the University of Modena and Reggio Emilia. \
+The idea was to create a compiler for a custom language, the .mz language. 
