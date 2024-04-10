@@ -8,7 +8,7 @@ import org.compiler.nodes.expressions.NodeIntLit;
 import org.compiler.nodes.statements.NodeExit;
 import org.compiler.nodes.statements.NodeLet;
 import org.compiler.peekers.PeekIteratorToken;
-import org.compiler.token.Token;
+import org.compiler.token.tokens.Token;
 import org.compiler.token.TokenType;
 import org.compiler.token.tokens.TokenIdent;
 import org.compiler.token.tokens.TokenIntLit;
@@ -22,17 +22,18 @@ import java.util.ArrayList;
  */
 public class Parser {
     private final PeekIteratorToken it;
-
+    NodeProgram tree;
     public Parser(ArrayList<Token> tokens) {
         this.it = new PeekIteratorToken(tokens);
+        parseProgram();
     }
 
-    public NodeProgram parseProgram() {
+    public void parseProgram() {
         ArrayList<NodeStatement> stmts = new ArrayList<>();
         while (it.hasNext()) {
             stmts.add(parseStmt());
         }
-        return new NodeProgram(stmts);
+        tree = new NodeProgram(stmts);
     }
 
     private NodeStatement parseStmt() {
@@ -86,6 +87,10 @@ public class Parser {
             throw new IllegalArgumentException("Semicolon not present");
         }
         return new NodeLet(expr, ident);
+    }
+
+    public NodeProgram getTree() {
+        return tree;
     }
 
     @Override

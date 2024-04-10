@@ -1,6 +1,7 @@
 package org.compiler.token;
 
 import org.compiler.peekers.PeekIteratorChar;
+import org.compiler.token.tokens.Token;
 import org.compiler.token.tokens.TokenIntLit;
 
 import java.util.ArrayList;

@@ -34,10 +34,11 @@ public class CompilerMZ {
         }
 
         Tokenizer tokenizer = new Tokenizer(content);
+        tokenizer.tokenize();
         System.out.println("1) Tokenizzato!");
         Parser parser = new Parser(tokenizer.getTokens());
-
-        NodeProgram tree = parser.parseProgram();
+        parser.parseProgram();
+        NodeProgram tree = parser.getTree();
         if (tree == null) {
             throw new RuntimeException("No exit statement found");
         }
@@ -149,6 +150,5 @@ public class CompilerMZ {
             System.out.println("Error running process" + description + ": " + e.getMessage());
             throw new RuntimeException("Process error");
         }
-        System.out.println("brutto");
     }
 }

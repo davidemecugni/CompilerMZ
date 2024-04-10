@@ -56,7 +56,7 @@ public class Generator {
         }
         // Exits 0 by default
         sb.append("     mov rax, 60\n");
-        sb.append("     mov rdi, 100\n");
+        sb.append("     mov rdi, 0\n");
         sb.append("     syscall");
         return sb.toString();
     }

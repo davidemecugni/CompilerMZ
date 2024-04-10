@@ -1,6 +1,6 @@
 package org.compiler.peekers;
 
-import org.compiler.token.Token;
+import org.compiler.token.tokens.Token;
 
 import java.util.List;
 
