@@ -37,9 +37,11 @@ public class Parser {
     }
 
     private NodeStatement parseStmt() {
-        if (it.hasNext() && it.next().getType() == TokenType._exit) {
+        if (it.hasNext() && it.peek().getType() == TokenType._exit) {
+            it.next();
             return parseExit();
-        } else if (it.hasNext() && it.next().getType() == TokenType.let) {
+        } else if (it.hasNext() && it.peek().getType() == TokenType.let) {
+            it.next();
             return parseLet();
         } else {
             throw new IllegalArgumentException("Invalid token in statement");

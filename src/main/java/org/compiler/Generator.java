@@ -9,16 +9,19 @@ import org.compiler.nodes.statements.NodeExit;
 import org.compiler.nodes.statements.NodeLet;
 import org.compiler.token.tokens.TokenIdent;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Generates a string representation of the assembly code
  */
 public class Generator {
     private final NodeProgram m_program;
-    long stack_location;
+    private long stack_size = 0;
+    private Map<String, Long> variables = new HashMap<>();
 
     public Generator(NodeProgram program) {
         this.m_program = program;
-        this.stack_location = 0;
     }
 
     public String generateStatement(NodeStatement stmt) {
@@ -29,12 +32,16 @@ public class Generator {
                 stmtSB.append(generateExpression(stmt.getStmt()));
                 stmtSB.append("     ;;exit\n");
                 stmtSB.append("     mov rax, 60\n");
-                stmtSB.append(pop("rdi")).append("\n");
+                stmtSB.append(pop("rdi"));
                 stmtSB.append("     syscall\n");
                 stmtSB.append("     ;;/exit\n\n");
             }
             case NodeLet nodeLet -> {
-                // Handle NodeLet type
+                if (variables != null && variables.containsValue(nodeLet.getIdentifier().getIdent().getName())) {
+                    throw new IllegalArgumentException("Identifier already used");
+                }
+                variables.put(nodeLet.getIdentifier().getIdent().getName(), stack_size);
+                stmtSB.append(generateExpression(stmt.getStmt()));
             }
             case null, default -> {
                 throw new IllegalArgumentException("Unknown statement type in generator");
@@ -52,7 +59,15 @@ public class Generator {
                 exprSB.append(push("rax")).append("\n");
             }
             case NodeIdent nodeIdent -> {
+                /*
+                //per controllare se la variabile è presente nella mappa
+                if (!variables.containsValue(nodeIdent.getIdent().getName())) {
+                    throw new IllegalArgumentException("Undeclared Identifier");
+                }
+                */
 
+                long offset = (stack_size - variables.get(nodeIdent.getIdent().getName()) - 1) * 8;
+                exprSB.append(push("QWORD [rsp + " + offset + "]")).append("\n");
             }
             case null, default -> {
                 throw new IllegalArgumentException("Unknown expression type in generator");
@@ -78,7 +93,6 @@ public class Generator {
         for (NodeStatement statement : m_program.getStmts()) {
             System.out.println(statement.getStmt().getExpr().getType().toString());
         }
-        stack_location++;
     }
 
     /**
@@ -87,7 +101,7 @@ public class Generator {
      * @return a string
      */
     public String push(String reg) {
-        stack_location++;
+        stack_size++;
         return "     push " + reg + "\n";
     }
 
@@ -97,7 +111,7 @@ public class Generator {
      * @return a string
      */
     public String pop(String reg) {
-        stack_location--;
+        stack_size--;
         return "     pop " + reg + "\n";
     }
 }
