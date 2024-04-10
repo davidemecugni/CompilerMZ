@@ -1,5 +1,7 @@
 package org.compiler.token;
 
+import org.compiler.token.tokens.TokenIdent;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,11 +17,14 @@ public class Token {
     // Map to convert alphabetic tokens to their corresponding TokenType
     private static final Map<Object, TokenType> wordToTokenMap;
     static {
+        //Char only one quote, String double quotes
         wordToTokenMap = new HashMap<>();
         wordToTokenMap.put("exit", TokenType._exit);
         wordToTokenMap.put(';', TokenType.semi);
         wordToTokenMap.put('(', TokenType.open_paren);
         wordToTokenMap.put(')', TokenType.close_paren);
+        wordToTokenMap.put('=', TokenType.eq);
+        wordToTokenMap.put("let", TokenType.let);
         // Add more entries as needed
     }
     public Token(TokenType type) {
@@ -38,7 +43,9 @@ public class Token {
         if(wordToTokenMap.containsKey(word)){
             return new Token(wordToTokenMap.get(word));
         }
-        throw new IllegalArgumentException("Illegal alphabetic token not found in the map");
+        else{
+            return new TokenIdent(word.toString());
+        }
     }
     @Override
     public String toString() {

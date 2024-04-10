@@ -66,21 +66,21 @@ public class PeekIteratorChar implements PeekIterator<Character>{
 
     public Character next() {
         if (!hasNext()) {
-            throw new NoSuchElementException("No next element");
+            return null;
         }
         return getNextNonWhitespaceChar();
     }
 
     public Character peek() {
         if (!hasNext()) {
-            throw new NoSuchElementException("No peekable element");
+            return null;
         }
         return list.get(cursor);
     }
 
     public Character peek(int offset) {
         if (cursor + offset >= list.size()) {
-            throw new NoSuchElementException("Offset is too large");
+            return null;
         }
         return list.get(cursor + offset);
     }

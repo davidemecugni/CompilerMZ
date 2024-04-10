@@ -1,20 +1,57 @@
 package org.compiler;
-import org.compiler.nodes.Exit;
+
+import org.compiler.nodes.*;
+import org.compiler.nodes.expressions.*;
+import org.compiler.nodes.statements.*;
+
 
 /**
  * Generates a string representation of the assembly code
  */
 public class Generator {
-    private final Exit m_root;
-    public Generator(Exit exit){
-        this.m_root = exit;
+    private final NodeProgram m_program;
+    public Generator(NodeProgram program){
+        this.m_program = program;
     }
 
-    public String generate(){
+    public String generateStatement(NodeStatement stmt){
+        switch (stmt) {
+            case NodeExit nodeExit -> {
+                // Handle NodeExit type
+            }
+            case NodeLet nodeLet -> {
+                // Handle NodeLet type
+            }
+            case null, default -> {
+                // Handle other types
+            }
+        }
+        return "";
+    }
+
+    public String generateExpression(NodeExpression expr){
+        switch (expr) {
+            case NodeIntLit nodeIntLit -> {
+                // Handle NodeIdent type
+            }
+            case NodeIdent nodeIdent -> {
+                // Handle NodeIdent type
+            }
+            case null, default -> {
+                // Handle other types
+            }
+        }
+        return "";
+    }
+    public String generateProgram(){
         StringBuilder sb = new StringBuilder();
         sb.append("global _start\n_start:\n");
+        for(NodeStatement statement : m_program.getStmts()){
+            sb.append(generateStatement(statement));
+        }
+        //Exits 0 by default
         sb.append("     mov rax, 60\n");
-        sb.append("     mov rdi, ").append(m_root.expr.int_literal().getValue()).append("\n");
+        sb.append("     mov rdi, 0");
         sb.append("     syscall");
         return sb.toString();
     }

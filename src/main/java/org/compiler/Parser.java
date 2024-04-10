@@ -2,11 +2,15 @@ package org.compiler;
 
 
 import org.compiler.nodes.*;
+import org.compiler.nodes.expressions.NodeIdent;
+import org.compiler.nodes.expressions.NodeIntLit;
+import org.compiler.nodes.statements.NodeExit;
 import org.compiler.peekers.PeekIteratorToken;
 import org.compiler.token.Token;
 import org.compiler.token.TokenType;
-import org.compiler.token.tokens.IntLit;
-
+import org.compiler.token.tokens.TokenIdent;
+import org.compiler.token.tokens.TokenIntLit;
+import org.compiler.nodes.statements.NodeLet;
 import java.util.ArrayList;
 
 /**
@@ -19,33 +23,69 @@ public class Parser {
     public Parser(ArrayList<Token> tokens) {
         this.it = new PeekIteratorToken(tokens);
     }
-    public Exit parse(){
-        Exit exit = null;
+
+    public NodeProgram parseProgram(){
+        ArrayList<NodeStatement> stmts = new ArrayList<>();
         while(it.hasNext()){
-            if(it.next().getType() == TokenType._exit){
-                Expression expr = parseExpression();
-                if(expr != null){
-                    exit = new Exit(expr);
-                }
-                else{
-                    throw new IllegalArgumentException("Invalid expression");
-                }
-                if( ! it.hasNext() || it.next().getType() != TokenType.semi){
-                    throw new IllegalArgumentException("Invalid token after expression");
-                }
-            }
+            stmts.add(parseStmt());
+        }
+        return new NodeProgram(stmts);
+    }
+
+    private NodeStatement parseStmt(){
+        if(it.hasNext() && it.next().getType() == TokenType._exit){
+            return parseExit();
+        }
+        else if(it.hasNext() && it.next().getType() == TokenType.let){
+            return parseLet();
+        }
+        else{
+            throw new IllegalArgumentException("Invalid token in statement");
+        }
+    }
+    private NodeExpression parseExpr(){
+        if(it.hasNext() && it.peek().getType() == TokenType.int_lit){
+            return new NodeIntLit((TokenIntLit) it.next());
+        }
+        else if(it.hasNext() && it.peek().getType() == TokenType.ident){
+            return new NodeIdent((TokenIdent) it.next());
+        }
+        else{
+            throw new IllegalArgumentException("Invalid token in expression");
+        }
+    }
+    private NodeExit parseExit(){
+        NodeExpression expr;
+        if( ! it.hasNext() || it.next().getType() != TokenType.open_paren){
+            throw new IllegalArgumentException("Invalid token after exit, expected open parenthesis");
+        }
+        expr = parseExpr();
+        NodeExit exit = new NodeExit(expr);
+        if( ! it.hasNext() || it.next().getType() != TokenType.close_paren){
+            throw new IllegalArgumentException("Parenthesis not closed");
+        }
+        if( ! it.hasNext() || it.next().getType() != TokenType.semi){
+            throw new IllegalArgumentException("Semicolon not present");
         }
         return exit;
     }
-    private Expression parseExpression(){
-        if(it.hasNext() && it.peek().getType() == TokenType.int_lit){
-            return new Expression((IntLit) it.next());
-        }
-        else{
-            return null;
-        }
-    }
 
+    private NodeLet parseLet(){
+        NodeIdent ident;
+        NodeExpression expr;
+        if( ! it.hasNext() || it.peek().getType() != TokenType.ident){
+            throw new IllegalArgumentException("Invalid token after let, expected identifier");
+        }
+        ident = new NodeIdent((TokenIdent)it.next());
+        if( ! it.hasNext() || it.next().getType() != TokenType.eq){
+            throw new IllegalArgumentException("Invalid token after ident, expected equal sign");
+        }
+        expr = parseExpr();
+        if( ! it.hasNext() || it.next().getType() != TokenType.semi){
+            throw new IllegalArgumentException("Semicolon not present");
+        }
+        return new NodeLet(expr, ident);
+    }
     @Override
     public String toString() {
         return "Parser{" +

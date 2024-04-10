@@ -7,6 +7,6 @@ multi
 linea
 @@
 
-exit 132;
+exit(132);
 
 

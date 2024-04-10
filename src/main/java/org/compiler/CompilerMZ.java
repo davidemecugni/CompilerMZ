@@ -37,13 +37,13 @@ public class CompilerMZ {
         System.out.println("1) Tokenizzato!");
         Parser parser = new Parser(tokenizer.getTokens());
 
-        Exit tree = parser.parse();
+        NodeProgram tree = parser.parseProgram();
         if (tree == null) {
             throw new RuntimeException("No exit statement found");
         }
         System.out.println("2) Parserizzato!");
         Generator generator = new Generator(tree);
-        String res = generator.generate();
+        String res = generator.generateProgram();
         System.out.println("3) Generato ASM!");
         String fileOut = "Risorse/output.asm";
         // Se un file di output è stato specificato

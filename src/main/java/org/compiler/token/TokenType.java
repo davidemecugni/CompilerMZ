@@ -8,5 +8,8 @@ public enum TokenType {
     int_lit,
     semi,
     open_paren,
-    close_paren
+    close_paren,
+    ident,
+    let,
+    eq
 }
