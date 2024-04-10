@@ -4,9 +4,10 @@ import org.compiler.token.Token;
 
 import java.util.List;
 
-public class PeekIteratorToken implements PeekIterator<Token>{
+public class PeekIteratorToken implements PeekIterator<Token> {
     private final List<Token> list;
     private int cursor;
+
     public PeekIteratorToken(List<Token> list) {
         this.list = list;
         this.cursor = 0;
@@ -16,9 +17,10 @@ public class PeekIteratorToken implements PeekIterator<Token>{
     public boolean hasNext() {
         return cursor < list.size();
     }
+
     @Override
-    public Token next(){
-        if(!hasNext()){
+    public Token next() {
+        if (!hasNext()) {
             return null;
         }
         return list.get(cursor++);
@@ -26,15 +28,15 @@ public class PeekIteratorToken implements PeekIterator<Token>{
 
     @Override
     public Token peek() {
-        if(!hasNext()){
+        if (!hasNext()) {
             return null;
         }
         return list.get(cursor);
     }
 
     @Override
-    public Token peek(int offset){
-        if(cursor + offset >= list.size()){
+    public Token peek(int offset) {
+        if (cursor + offset >= list.size()) {
             return null;
         }
         return list.get(cursor + offset);

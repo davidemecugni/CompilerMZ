@@ -13,7 +13,7 @@ public class TokenIntLit extends Token {
         this.value = value;
     }
 
-    public TokenIntLit(String value){
+    public TokenIntLit(String value) {
         super(TokenType.int_lit);
         this.value = Integer.parseInt(value);
     }
@@ -24,16 +24,17 @@ public class TokenIntLit extends Token {
 
     @Override
     public String toString() {
-        return "TokenIntLit{" +
-                "value=" + value +
-                '}';
+        return "TokenIntLit{" + "value=" + value + '}';
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
         TokenIntLit intLit = (TokenIntLit) o;
         return value == intLit.value;
     }

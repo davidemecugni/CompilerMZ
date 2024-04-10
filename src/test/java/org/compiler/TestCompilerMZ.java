@@ -19,6 +19,6 @@ public class TestCompilerMZ {
         }
 
         // It this gives error, code in fausto.mz is wrong
-        assertEquals(0,exitCode);
+        assertEquals(0, exitCode);
     }
 }
