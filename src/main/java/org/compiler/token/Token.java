@@ -6,10 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents a token in the source code
- * A token is a pair consisting of a token name and an optional token value
- * The token name is an enumeration of the possible types of tokens
- * The token value is the actual value of the token in the source code(ex. int_lit -> 42)
+ * Represents a token in the source code A token is a pair consisting of a token name and an optional token value The
+ * token name is an enumeration of the possible types of tokens The token value is the actual value of the token in the
+ * source code(ex. int_lit -> 42)
  */
 public class Token {
     private final TokenType type;
@@ -17,7 +16,7 @@ public class Token {
     // Map to convert alphabetic tokens to their corresponding TokenType
     private static final Map<Object, TokenType> wordToTokenMap;
     static {
-        //Char only one quote, String double quotes
+        // Char only one quote, String double quotes
         wordToTokenMap = new HashMap<>();
         wordToTokenMap.put("exit", TokenType._exit);
         wordToTokenMap.put(';', TokenType.semi);
@@ -27,6 +26,7 @@ public class Token {
         wordToTokenMap.put("let", TokenType.let);
         // Add more entries as needed
     }
+
     public Token(TokenType type) {
         this.type = type;
     }
@@ -34,24 +34,26 @@ public class Token {
     public TokenType getType() {
         return type;
     }
+
     /**
      * Converts an alphabetic token to a TokenType
-     * @param word used to identify the TokenType
+     *
+     * @param word
+     *            used to identify the TokenType
+     *
      * @return the corresponding TokenType
      */
-    public static Token of(Object word){
-        if(wordToTokenMap.containsKey(word)){
+    public static Token of(Object word) {
+        if (wordToTokenMap.containsKey(word)) {
             return new Token(wordToTokenMap.get(word));
-        }
-        else{
+        } else {
             return new TokenIdent(word.toString());
         }
     }
+
     @Override
     public String toString() {
-        return "Token{" +
-                "type=" + type +
-                '}';
+        return "Token{" + "type=" + type + '}';
     }
 
     @Override

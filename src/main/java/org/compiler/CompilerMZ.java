@@ -1,12 +1,11 @@
 package org.compiler;
 
+import org.compiler.nodes.NodeProgram;
+import org.compiler.token.Tokenizer;
+
 import java.io.*;
-import java.nio.Buffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
-import org.compiler.nodes.*;
-import org.compiler.token.Tokenizer;
 
 /**
  * The main class of the compiler
@@ -14,7 +13,9 @@ import org.compiler.token.Tokenizer;
 public class CompilerMZ {
     /**
      * The main method of the compiler
-     * @param args eventual input and output files, default fausto.mz and output.asm
+     *
+     * @param args
+     *            eventual input and output files, default fausto.mz and output.asm
      */
     public static void main(String[] args) {
         System.out.println("MZ Compiler by Davide Mecugni, Andrea Zanasi\n");
@@ -22,8 +23,7 @@ public class CompilerMZ {
         String fileIn;
         if (args.length < 1) {
             fileIn = "Risorse/fausto.mz";
-        }
-        else{
+        } else {
             fileIn = args[0];
         }
         String content;
@@ -47,7 +47,7 @@ public class CompilerMZ {
         System.out.println("3) Generato ASM!");
         String fileOut = "Risorse/output.asm";
         // Se un file di output è stato specificato
-        if(args.length == 2){
+        if (args.length == 2) {
             fileOut = args[1];
         }
         try {
@@ -63,13 +63,16 @@ public class CompilerMZ {
         }
     }
 
-
-
     /**
      * Read a file and return its content as a string
-     * @param filePath the path of the file to read
+     *
+     * @param filePath
+     *            the path of the file to read
+     *
      * @return String
-     * @throws IOException if an I/O error occurs reading from the file or a malformed or unmappable byte sequence is read
+     *
+     * @throws IOException
+     *             if an I/O error occurs reading from the file or a malformed or unmappable byte sequence is read
      */
     public static String readFile(String filePath) throws IOException {
         return new String(Files.readAllBytes(Paths.get(filePath)));
@@ -77,9 +80,15 @@ public class CompilerMZ {
 
     /**
      * Write content to a file
-     * @param filePath the path of the file to write to
-     * @param content the content to write to the file
-     * @throws IOException if an I/O error occurs writing to the file or the file exists but is a directory rather than a regular file, does not exist but cannot be created, or cannot be opened for any other reason
+     *
+     * @param filePath
+     *            the path of the file to write to
+     * @param content
+     *            the content to write to the file
+     *
+     * @throws IOException
+     *             if an I/O error occurs writing to the file or the file exists but is a directory rather than a
+     *             regular file, does not exist but cannot be created, or cannot be opened for any other reason
      */
     public static void writeFile(String filePath, String content) throws IOException {
         FileWriter writer = new FileWriter(filePath);
@@ -89,8 +98,12 @@ public class CompilerMZ {
 
     /**
      * Processes the .asm file generated to and object file and an executable file
-     * @param filePath File .asm used as input
-     * @throws FileNotFoundException If input file doesn't exist or is not readable
+     *
+     * @param filePath
+     *            File .asm used as input
+     *
+     * @throws FileNotFoundException
+     *             If input file doesn't exist or is not readable
      */
     public static void makeExecutable(String filePath) throws FileNotFoundException {
         File asmFile = new File(filePath);
@@ -113,10 +126,13 @@ public class CompilerMZ {
 
     /**
      * Used to run external processes with meaningful error management
-     * @param process Process given to be run
-     * @param description String to describe program to be run
+     *
+     * @param process
+     *            Process given to be run
+     * @param description
+     *            String to describe program to be run
      */
-    private static void runProcess(ProcessBuilder process, String description){
+    private static void runProcess(ProcessBuilder process, String description) {
         try {
             process.redirectErrorStream(true);
             Process nasmProcess = process.start();
@@ -127,11 +143,12 @@ public class CompilerMZ {
                 System.out.println(line);
             }
             if (exitCode != 0) {
-                throw new RuntimeException("Error: "+ description +" failed.");
+                throw new RuntimeException("Error: " + description + " failed.");
             }
         } catch (IOException | InterruptedException e) {
             System.out.println("Error running process" + description + ": " + e.getMessage());
             throw new RuntimeException("Process error");
         }
+        System.out.println("brutto");
     }
 }
