@@ -7,6 +7,7 @@ import org.compiler.nodes.expressions.NodeIdent;
 import org.compiler.nodes.expressions.NodeIntLit;
 import org.compiler.nodes.statements.NodeExit;
 import org.compiler.nodes.statements.NodeLet;
+import org.compiler.token.tokens.TokenIdent;
 
 /**
  * Generates a string representation of the assembly code
@@ -19,9 +20,12 @@ public class Generator {
     }
 
     public String generateStatement(NodeStatement stmt) {
+        StringBuilder stmtSB = new StringBuilder();
         switch (stmt) {
         case NodeExit nodeExit -> {
-            // Handle NodeExit type
+            stmtSB.append("     mov rax, 60\n");
+            stmtSB.append("     mov rdi, ").append("0").append("\n");
+            stmtSB.append("     syscall");
         }
         case NodeLet nodeLet -> {
             // Handle NodeLet type
@@ -30,13 +34,15 @@ public class Generator {
             throw new IllegalArgumentException("Unknown statement type in generator");
         }
         }
-        return "";
+        return stmtSB.toString();
     }
 
     public String generateExpression(NodeExpression expr) {
+        StringBuilder exprSB = new StringBuilder();
         switch (expr) {
         case NodeIntLit nodeIntLit -> {
-            // Handle NodeIdent type
+            exprSB.append("     mov rax, ").append(nodeIntLit.getIntLit().getValue()).append("\n");
+            exprSB.append("     push rax\n");
         }
         case NodeIdent nodeIdent -> {
             // Handle NodeIdent type
@@ -45,7 +51,7 @@ public class Generator {
             throw new IllegalArgumentException("Unknown expression type in generator");
         }
         }
-        return "";
+        return exprSB.toString();
     }
 
     public String generateProgram() {
