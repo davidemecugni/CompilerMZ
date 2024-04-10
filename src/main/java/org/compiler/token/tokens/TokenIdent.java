@@ -17,7 +17,7 @@ public class TokenIdent extends Token {
 
     @Override
     public String toString() {
-        return "NodeIdent{" +
+        return "TokenIdent{" +
                 "name='" + name + '\'' +
                 '}';
     }

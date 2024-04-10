@@ -24,7 +24,7 @@ public class TokenIntLit extends Token {
 
     @Override
     public String toString() {
-        return "NodeIntLit{" +
+        return "TokenIntLit{" +
                 "value=" + value +
                 '}';
     }

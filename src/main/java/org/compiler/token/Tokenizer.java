@@ -45,7 +45,8 @@ public class Tokenizer {
                  it.IgnoreComment();
              }
              else{
-                 AddToken(Token.of(c));
+                 Token token = Token.of(c);
+                 AddToken(token);
             }
 
         }

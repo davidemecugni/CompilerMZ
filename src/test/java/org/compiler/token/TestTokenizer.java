@@ -1,5 +1,6 @@
 package org.compiler.token;
 
+import org.compiler.token.tokens.TokenIdent;
 import org.compiler.token.tokens.TokenIntLit;
 import org.junit.jupiter.api.Test;
 
@@ -41,13 +42,13 @@ public class TestTokenizer {
 
     @Test
     public void testTokenizerLet() {
-        // Non va dovrebbe restituire solo token
-        final Tokenizer validLet = new Tokenizer("let x = 10;");
-        // validLet = new Tokenizer("let x = 10; let y = 20;");
-        // assertEquals(validLet.getTokens(), List.of(new Token(TokenType.let), new Token(TokenType.ident), new Token(TokenType.eq), new TokenIntLit( "10"), new Token(TokenType.semi), new Token(TokenType.let), new Token(TokenType.ident), new Token(TokenType.eq), new TokenIntLit( "20"), new Token(TokenType.semi)));
-        //validLet = new Tokenizer("let x = 10; let y = 20; let z = 30;");
-        // assertEquals(validLet.getTokens(), List.of(new Token(TokenType.let), new Token(TokenType.ident), new Token(TokenType.eq), new TokenIntLit( "10"), new Token(TokenType.semi), new Token(TokenType.let), new Token(TokenType.ident), new Token(TokenType.eq), new TokenIntLit( "20"), new Token(TokenType.semi), new Token(TokenType.let), new Token(TokenType.ident), new Token(TokenType.eq), new TokenIntLit( "30"), new Token(TokenType.semi)));
-        // validLet = new Tokenizer("let x = 10; let y = 20; let z = 30; let w = 40;");
-        // assertEquals(validLet.getTokens(), List.of(new Token(TokenType.let), new Token(TokenType.ident), new Token(TokenType.eq), new TokenIntLit( "10"), new Token(TokenType.semi), new Token(TokenType.let), new Token(TokenType.ident), new Token(TokenType.eq), new TokenIntLit( "20"), new Token(TokenType.semi), new Token(TokenType.let), new Token(TokenType.ident), new Token(TokenType.eq), new TokenIntLit( "30"), new Token(TokenType.semi), new Token(TokenType.let), new Token(TokenType.ident), new Token(TokenType.eq), new TokenIntLit( "40"), new Token(TokenType.semi)));
+        Tokenizer validLet = new Tokenizer("let x = 10;");
+        assertEquals(validLet.getTokens(), List.of(new Token(TokenType.let), new TokenIdent("x"), new Token(TokenType.eq), new TokenIntLit( "10"), new Token(TokenType.semi)));
+        validLet = new Tokenizer("let x = 10; let y = 20;");
+        assertEquals(validLet.getTokens(), List.of(new Token(TokenType.let), new TokenIdent("x"), new Token(TokenType.eq), new TokenIntLit( "10"), new Token(TokenType.semi), new Token(TokenType.let), new TokenIdent("y"), new Token(TokenType.eq), new TokenIntLit( "20"), new Token(TokenType.semi)));
+        validLet = new Tokenizer("let x = 10; let y = 20; let z = 30;");
+        assertEquals(validLet.getTokens(), List.of(new Token(TokenType.let), new TokenIdent("x"), new Token(TokenType.eq), new TokenIntLit( "10"), new Token(TokenType.semi), new Token(TokenType.let), new TokenIdent("y"), new Token(TokenType.eq), new TokenIntLit( "20"), new Token(TokenType.semi), new Token(TokenType.let), new TokenIdent("z"), new Token(TokenType.eq), new TokenIntLit( "30"), new Token(TokenType.semi)));
+        validLet = new Tokenizer("let x = 10; let y = 20; let z = 30; let w = 40;");
+        assertEquals(validLet.getTokens(), List.of(new Token(TokenType.let), new TokenIdent("x"), new Token(TokenType.eq), new TokenIntLit( "10"), new Token(TokenType.semi), new Token(TokenType.let), new TokenIdent("y"), new Token(TokenType.eq), new TokenIntLit( "20"), new Token(TokenType.semi), new Token(TokenType.let), new TokenIdent("z"), new Token(TokenType.eq), new TokenIntLit( "30"), new Token(TokenType.semi), new Token(TokenType.let), new TokenIdent("w"), new Token(TokenType.eq), new TokenIntLit( "40"), new Token(TokenType.semi)));
     }
 }

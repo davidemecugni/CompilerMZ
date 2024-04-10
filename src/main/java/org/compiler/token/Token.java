@@ -17,13 +17,14 @@ public class Token {
     // Map to convert alphabetic tokens to their corresponding TokenType
     private static final Map<Object, TokenType> wordToTokenMap;
     static {
+        //Char only one quote, String double quotes
         wordToTokenMap = new HashMap<>();
         wordToTokenMap.put("exit", TokenType._exit);
         wordToTokenMap.put(';', TokenType.semi);
         wordToTokenMap.put('(', TokenType.open_paren);
         wordToTokenMap.put(')', TokenType.close_paren);
+        wordToTokenMap.put('=', TokenType.eq);
         wordToTokenMap.put("let", TokenType.let);
-        wordToTokenMap.put("=", TokenType.eq);
         // Add more entries as needed
     }
     public Token(TokenType type) {
