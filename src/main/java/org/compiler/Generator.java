@@ -23,7 +23,7 @@ public class Generator {
                 // Handle NodeLet type
             }
             case null, default -> {
-                // Handle other types
+                throw new IllegalArgumentException("Unknown statement type in generator");
             }
         }
         return "";
@@ -38,7 +38,7 @@ public class Generator {
                 // Handle NodeIdent type
             }
             case null, default -> {
-                // Handle other types
+                throw new IllegalArgumentException("Unknown expression type in generator");
             }
         }
         return "";
@@ -51,7 +51,7 @@ public class Generator {
         }
         //Exits 0 by default
         sb.append("     mov rax, 60\n");
-        sb.append("     mov rdi, 0");
+        sb.append("     mov rdi, 100\n");
         sb.append("     syscall");
         return sb.toString();
     }

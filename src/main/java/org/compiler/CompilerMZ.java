@@ -1,7 +1,7 @@
 package org.compiler;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.Buffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -56,6 +56,11 @@ public class CompilerMZ {
             throw new RuntimeException(e);
         }
         System.out.println("4) File generato!");
+        try {
+            makeExecutable(fileOut);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -80,5 +85,53 @@ public class CompilerMZ {
         FileWriter writer = new FileWriter(filePath);
         writer.write(content);
         writer.close();
+    }
+
+    /**
+     * Processes the .asm file generated to and object file and an executable file
+     * @param filePath File .asm used as input
+     * @throws FileNotFoundException If input file doesn't exist or is not readable
+     */
+    public static void makeExecutable(String filePath) throws FileNotFoundException {
+        File asmFile = new File(filePath);
+
+        if (!asmFile.exists() || !asmFile.isFile()) {
+            throw new FileNotFoundException("Invalid file path: " + filePath);
+        }
+
+        // Compile assembly file using nasm
+        String objFilePath = filePath.replace(".asm", ".o");
+        ProcessBuilder nasmProcessBuilder = new ProcessBuilder("nasm", "-f", "elf64", "-o", objFilePath, filePath);
+        runProcess(nasmProcessBuilder, "NASM assembler for elf x86_64 architecture");
+
+        // Link object file using ld
+        String execFilePath = filePath.replace(".asm", "");
+        ProcessBuilder ldProcessBuilder = new ProcessBuilder("ld", "-o", execFilePath, objFilePath);
+        runProcess(ldProcessBuilder, "ld linker");
+
+    }
+
+    /**
+     * Used to run external processes with meaningful error management
+     * @param process Process given to be run
+     * @param description String to describe program to be run
+     */
+    private static void runProcess(ProcessBuilder process, String description){
+        try {
+            process.redirectErrorStream(true);
+            Process nasmProcess = process.start();
+            BufferedReader nasmErrorReader = new BufferedReader(new InputStreamReader(nasmProcess.getInputStream()));
+            String line;
+            int exitCode = nasmProcess.waitFor();
+            while ((line = nasmErrorReader.readLine()) != null) {
+                System.out.println(line);
+            }
+            if (exitCode != 0) {
+                throw new RuntimeException("Error: "+ description +" failed.");
+            }
+        } catch (IOException | InterruptedException e) {
+            System.out.println("Error running process" + description + ": " + e.getMessage());
+            throw new RuntimeException("Process error");
+        }
     }
 }

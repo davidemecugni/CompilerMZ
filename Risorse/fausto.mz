@@ -1,12 +1,1 @@
-@ commento in linea
-
-
-@@
-commento
-multi
-linea
-@@
-
-exit(132);
-
-
+exit(30);
