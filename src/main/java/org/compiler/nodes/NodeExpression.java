@@ -1,6 +1,6 @@
 package org.compiler.nodes;
 
-import org.compiler.token.Token;
+import org.compiler.token.tokens.Token;
 
 public class NodeExpression {
     private final Token expr;

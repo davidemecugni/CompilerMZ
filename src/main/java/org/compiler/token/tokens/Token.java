@@ -1,6 +1,6 @@
-package org.compiler.token;
+package org.compiler.token.tokens;
 
-import org.compiler.token.tokens.TokenIdent;
+import org.compiler.token.TokenType;
 
 import java.util.HashMap;
 import java.util.Map;

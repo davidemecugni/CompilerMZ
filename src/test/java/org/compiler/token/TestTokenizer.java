@@ -1,5 +1,6 @@
 package org.compiler.token;
 
+import org.compiler.token.tokens.Token;
 import org.compiler.token.tokens.TokenIdent;
 import org.compiler.token.tokens.TokenIntLit;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,6 @@ public class TestTokenizer {
                 List.of(new Token(TokenType.semi), new Token(TokenType.semi), new Token(TokenType.semi)));
         validExit = new Tokenizer("()");
         assertEquals(validExit.getTokens(), List.of(new Token(TokenType.open_paren), new Token(TokenType.close_paren)));
-        // NON WORKA assertThrows(IllegalArgumentException.class, () -> new Tokenizer("exit 10.0;"));
     }
 
     @Test
@@ -40,6 +40,7 @@ public class TestTokenizer {
         validComment = new Tokenizer("@@ -0,0 +1,32 @@\n\n@@\nciao\n@@exit 100;");
         assertEquals(List.of(new Token(TokenType._exit), new TokenIntLit("100"), new Token(TokenType.semi)),
                 validComment.getTokens());
+
         assertThrows(NoSuchElementException.class, () -> new Tokenizer("@@"));
         assertThrows(NoSuchElementException.class, () -> new Tokenizer("@@ 10;"));
         assertThrows(NoSuchElementException.class, () -> new Tokenizer("@@ 10;\n\n@"));

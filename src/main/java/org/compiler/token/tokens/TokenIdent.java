@@ -1,6 +1,5 @@
 package org.compiler.token.tokens;
 
-import org.compiler.token.Token;
 import org.compiler.token.TokenType;
 
 public class TokenIdent extends Token {
