@@ -60,12 +60,11 @@ public class Generator {
                 exprSB.append(push("rax")).append("\n");
             }
             case NodeIdent nodeIdent -> {
-                /*
-                //per controllare se la variabile è presente nella mappa
-                if (!variables.containsValue(nodeIdent.getIdent().getName())) {
-                    throw new IllegalArgumentException("Undeclared Identifier");
+
+                //per controllare se una variabile è presente nella mappa
+                if (!variables.containsKey(nodeIdent.getIdent().getName())) {
+                    throw new IllegalArgumentException("Identifier not found");
                 }
-                */
 
                 exprSB.append("     ;;identifier\n");
                 long offset = (stack_size - variables.get(nodeIdent.getIdent().getName()) - 1) * 8;
