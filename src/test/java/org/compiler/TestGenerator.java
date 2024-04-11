@@ -49,4 +49,18 @@ public class TestGenerator {
         Parser finalParser = parser;
         assertThrows(IllegalArgumentException.class, () -> new Generator(finalParser.getTree()));
     }
+
+    @Test
+    public void testGeneratorIdentity(){
+        Tokenizer tokenizer = new Tokenizer("exit(x);");
+        Parser parser = new Parser(tokenizer.getTokens());
+        Parser finalParser = parser;
+        assertThrows(IllegalArgumentException.class, () -> new Generator(finalParser.getTree()));
+
+        tokenizer = new Tokenizer("let x = x;");
+        parser = new Parser(tokenizer.getTokens());
+        Parser finalParser1 = parser;
+        // assertThrows(IllegalArgumentException.class, () -> new Generator(finalParser1.getTree()));
+
+    }
 }
