@@ -12,4 +12,11 @@ public class NodeProgram {
     public List<NodeStatement> getStmts() {
         return stmts;
     }
+
+    @Override
+    public String toString() {
+        return "NodeProgram{" +
+                "stmts=" + stmts +
+                '}';
+    }
 }

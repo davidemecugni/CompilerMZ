@@ -69,7 +69,12 @@ public class Generator {
                 }
 
                 exprSB.append("     ;;identifier\n");
+
                 long offset = (stack_size - variables.get(nodeIdent.getIdent().getName()) - 1) * 8;
+                if (offset < 0) {
+                    throw new IllegalArgumentException("Variable might not have been initialized");
+                }
+
                 exprSB.append(push("QWORD [rsp + " + offset + "]")).append("\n");
             }
             case null, default -> {

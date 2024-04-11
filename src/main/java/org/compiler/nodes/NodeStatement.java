@@ -10,4 +10,11 @@ public class NodeStatement {
     public NodeExpression getStmt() {
         return stmt;
     }
+
+    @Override
+    public String toString() {
+        return "NodeStatement{" +
+                "stmt=" + stmt +
+                '}';
+    }
 }
