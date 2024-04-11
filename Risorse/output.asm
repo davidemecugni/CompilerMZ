@@ -17,6 +17,9 @@ _start:
      push QWORD [rsp + 16]
 
      ;;identifier
+     push QWORD [rsp + 24]
+
+     ;;identifier
      push QWORD [rsp + 0]
 
      ;;exit

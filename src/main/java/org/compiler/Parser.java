@@ -28,7 +28,7 @@ public class Parser {
         parseProgram();
     }
 
-    public void parseProgram() {
+    private void parseProgram() {
         ArrayList<NodeStatement> stmts = new ArrayList<>();
         while (it.hasNext()) {
             stmts.add(parseStmt());

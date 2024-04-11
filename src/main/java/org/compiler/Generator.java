@@ -37,7 +37,7 @@ public class Generator {
                 stmtSB.append("     ;;/exit\n\n");
             }
             case NodeLet nodeLet -> {
-                if (variables != null && variables.containsValue(nodeLet.getIdentifier().getIdent().getName())) {
+                if (variables != null && variables.containsKey(nodeLet.getIdentifier().getIdent().getName())) {
                     throw new IllegalArgumentException("Identifier already used");
                 }
                 variables.put(nodeLet.getIdentifier().getIdent().getName(), stack_size);

@@ -35,7 +35,6 @@ public class CompilerMZ {
 
         //Tokenizing
         Tokenizer tokenizer = new Tokenizer(content);
-        tokenizer.tokenize();
         System.out.println("1) Tokenizzato!");
 
         //for debugging
