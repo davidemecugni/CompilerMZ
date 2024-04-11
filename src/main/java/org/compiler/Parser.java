@@ -97,6 +97,9 @@ public class Parser {
 
     @Override
     public String toString() {
-        return "Parser{" + "it=" + it + '}';
+        return "Parser{" +
+                "it=" + it +
+                ", tree=" + tree +
+                '}';
     }
 }

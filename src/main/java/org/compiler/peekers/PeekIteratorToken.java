@@ -42,4 +42,11 @@ public class PeekIteratorToken implements PeekIterator<Token> {
         return list.get(cursor + offset);
     }
 
+    @Override
+    public String toString() {
+        return "PeekIteratorToken{" +
+                "list=" + list +
+                ", cursor=" + cursor +
+                '}';
+    }
 }

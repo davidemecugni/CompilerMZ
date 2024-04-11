@@ -12,4 +12,11 @@ public class NodeExpression {
     public Token getExpr() {
         return expr;
     }
+
+    @Override
+    public String toString() {
+        return "NodeExpression{" +
+                "expr=" + expr +
+                '}';
+    }
 }
