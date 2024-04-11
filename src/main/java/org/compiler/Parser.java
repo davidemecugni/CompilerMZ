@@ -23,6 +23,7 @@ import java.util.ArrayList;
 public class Parser {
     private final PeekIteratorToken it;
     NodeProgram tree;
+
     public Parser(ArrayList<Token> tokens) {
         this.it = new PeekIteratorToken(tokens);
         parseProgram();

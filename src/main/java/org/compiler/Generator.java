@@ -16,12 +16,14 @@ import java.util.Map;
  * Generates a string representation of the assembly code
  */
 public class Generator {
+    private String generated = "";
     private final NodeProgram m_program;
     private long stack_size = 0;
     private Map<String, Long> variables = new HashMap<>();
 
     public Generator(NodeProgram program) {
         this.m_program = program;
+        generateProgram();
     }
 
     public String generateStatement(NodeStatement stmt) {
@@ -82,7 +84,7 @@ public class Generator {
         return exprSB.toString();
     }
 
-    public String generateProgram() {
+    public void generateProgram() {
         StringBuilder sb = new StringBuilder();
         sb.append("global _start\n_start:\n\n");
         for (NodeStatement statement : m_program.getStmts()) {
@@ -93,7 +95,7 @@ public class Generator {
         sb.append("     mov rax, 60\n");
         sb.append("     mov rdi, 0\n");
         sb.append("     syscall\n");
-        return sb.toString();
+        generated = sb.toString();
     }
 
     public void printStmt() {
@@ -120,5 +122,9 @@ public class Generator {
     public String pop(String reg) {
         stack_size--;
         return "     pop " + reg + "\n";
+    }
+
+    public String getGenerated() {
+        return generated;
     }
 }
