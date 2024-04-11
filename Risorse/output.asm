@@ -2,19 +2,24 @@ global _start
 _start:
 
      ;;value
-     mov rax, 7
+     mov rax, 1
      push rax
 
      ;;value
-     mov rax, 16
+     mov rax, 2
      push rax
 
      ;;value
-     mov rax, 8
+     mov rax, 3
      push rax
 
-     ;;identifier
-     push QWORD [rsp + 16]
+     ;;value
+     mov rax, 4
+     push rax
+
+     ;;value
+     mov rax, 100
+     push rax
 
      ;;identifier
      push QWORD [rsp + 0]

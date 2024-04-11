@@ -23,8 +23,23 @@ Added tester.sh utility to go from a .mz file to an executable file through:
 Example:
 ```manz
 @commento
-exit 42;
+let x = 1;
+let y = 2;
+let z = 3;
+
+exit(x);
 ```
+# Features
+- [x] Comments
+  - [x] Single line comments
+  - [x] Multi line comments
+- [x] Variables
+  - [x] Initialization
+  - [x] Declaration
+  - [x] Automatic check for already declared variables
+- [x] Exit
+  - [x] Exit with variable
+  - [x] Exit by default(0)
 # The idea
 ![CompilerMZ](READMESOURCES/warning.png) \
 The project was born during a OOP course at the University of Modena and Reggio Emilia. \
