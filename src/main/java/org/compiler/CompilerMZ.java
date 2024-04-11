@@ -50,7 +50,7 @@ public class CompilerMZ {
 
         //Generating
         Generator generator = new Generator(tree);
-        String res = generator.generateProgram();
+        String res = generator.getGenerated();
         System.out.println("3) Generato ASM!");
 
         //for debugging
