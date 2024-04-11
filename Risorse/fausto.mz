@@ -1,1 +1,6 @@
-exit(30);
+let x = 7;
+let t = 16;
+let y = 8;
+let z = x;
+let z = x;
+exit(z);

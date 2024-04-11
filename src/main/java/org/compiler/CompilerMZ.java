@@ -33,20 +33,32 @@ public class CompilerMZ {
             throw new RuntimeException(e);
         }
 
+        //Tokenizing
         Tokenizer tokenizer = new Tokenizer(content);
-        tokenizer.tokenize();
         System.out.println("1) Tokenizzato!");
+
+        //for debugging
+        //System.out.println(tokenizer.getTokens());
+
+        //Parsing
         Parser parser = new Parser(tokenizer.getTokens());
-        parser.parseProgram();
         NodeProgram tree = parser.getTree();
         if (tree == null) {
             throw new RuntimeException("No exit statement found");
         }
         System.out.println("2) Parserizzato!");
+
+        //Generating
         Generator generator = new Generator(tree);
         String res = generator.generateProgram();
         System.out.println("3) Generato ASM!");
+
+        //for debugging
+        //generator.printStmt();
+
+        //generating file
         String fileOut = "Risorse/output.asm";
+
         // Se un file di output è stato specificato
         if (args.length == 2) {
             fileOut = args[1];

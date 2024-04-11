@@ -19,7 +19,7 @@ public class Tokenizer {
         tokenize();
     }
 
-    public void tokenize() {
+    private void tokenize() {
         StringBuilder buffer = new StringBuilder();
         while (it.hasNext()) {
             char c = it.next();
