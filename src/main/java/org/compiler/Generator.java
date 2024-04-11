@@ -55,6 +55,7 @@ public class Generator {
 
         switch (expr) {
             case NodeIntLit nodeIntLit -> {
+                exprSB.append("     ;;value\n");
                 exprSB.append("     mov rax, ").append(nodeIntLit.getIntLit().getValue()).append("\n");
                 exprSB.append(push("rax")).append("\n");
             }
@@ -66,6 +67,7 @@ public class Generator {
                 }
                 */
 
+                exprSB.append("     ;;identifier\n");
                 long offset = (stack_size - variables.get(nodeIdent.getIdent().getName()) - 1) * 8;
                 exprSB.append(push("QWORD [rsp + " + offset + "]")).append("\n");
             }
@@ -83,6 +85,7 @@ public class Generator {
             sb.append(generateStatement(statement));
         }
         // Exits 0 by default
+        sb.append("     ;;final exit\n");
         sb.append("     mov rax, 60\n");
         sb.append("     mov rdi, 0\n");
         sb.append("     syscall\n");
