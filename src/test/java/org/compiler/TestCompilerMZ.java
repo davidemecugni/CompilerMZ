@@ -1,24 +1,21 @@
 package org.compiler;
 
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
+
+
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 
 public class TestCompilerMZ {
     @Test
-    public void testCompilerMZ() {
-        ProcessBuilder processBuilder = new ProcessBuilder("./tester.sh");
-        processBuilder.redirectErrorStream(true);
-        int exitCode = -1;
+    public void testCompilerMZ() throws IOException {
+        int exitCode = CompilerMZ.callFullStack("src/test/java/org/compiler/testCompilerMZResources/exits100.mz","src/test/java/org/compiler/testCompilerMZResources/exits100.asm");
+        assertEquals(100, exitCode);
+        exitCode = CompilerMZ.callFullStack("src/test/java/org/compiler/testCompilerMZResources/exits42.mz","src/test/java/org/compiler/testCompilerMZResources/exits42.asm");
+        assertEquals(42,exitCode);
+        assertThrows(NoSuchFileException.class, () -> CompilerMZ.callFullStack("src/test/null.mz","src/test/java/org/compiler/testCompilerMZResources/exits42.asm"));
 
-        try {
-            Process process = processBuilder.start();
-            exitCode = process.waitFor();
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        // It this gives error, code in fausto.mz is wrong
-        assertEquals(0, exitCode);
     }
 }

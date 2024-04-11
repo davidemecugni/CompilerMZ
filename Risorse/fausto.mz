@@ -1,5 +1,12 @@
-let x = 7;
-let t = 16;
-let y = 8;
-let z = x;
-exit(z);
+@ Variabili
+let a = 1;
+let b = 2;
+let c = 3;
+let d = 4;
+
+@@
+Variabile di uscita
+Salva il codice di uscita
+@@
+let exitCode = 100;
+exit(exitCode);
