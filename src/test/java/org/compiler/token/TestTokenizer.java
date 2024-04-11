@@ -71,5 +71,9 @@ public class TestTokenizer {
                         new Token(TokenType.let), new TokenIdent("z"), new Token(TokenType.eq), new TokenIntLit("30"),
                         new Token(TokenType.semi), new Token(TokenType.let), new TokenIdent("w"),
                         new Token(TokenType.eq), new TokenIntLit("40"), new Token(TokenType.semi)));
+
+        validLet = new Tokenizer("let variable = 10;");
+        assertEquals(validLet.getTokens(), List.of(new Token(TokenType.let), new TokenIdent("variable"),
+                new Token(TokenType.eq), new TokenIntLit("10"), new Token(TokenType.semi)));
     }
 }

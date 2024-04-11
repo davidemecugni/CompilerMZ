@@ -60,7 +60,11 @@ public class TestGenerator {
         tokenizer = new Tokenizer("let x = x;");
         parser = new Parser(tokenizer.getTokens());
         Parser finalParser1 = parser;
-        // assertThrows(IllegalArgumentException.class, () -> new Generator(finalParser1.getTree()));
+        assertThrows(IllegalArgumentException.class, () -> new Generator(finalParser1.getTree()));
 
+        tokenizer = new Tokenizer("let x = 42; let variable = variable;");
+        parser = new Parser(tokenizer.getTokens());
+        Parser finalParser2 = parser;
+        assertThrows(IllegalArgumentException.class, () -> new Generator(finalParser2.getTree()));
     }
 }
