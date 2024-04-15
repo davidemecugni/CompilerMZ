@@ -37,6 +37,15 @@ exit(x);
 - [x] Exit
   - [x] Exit with variable
   - [x] Exit by default(0)
+# Get the compiler working
+```shell
+sudo apt-get install nasm
+sudo apt-get install ld
+```
+Then add this line at the end of your `.bashrc` file:
+```shell
+echo "alias compilerMZ='java -classpath ~/IdeaProjects/CompilerMZ/target/classes:~/.m2/repository/commons-cli/commons-cli/1.6.0/commons-cli-1.6.0.jar org.compiler.CompilerMZ'" >> ~/.bashrc
+```
 # The idea
 ![CompilerMZ](READMESOURCES/warning.png) \
 The project was born during a OOP course at the University of Modena and Reggio Emilia. \

@@ -26,13 +26,16 @@ public class CompilerMZ {
             formatter.printHelp("CompilerMZ", getOptions());
             return;
         }
-        String fileIn = getCmdFileOption(cmd, "i", "Risorse/fausto.mz", "mz");
-        String fileOut = getCmdFileOption(cmd, "o", "Risorse/fausto.asm", "asm");
-        String fileObj = getCmdFileOption(cmd, "O", "Risorse/fausto.o", "o");
-        String fileExe = getCmdFileOption(cmd, "e", "Risorse/fausto", "");
-        if (!cmd.hasOption("v")) {
+        String fileIn = getCmdFileOption(cmd, "i", "fausto.mz", ".mz");
+        String fileOut = getCmdFileOption(cmd, "o", removeExtension(fileIn, ".mz"), ".asm");
+        String fileObj = getCmdFileOption(cmd, "O", removeExtension(fileOut, ".asm"), ".o");
+        String fileExe = getCmdFileOption(cmd, "e", removeExtension(fileObj, ".o"), "");
+        if (!cmd.hasOption("v") && !cmd.hasOption("c")) {
             callFullStack(fileIn, fileOut, fileObj, fileExe);
             return;
+        }
+        if (!cmd.hasOption("v") && cmd.hasOption("c")) {
+            callAssembler(fileIn, fileOut);
         }
 
         // Reading file
@@ -61,7 +64,9 @@ public class CompilerMZ {
         // Writing file
         writeFile(fileOut, res);
         System.out.println("4) Generated file!");
-
+        if (cmd.hasOption("c")) {
+            return;
+        }
         // Assembling
         callAssembler(fileOut, fileObj);
         System.out.println("5) NASM: assembled file!");
@@ -301,7 +306,22 @@ public class CompilerMZ {
         if (fileIn.endsWith(ext)) {
             return fileIn;
         }
-        return fileIn + "." + ext;
+        return fileIn + ext;
+    }
+
+    /**
+     * Removes an extension if present
+     *
+     * @param fileIn String path of input file
+     * @param ext   Correct extension
+     *
+     * @return Path without extension
+     */
+    private static String removeExtension(String fileIn, String ext) {
+        if (fileIn.endsWith(ext)) {
+            return fileIn.substring(0, fileIn.length() - ext.length());
+        }
+        return fileIn;
     }
 
     /**
@@ -338,7 +358,9 @@ public class CompilerMZ {
     private static String getCmdFileOption(CommandLine cmd, String option, String def, String ext) {
         String s = cmd.getOptionValue(option, def);
         File f = new File(s);
-        s = f.getAbsolutePath();
+        if (!f.isAbsolute()) {
+            s = f.getAbsolutePath();
+        }
         s = correctExtension(s, ext);
         return s;
     }
