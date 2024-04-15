@@ -7,4 +7,7 @@
 - [expr]
   - int_lit
   - ident
-# Up to 35.56
+  
+### Notes
+*) Zero or more \
++) One or more

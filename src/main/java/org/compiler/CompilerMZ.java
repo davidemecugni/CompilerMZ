@@ -6,7 +6,7 @@ import org.compiler.token.Tokenizer;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
+import org.apache.commons.cli.*;
 
 /**
  * The main class of the compiler
@@ -18,77 +18,63 @@ public class CompilerMZ {
      * @param args
      *            eventual input and output files, default fausto.mz and output.asm
      */
-    public static void main(String[] args) throws IOException {
-        System.out.println("MZ Compiler by Davide Mecugni, Andrea Zanasi\n");
-
-
-        // USE: CommandLine line = parser.parse(options, args);
-        //Setting file in
-        String fileIn;
-        if (args.length < 1) {
-            fileIn = "../../Risorse/fausto.mz";
-        } else {
-            fileIn = args[0];
-        }
-        File in = new File(fileIn);
-        fileIn = in.getAbsolutePath();
-        fileIn = correctExtension(fileIn, "mz");
-
-        //Setting file out
-        String fileOut = "../../Risorse/fausto.asm";
-        if (args.length == 2) {
-            fileOut = args[1];
-        }
-        File out = new File(fileOut);
-        fileOut = out.getAbsolutePath();
-        fileOut = correctExtension(fileOut, "asm");
-
-        if( ! Arrays.asList(args).contains("--verbose") || ! Arrays.asList(args).contains("-v")) {
-            callFullStack(fileIn, fileOut);
+    public static void main(String[] args) throws IOException, ParseException {
+        CommandLine cmd = getCmd(args);
+        if (cmd.hasOption("h")) {
+            HelpFormatter formatter = new HelpFormatter();
+            System.out.println("MZ Compiler by Davide Mecugni, Andrea Zanasi\n(C) 2024\n");
+            formatter.printHelp("CompilerMZ", getOptions());
             return;
         }
+        String fileIn = getCmdFileOption(cmd, "i", "Risorse/fausto.mz", "mz");
+        String fileOut = getCmdFileOption(cmd, "o", "Risorse/fausto.asm", "asm");
+        String fileObj = getCmdFileOption(cmd, "O", "Risorse/fausto.o", "o");
+        String fileExe = getCmdFileOption(cmd, "e", "Risorse/fausto", "");
+        if (!cmd.hasOption("v")) {
+            callFullStack(fileIn, fileOut, fileObj, fileExe);
+            return;
+        }
+
         // Reading file
         String content;
-        content = readFile(correctExtension(fileIn, "mz"));
+        content = readFile(fileIn);
 
         // Tokenizing
         Tokenizer tokenizer = new Tokenizer(content);
-        System.out.println("1) Tokenizzato!");
+        System.out.println("1) Tokenized!");
         // for debugging
         // System.out.println(tokenizer.getTokens());
 
         // Parsing
         Parser parser = new Parser(tokenizer.getTokens());
         NodeProgram tree = parser.getTree();
-        System.out.println("2) Parserizzato!");
+        System.out.println("2) Parsed!");
 
         // Generating
         Generator generator = new Generator(tree);
         String res = generator.getGenerated();
-        System.out.println("3) Generato ASM!");
+        System.out.println("3) Generated assembly!");
 
         // for debugging
         // generator.printStmt();
 
         // Writing file
         writeFile(fileOut, res);
-        System.out.println("4) File generato!");
+        System.out.println("4) Generated file!");
 
         // Assembling
-        callAssembler(fileOut);
-        System.out.println("5) NASM: File assmeblato");
+        callAssembler(fileOut, fileObj);
+        System.out.println("5) NASM: assembled file!");
 
         // Linking
-        String objectFilePath = fileOut.replace(".asm", ".o");
-        callLinker(objectFilePath);
-        System.out.println("6) ld: File linkato");
+        callLinker(fileObj, fileExe);
+        System.out.println("6) ld: linked file!");
 
         // Executing
-        String execFilePath = fileOut.replace(".asm", "");
-        int returnCode = callExecutable(execFilePath);
-        System.out.println("7) File eseguito!");
-        System.out.println(fileIn + " -->>  " + fileOut);
-        System.out.println("Return code: " + returnCode);
+        int returnCode = callExecutable(fileExe);
+        System.out.println("7) Executed file!");
+        System.out.println("In:  " + fileIn + " \n-->> " + fileOut + "\n-->> " + fileObj + "\n-->> " + fileExe);
+        System.out.println("Return code of exe: " + returnCode);
     }
 
     /**
@@ -99,26 +85,63 @@ public class CompilerMZ {
      * @param fileASMOut
      *            .asm file used as intermediate step, uses same name for .o object, without extension for exe file
      *
-     * @return exit code of executable file
-     *
      * @throws IOException
      *             on any error through the whole process
      */
-    public static int callFullStack(String fileIn, String fileASMOut) throws IOException {
-        fileIn = correctExtension(fileIn, "mz");
-        fileASMOut = correctExtension(fileASMOut, "asm");
-
+    public static void makeAssembly(String fileIn, String fileASMOut) throws IOException {
         String content = readFile(fileIn);
         Tokenizer tokenizer = new Tokenizer(content);
         Parser parser = new Parser(tokenizer.getTokens());
         Generator generator = new Generator(parser.getTree());
         String outputASM = generator.getGenerated();
         writeFile(fileASMOut, outputASM);
-        callAssembler(fileASMOut);
-        String objectFilePath = fileASMOut.replace(".asm", ".o");
-        callLinker(objectFilePath);
-        String execFilePath = fileASMOut.replace(".asm", "");
-        return callExecutable(execFilePath);
+    }
+
+    /**
+     * Goes from .mz file to exe file
+     *
+     * @param fileIn
+     *            .mz file
+     * @param fileOut
+     *            .asm assembly file where compiled .mz goes
+     * @param fileObj
+     *            .o assembled object file made from .asm
+     * @param fileExe
+     *            executable final file
+     *
+     * @throws IOException
+     *             On any problem related to IO on files
+     */
+    public static void callFullStack(String fileIn, String fileOut, String fileObj, String fileExe) throws IOException {
+        makeAssembly(fileIn, fileOut);
+        callAssembler(fileOut, fileObj);
+        callLinker(fileObj, fileExe);
+        callExecutable(fileExe);
+    }
+
+    /**
+     * Goes from .mz file to exe file
+     *
+     * @param fileIn
+     *            .mz file
+     * @param fileOut
+     *            .asm assembly file where compiled .mz goes
+     * @param fileObj
+     *            .o assembled object file made from .asm
+     * @param fileExe
+     *            executable final file
+     *
+     * @return int Return code of the program
+     *
+     * @throws IOException
+     *             On any problem related to IO on files
+     */
+    public static int callFullStackWithReturnCode(String fileIn, String fileOut, String fileObj, String fileExe)
+            throws IOException {
+        makeAssembly(fileIn, fileOut);
+        callAssembler(fileOut, fileObj);
+        callLinker(fileObj, fileExe);
+        return callExecutable(fileExe);
     }
 
     /**
@@ -127,7 +150,7 @@ public class CompilerMZ {
      * @param filePath
      *            file to be read
      *
-     * @return string content of file
+     * @return String content of file
      *
      * @throws IOException
      *             on problems while reading
@@ -154,44 +177,46 @@ public class CompilerMZ {
     }
 
     /**
-     * Calls external NASM assembler
+     * Calls NASM assembler on 64 bit assembly
      *
-     * @param filePath
-     *            .asm file to be assembled
+     * @param fileOut
+     *            .asm file
+     * @param fileObj
+     *            .o compiled file
      *
      * @throws FileNotFoundException
-     *             on .asm file not found
+     *             is .asm file is not present
      */
-    private static void callAssembler(String filePath) throws FileNotFoundException {
-        File asmFile = new File(filePath);
+    private static void callAssembler(String fileOut, String fileObj) throws FileNotFoundException {
+        File asmFile = new File(fileOut);
 
         if (!asmFile.exists() || !asmFile.isFile()) {
-            throw new FileNotFoundException("Invalid file path: " + filePath);
+            throw new FileNotFoundException("Invalid file path: " + fileOut);
         }
 
-        String objFilePath = filePath.replace(".asm", ".o");
-        ProcessBuilder nasmProcessBuilder = new ProcessBuilder("nasm", "-f", "elf64", "-o", objFilePath, filePath);
+        ProcessBuilder nasmProcessBuilder = new ProcessBuilder("nasm", "-f", "elf64", "-o", fileObj, fileOut);
         runProcess(nasmProcessBuilder, "NASM assembler for elf x86_64 architecture");
     }
 
     /**
-     * Calls the ld linker
+     * Calls ld default linux linker
      *
-     * @param objectFilePath
-     *            .o file to be linked
+     * @param fileObj
+     *            .o object file generated by NASM
+     * @param fileExe
+     *            executable file
      *
      * @throws FileNotFoundException
-     *             on object file not found
+     *             if input file is not present
      */
-    private static void callLinker(String objectFilePath) throws FileNotFoundException {
-        File objectFile = new File(objectFilePath);
+    private static void callLinker(String fileObj, String fileExe) throws FileNotFoundException {
+        File objectFile = new File(fileObj);
 
         if (!objectFile.exists() || !objectFile.isFile()) {
-            throw new FileNotFoundException("Invalid file path: " + objectFilePath);
+            throw new FileNotFoundException("Invalid file path: " + fileObj);
         }
 
-        String execFilePath = objectFilePath.replace(".o", "");
-        ProcessBuilder ldProcessBuilder = new ProcessBuilder("ld", "-o", execFilePath, objectFilePath);
+        ProcessBuilder ldProcessBuilder = new ProcessBuilder("ld", "-o", fileExe, fileObj);
         runProcess(ldProcessBuilder, "ld linker");
     }
 
@@ -212,6 +237,7 @@ public class CompilerMZ {
         if (!executableFile.exists() || !executableFile.isFile()) {
             throw new FileNotFoundException("Invalid file path: " + filePath);
         }
+
         String command = executableFile.getAbsolutePath();
         ProcessBuilder execProcessBuilder = new ProcessBuilder(command);
         return runCustomProcess(execProcessBuilder, "Executable file", true);
@@ -261,10 +287,76 @@ public class CompilerMZ {
         }
     }
 
+    /**
+     * Adds an extension if not present
+     *
+     * @param fileIn
+     *            String path of input file
+     * @param ext
+     *            Correct extension
+     *
+     * @return Path with extension
+     */
     private static String correctExtension(String fileIn, String ext) {
         if (fileIn.endsWith(ext)) {
             return fileIn;
         }
         return fileIn + "." + ext;
+    }
+
+    /**
+     * Generates a Command line parser with options
+     *
+     * @param args
+     *            Default main options
+     *
+     * @return a CommandLine object to be used for checking flags and parameters
+     *
+     * @throws ParseException
+     *             If the arguments are not correct
+     */
+    private static CommandLine getCmd(String[] args) throws ParseException {
+        Options options = getOptions();
+        CommandLineParser parser = new DefaultParser();
+        return parser.parse(options, args);
+    }
+
+    /**
+     * Gets a command line option for file
+     *
+     * @param cmd
+     *            CommandLine object to work with
+     * @param option
+     *            Flag to be checked
+     * @param def
+     *            Default path option
+     * @param ext
+     *            Correct extension to be used for file
+     *
+     * @return Returns the option chosen with correct extension
+     */
+    private static String getCmdFileOption(CommandLine cmd, String option, String def, String ext) {
+        String s = cmd.getOptionValue(option, def);
+        File f = new File(s);
+        s = f.getAbsolutePath();
+        s = correctExtension(s, ext);
+        return s;
+    }
+
+    /**
+     * All CLI flag options
+     *
+     * @return an option object
+     */
+    private static Options getOptions() {
+        Options options = new Options();
+        options.addOption("i", "input", true, "input file");
+        options.addOption("o", "output", true, "output file");
+        options.addOption("O", "object", true, "input file");
+        options.addOption("e", "executable", true, "output file");
+        options.addOption("v", "verbose", false, "verbose output");
+        options.addOption("c", "compile", false, "compile only, no execution");
+        options.addOption("h", "help", false, "print this message");
+        return options;
     }
 }
