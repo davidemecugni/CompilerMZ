@@ -15,8 +15,6 @@ public class NodeProgram {
 
     @Override
     public String toString() {
-        return "NodeProgram{" +
-                "stmts=" + stmts +
-                '}';
+        return "NodeProgram{" + "stmts=" + stmts + '}';
     }
 }

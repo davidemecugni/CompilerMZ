@@ -16,17 +16,17 @@ public class TestParser {
         Tokenizer validExit = new Tokenizer("exit(69);");
         Parser parserExit = new Parser(validExit.getTokens());
 
-        //control if the first statement is an exit
+        // control if the first statement is an exit
         assertEquals(parserExit.getTree().getStmts().getFirst().getClass(), NodeExit.class);
 
-        //control if the value of the exit is 69
+        // control if the value of the exit is 69
         TokenIntLit value = (TokenIntLit) parserExit.getTree().getStmts().getFirst().getStmt().getExpr();
         assertEquals(value.getValue(), 69);
 
-        //control of error exit statement
+        // control of error exit statement
         Tokenizer invalidExit = new Tokenizer("exit 69;");
 
-        //control if the first statement is an exit
+        // control if the first statement is an exit
         assertThrows(IllegalArgumentException.class, () -> new Parser(invalidExit.getTokens()));
     }
 
@@ -35,18 +35,18 @@ public class TestParser {
         Tokenizer validLet = new Tokenizer("let a = 10;");
         Parser parserLet = new Parser(validLet.getTokens());
 
-        //control if the first statement is let
+        // control if the first statement is let
         assertEquals(parserLet.getTree().getStmts().getFirst().getClass(), NodeLet.class);
 
-        //control if the identifier is a
+        // control if the identifier is a
         TokenIdent name = ((NodeLet) parserLet.getTree().getStmts().getFirst()).getIdentifier().getIdent();
         assertEquals(name.getName(), "a");
 
-        //control if the value of the identifier is 10
+        // control if the value of the identifier is 10
         TokenIntLit value = (TokenIntLit) parserLet.getTree().getStmts().getFirst().getStmt().getExpr();
         assertEquals(value.getValue(), 10);
 
-        //control of error let statement
+        // control of error let statement
         Tokenizer invalidIdent1 = new Tokenizer("let a 10;");
         Tokenizer invalidIdent2 = new Tokenizer("let a = 10");
         Tokenizer invalidIdent3 = new Tokenizer("let = 10");

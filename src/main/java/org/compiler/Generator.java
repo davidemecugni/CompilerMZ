@@ -7,7 +7,6 @@ import org.compiler.nodes.expressions.NodeIdent;
 import org.compiler.nodes.expressions.NodeIntLit;
 import org.compiler.nodes.statements.NodeExit;
 import org.compiler.nodes.statements.NodeLet;
-import org.compiler.token.tokens.TokenIdent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +18,7 @@ public class Generator {
     private String generated = "";
     private final NodeProgram m_program;
     private long stack_size = 0;
-    private Map<String, Long> variables = new HashMap<>();
+    private final Map<String, Long> variables = new HashMap<>();
 
     public Generator(NodeProgram program) {
         this.m_program = program;
@@ -29,25 +28,25 @@ public class Generator {
     public String generateStatement(NodeStatement stmt) {
         StringBuilder stmtSB = new StringBuilder();
         switch (stmt) {
-            case NodeExit nodeExit -> {
-                //prendo l'espressione exit(expr)
-                stmtSB.append(generateExpression(stmt.getStmt()));
-                stmtSB.append("     ;;exit\n");
-                stmtSB.append("     mov rax, 60\n");
-                stmtSB.append(pop("rdi"));
-                stmtSB.append("     syscall\n");
-                stmtSB.append("     ;;/exit\n\n");
+        case NodeExit nodeExit -> {
+            // prendo l'espressione exit(expr)
+            stmtSB.append(generateExpression(stmt.getStmt()));
+            stmtSB.append("     ;;exit\n");
+            stmtSB.append("     mov rax, 60\n");
+            stmtSB.append(pop("rdi"));
+            stmtSB.append("     syscall\n");
+            stmtSB.append("     ;;/exit\n\n");
+        }
+        case NodeLet nodeLet -> {
+            if (variables.containsKey(nodeLet.getIdentifier().getIdent().getName())) {
+                throw new IllegalArgumentException("Identifier already used");
             }
-            case NodeLet nodeLet -> {
-                if (variables != null && variables.containsKey(nodeLet.getIdentifier().getIdent().getName())) {
-                    throw new IllegalArgumentException("Identifier already used");
-                }
-                variables.put(nodeLet.getIdentifier().getIdent().getName(), stack_size);
-                stmtSB.append(generateExpression(stmt.getStmt()));
-            }
-            case null, default -> {
-                throw new IllegalArgumentException("Unknown statement type in generator");
-            }
+            variables.put(nodeLet.getIdentifier().getIdent().getName(), stack_size);
+            stmtSB.append(generateExpression(stmt.getStmt()));
+        }
+        case null, default -> {
+            throw new IllegalArgumentException("Unknown statement type in generator");
+        }
         }
         return stmtSB.toString();
     }
@@ -56,30 +55,30 @@ public class Generator {
         StringBuilder exprSB = new StringBuilder();
 
         switch (expr) {
-            case NodeIntLit nodeIntLit -> {
-                exprSB.append("     ;;value\n");
-                exprSB.append("     mov rax, ").append(nodeIntLit.getIntLit().getValue()).append("\n");
-                exprSB.append(push("rax")).append("\n");
+        case NodeIntLit nodeIntLit -> {
+            exprSB.append("     ;;value\n");
+            exprSB.append("     mov rax, ").append(nodeIntLit.getIntLit().getValue()).append("\n");
+            exprSB.append(push("rax")).append("\n");
+        }
+        case NodeIdent nodeIdent -> {
+
+            // per controllare se una variabile è presente nella mappa
+            if (!variables.containsKey(nodeIdent.getIdent().getName())) {
+                throw new IllegalArgumentException("Identifier not found");
             }
-            case NodeIdent nodeIdent -> {
 
-                //per controllare se una variabile è presente nella mappa
-                if (!variables.containsKey(nodeIdent.getIdent().getName())) {
-                    throw new IllegalArgumentException("Identifier not found");
-                }
+            exprSB.append("     ;;identifier\n");
 
-                exprSB.append("     ;;identifier\n");
-
-                long offset = (stack_size - variables.get(nodeIdent.getIdent().getName()) - 1) * 8;
-                if (offset < 0) {
-                    throw new IllegalArgumentException("Variable might not have been initialized");
-                }
-
-                exprSB.append(push("QWORD [rsp + " + offset + "]")).append("\n");
+            long offset = (stack_size - variables.get(nodeIdent.getIdent().getName()) - 1) * 8;
+            if (offset < 0) {
+                throw new IllegalArgumentException("Variable might not have been initialized");
             }
-            case null, default -> {
-                throw new IllegalArgumentException("Unknown expression type in generator");
-            }
+
+            exprSB.append(push("QWORD [rsp + " + offset + "]")).append("\n");
+        }
+        case null, default -> {
+            throw new IllegalArgumentException("Unknown expression type in generator");
+        }
         }
         return exprSB.toString();
     }
@@ -106,7 +105,10 @@ public class Generator {
 
     /**
      * increase stack location
-     * @param reg asm register
+     *
+     * @param reg
+     *            asm register
+     *
      * @return a string
      */
     public String push(String reg) {
@@ -116,7 +118,10 @@ public class Generator {
 
     /**
      * reduces stack location
-     * @param reg asm register
+     *
+     * @param reg
+     *            asm register
+     *
      * @return a string
      */
     public String pop(String reg) {

@@ -44,9 +44,6 @@ public class PeekIteratorToken implements PeekIterator<Token> {
 
     @Override
     public String toString() {
-        return "PeekIteratorToken{" +
-                "list=" + list +
-                ", cursor=" + cursor +
-                '}';
+        return "PeekIteratorToken{" + "list=" + list + ", cursor=" + cursor + '}';
     }
 }

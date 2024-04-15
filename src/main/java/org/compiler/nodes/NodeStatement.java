@@ -13,8 +13,6 @@ public class NodeStatement {
 
     @Override
     public String toString() {
-        return "NodeStatement{" +
-                "stmt=" + stmt +
-                '}';
+        return "NodeStatement{" + "stmt=" + stmt + '}';
     }
 }
