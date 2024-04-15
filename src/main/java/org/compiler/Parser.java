@@ -8,8 +8,8 @@ import org.compiler.nodes.expressions.NodeIntLit;
 import org.compiler.nodes.statements.NodeExit;
 import org.compiler.nodes.statements.NodeLet;
 import org.compiler.peekers.PeekIteratorToken;
-import org.compiler.token.tokens.Token;
 import org.compiler.token.TokenType;
+import org.compiler.token.tokens.Token;
 import org.compiler.token.tokens.TokenIdent;
 import org.compiler.token.tokens.TokenIntLit;
 
@@ -98,9 +98,6 @@ public class Parser {
 
     @Override
     public String toString() {
-        return "Parser{" +
-                "it=" + it +
-                ", tree=" + tree +
-                '}';
+        return "Parser{" + "it=" + it + ", tree=" + tree + '}';
     }
 }

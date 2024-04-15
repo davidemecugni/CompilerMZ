@@ -8,5 +8,5 @@ let d = 4;
 Variabile di uscita
 Salva il codice di uscita
 @@
-let exitCode = 100;
+let exitCode = 70;
 exit(exitCode);

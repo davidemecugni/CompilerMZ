@@ -15,8 +15,6 @@ public class NodeExpression {
 
     @Override
     public String toString() {
-        return "NodeExpression{" +
-                "expr=" + expr +
-                '}';
+        return "NodeExpression{" + "expr=" + expr + '}';
     }
 }
