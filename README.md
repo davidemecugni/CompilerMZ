@@ -42,7 +42,7 @@ exit(x);
 sudo apt-get install nasm
 sudo apt-get install ld
 ```
-Then add this line at the end of your `.bashrc` file:
+To add compilerMZ to your path(if the project is under IdeaProjects and the commons-cli is installed):
 ```shell
 echo "alias compilerMZ='java -classpath ~/IdeaProjects/CompilerMZ/target/classes:~/.m2/repository/commons-cli/commons-cli/1.6.0/commons-cli-1.6.0.jar org.compiler.CompilerMZ'" >> ~/.bashrc
 ```
