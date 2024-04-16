@@ -27,6 +27,8 @@ jobs:
       run: mvn -B package --file pom.xml
     - name: Build and Run Tests
       run: mvn test --batch-mode --fail-at-end
+    - name: LS
+      run: ls -al /home/runner/work/CompilerMZ/CompilerMZ/target/surefire-reports
     - name: Publish Test Report
       if: success() || failure()
       uses: scacap/action-surefire-report@v1
