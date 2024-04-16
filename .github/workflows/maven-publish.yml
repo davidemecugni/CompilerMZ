@@ -25,10 +25,8 @@ jobs:
       run: mvn -B package --file pom.xml
     - name: Generate Report
       run: mvn surefire-report:report 
-    - name: List files in surefire-reports directory
-      run: ls target/surefire-reports/
     - name: List files CompilerMZ
-      run: ls /home/runner/work/CompilerMZ/CompilerMZ/
+      run: ls -r /home/runner/work/CompilerMZ/CompilerMZ/
     - name: Test and Report
       uses: dorny/test-reporter@v1
       if: always()
