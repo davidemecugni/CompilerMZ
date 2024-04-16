@@ -21,7 +21,7 @@ public class CompilerMZ {
     public static void main(String[] args) throws IOException, ParseException {
         CommandLine cmd = getCmd(args);
         long start = 0;
-        if(cmd.hasOption("t")) {
+        if (cmd.hasOption("t")) {
             start = System.currentTimeMillis();
         }
         if (cmd.hasOption("h")) {
@@ -36,7 +36,7 @@ public class CompilerMZ {
         String fileExe = getCmdFileOption(cmd, "e", removeExtension(fileObj, ".o"), "");
         if (!cmd.hasOption("v") && !cmd.hasOption("c")) {
             callFullStack(fileIn, fileOut, fileObj, fileExe);
-            if(cmd.hasOption("t")) {
+            if (cmd.hasOption("t")) {
                 long end = System.currentTimeMillis();
                 System.out.println("Time: " + (end - start) + "ms");
             }
@@ -44,7 +44,7 @@ public class CompilerMZ {
         }
         if (!cmd.hasOption("v") && cmd.hasOption("c")) {
             callAssembler(fileIn, fileOut);
-            if(cmd.hasOption("t")) {
+            if (cmd.hasOption("t")) {
                 long end = System.currentTimeMillis();
                 System.out.println("Time: " + (end - start) + "ms");
             }
@@ -77,7 +77,7 @@ public class CompilerMZ {
         writeFile(fileOut, res);
         System.out.println("4) Generated file!");
         if (cmd.hasOption("c")) {
-            if(cmd.hasOption("t")) {
+            if (cmd.hasOption("t")) {
                 long end = System.currentTimeMillis();
                 System.out.println("Time: " + (end - start) + "ms");
             }
@@ -97,7 +97,7 @@ public class CompilerMZ {
         System.out.println("In:  " + fileIn + " \n-->> " + fileOut + "\n-->> " + fileObj + "\n-->> " + fileExe);
         System.out.println("Return code of exe: " + returnCode);
 
-        if(cmd.hasOption("t")) {
+        if (cmd.hasOption("t")) {
             long end = System.currentTimeMillis();
             System.out.println("Time: " + (end - start) + "ms");
         }
