@@ -1,10 +1,12 @@
-### Assembly ###
-*.o
-
 ### Removes executables ###
 *
 !/**/
 !*.*
+
+### Assembly ###
+*.o
+*.asm
+
 
 ### Maven ###
 target/
