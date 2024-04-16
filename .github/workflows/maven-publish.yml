@@ -25,12 +25,16 @@ jobs:
       run: mvn -B package --file pom.xml
     - name: Generate Report
       run: mvn surefire-report:report 
+    - name: List files in surefire-reports directory
+      run: ls target/surefire-reports/
+    - name: List files CompilerMZ
+      run: ls /home/runner/work/CompilerMZ/CompilerMZ/
     - name: Test and Report
       uses: dorny/test-reporter@v1
       if: always()
       with:
         name: Maven Tests
-        path: /home/runner/work/CompilerMZ/CompilerMZ/target/surefire-reports/*.xml
+        path: target/surefire-reports/*.xml
         reporter: java-junit
       continue-on-error: false
    
