@@ -28,7 +28,7 @@ jobs:
       if: always()
       with:
         name: Maven Tests
-        path: target/surefire-reports/*.xml
+        path: /home/runner/work/CompilerMZ/CompilerMZ/target/surefire-reports/*.xml
         reporter: java-junit
       continue-on-error: false
    
