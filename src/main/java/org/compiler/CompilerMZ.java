@@ -20,6 +20,10 @@ public class CompilerMZ {
      */
     public static void main(String[] args) throws IOException, ParseException {
         CommandLine cmd = getCmd(args);
+        long start = 0;
+        if(cmd.hasOption("t")) {
+            start = System.currentTimeMillis();
+        }
         if (cmd.hasOption("h")) {
             HelpFormatter formatter = new HelpFormatter();
             System.out.println("MZ Compiler by Davide Mecugni, Andrea Zanasi\n(C) 2024\n");
@@ -32,10 +36,18 @@ public class CompilerMZ {
         String fileExe = getCmdFileOption(cmd, "e", removeExtension(fileObj, ".o"), "");
         if (!cmd.hasOption("v") && !cmd.hasOption("c")) {
             callFullStack(fileIn, fileOut, fileObj, fileExe);
+            if(cmd.hasOption("t")) {
+                long end = System.currentTimeMillis();
+                System.out.println("Time: " + (end - start) + "ms");
+            }
             return;
         }
         if (!cmd.hasOption("v") && cmd.hasOption("c")) {
             callAssembler(fileIn, fileOut);
+            if(cmd.hasOption("t")) {
+                long end = System.currentTimeMillis();
+                System.out.println("Time: " + (end - start) + "ms");
+            }
         }
 
         // Reading file
@@ -65,6 +77,10 @@ public class CompilerMZ {
         writeFile(fileOut, res);
         System.out.println("4) Generated file!");
         if (cmd.hasOption("c")) {
+            if(cmd.hasOption("t")) {
+                long end = System.currentTimeMillis();
+                System.out.println("Time: " + (end - start) + "ms");
+            }
             return;
         }
         // Assembling
@@ -80,6 +96,11 @@ public class CompilerMZ {
         System.out.println("7) Executed file!");
         System.out.println("In:  " + fileIn + " \n-->> " + fileOut + "\n-->> " + fileObj + "\n-->> " + fileExe);
         System.out.println("Return code of exe: " + returnCode);
+
+        if(cmd.hasOption("t")) {
+            long end = System.currentTimeMillis();
+            System.out.println("Time: " + (end - start) + "ms");
+        }
     }
 
     /**
@@ -312,8 +333,10 @@ public class CompilerMZ {
     /**
      * Removes an extension if present
      *
-     * @param fileIn String path of input file
-     * @param ext   Correct extension
+     * @param fileIn
+     *            String path of input file
+     * @param ext
+     *            Correct extension
      *
      * @return Path without extension
      */
@@ -372,12 +395,13 @@ public class CompilerMZ {
      */
     private static Options getOptions() {
         Options options = new Options();
-        options.addOption("i", "input", true, "input file");
-        options.addOption("o", "output", true, "output file");
-        options.addOption("O", "object", true, "input file");
-        options.addOption("e", "executable", true, "output file");
+        options.addOption("i", "input", true, "input .mz manz file");
+        options.addOption("o", "output", true, "output .asm assembly file");
+        options.addOption("O", "object", true, ".o object file(assembled .asm file)");
+        options.addOption("e", "executable", true, "final executable file");
         options.addOption("v", "verbose", false, "verbose output");
-        options.addOption("c", "compile", false, "compile only, no execution");
+        options.addOption("c", "compile", false, "compile only, no assembly and linking");
+        options.addOption("t", "time", false, "print time for given procedure");
         options.addOption("h", "help", false, "print this message");
         return options;
     }
