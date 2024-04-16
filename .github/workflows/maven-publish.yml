@@ -32,8 +32,6 @@ jobs:
     - name: Publish Test Report
       if: success() || failure()
       uses: scacap/action-surefire-report@v1
-      with:
-        report_paths: /home/runner/work/CompilerMZ/CompilerMZ/target/surefire-reports/TEST-*.xml
    
   publish-job:
     runs-on: ubuntu-latest
