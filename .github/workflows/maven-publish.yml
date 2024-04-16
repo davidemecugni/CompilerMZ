@@ -22,19 +22,10 @@ jobs:
         distribution: 'corretto'
         cache: maven
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
-    - name: Generate Report
-      run: mvn surefire-report:report 
-    - name: List files CompilerMZ
-      run: ls -r /home/runner/work/CompilerMZ/CompilerMZ/target/surefire-reports/
-    - name: Test and Report
-      uses: dorny/test-reporter@v1
-      if: always()
-      with:
-        name: Maven Tests
-        path: /home/runner/work/CompilerMZ/CompilerMZ/target/surefire-reports/
-        reporter: java-junit
-      continue-on-error: false
+      run: mvn -B package --file pom.xml --fail-at-end
+    - name: Publish Test Report
+      if: success() || failure()
+      uses: scacap/action-surefire-report@v1
    
   publish-job:
     runs-on: ubuntu-latest
