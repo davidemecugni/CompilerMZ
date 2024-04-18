@@ -24,6 +24,7 @@ public class Token {
         wordToTokenMap.put(')', TokenType.close_paren);
         wordToTokenMap.put('=', TokenType.eq);
         wordToTokenMap.put("let", TokenType.let);
+        wordToTokenMap.put('+', TokenType.plus);
         // Add more entries as needed
     }
 
@@ -39,7 +40,7 @@ public class Token {
      * Converts an alphabetic token to a TokenType
      *
      * @param word
-     *            used to identify the TokenType
+     *       import org.compiler.nodes.expressions.binary_expressions.NodeBin;     used to identify the TokenType
      *
      * @return the corresponding TokenType
      */

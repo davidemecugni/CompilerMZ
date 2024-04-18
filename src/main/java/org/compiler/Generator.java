@@ -3,8 +3,10 @@ package org.compiler;
 import org.compiler.nodes.NodeExpression;
 import org.compiler.nodes.NodeProgram;
 import org.compiler.nodes.NodeStatement;
-import org.compiler.nodes.expressions.NodeIdent;
-import org.compiler.nodes.expressions.NodeIntLit;
+import org.compiler.nodes.expressions.binary_expressions.NodeBin;
+import org.compiler.nodes.expressions.terms.NodeIdent;
+import org.compiler.nodes.expressions.terms.NodeIntLit;
+import org.compiler.nodes.expressions.terms.NodeTerm;
 import org.compiler.nodes.statements.NodeExit;
 import org.compiler.nodes.statements.NodeLet;
 
@@ -29,7 +31,6 @@ public class Generator {
         StringBuilder stmtSB = new StringBuilder();
         switch (stmt) {
         case NodeExit nodeExit -> {
-            // prendo l'espressione exit(expr)
             stmtSB.append(generateExpression(stmt.getStmt()));
             stmtSB.append("     ;;exit\n");
             stmtSB.append("     mov rax, 60\n");
@@ -44,41 +45,57 @@ public class Generator {
             variables.put(nodeLet.getIdentifier().getIdent().getName(), stack_size);
             stmtSB.append(generateExpression(stmt.getStmt()));
         }
-        case null, default -> {
-            throw new IllegalArgumentException("Unknown statement type in generator");
-        }
+        case null, default -> throw new IllegalArgumentException("Unknown statement type in generator");
         }
         return stmtSB.toString();
     }
 
-    public String generateExpression(NodeExpression expr) {
-        StringBuilder exprSB = new StringBuilder();
+    public String generateTerm(NodeTerm expr) {
+        StringBuilder termSB = new StringBuilder();
 
+        //genera i termini dell'espressione quindi per ora o int_lit o ident
         switch (expr) {
         case NodeIntLit nodeIntLit -> {
-            exprSB.append("     ;;value\n");
-            exprSB.append("     mov rax, ").append(nodeIntLit.getIntLit().getValue()).append("\n");
-            exprSB.append(push("rax")).append("\n");
+            termSB.append("     ;;value\n");
+            termSB.append("     mov rax, ").append(nodeIntLit.getIntLit().getValue()).append("\n");
+            termSB.append(push("rax")).append("\n");
         }
         case NodeIdent nodeIdent -> {
-
-            // per controllare se una variabile è presente nella mappa
             if (!variables.containsKey(nodeIdent.getIdent().getName())) {
                 throw new IllegalArgumentException("Identifier not found");
             }
 
-            exprSB.append("     ;;identifier\n");
+            termSB.append("     ;;identifier\n");
 
             long offset = (stack_size - variables.get(nodeIdent.getIdent().getName()) - 1) * 8;
             if (offset < 0) {
                 throw new IllegalArgumentException("Variable might not have been initialized");
             }
 
-            exprSB.append(push("QWORD [rsp + " + offset + "]")).append("\n");
+            termSB.append(push("QWORD [rsp + " + offset + "]")).append("\n");
         }
-        case null, default -> {
-            throw new IllegalArgumentException("Unknown expression type in generator");
+        case null, default -> throw new IllegalArgumentException("Unknown term type in generator");
         }
+        return termSB.toString();
+    }
+
+    public String generateExpression(NodeExpression expr) {
+        StringBuilder exprSB = new StringBuilder();
+
+        //se è un termine lo genera altrimenti genera l'espressione
+        switch (expr) {
+        case NodeTerm nodeTerm -> exprSB.append(generateTerm(nodeTerm));
+        case NodeBin nodeBin -> {
+            exprSB.append(generateExpression(nodeBin.getLeft()));
+            exprSB.append(generateExpression(nodeBin.getRight()));
+            exprSB.append("     ;;addition\n");
+            exprSB.append(pop("rax"));
+            exprSB.append(pop("rbx"));
+            exprSB.append("     add rax, rbx\n");
+            exprSB.append(push("rax"));
+            exprSB.append("     ;;/addition\n\n");
+        }
+        case null, default -> throw new IllegalArgumentException("Unknown expression type in generator");
         }
         return exprSB.toString();
     }
@@ -86,6 +103,7 @@ public class Generator {
     public void generateProgram() {
         StringBuilder sb = new StringBuilder();
         sb.append("global _start\n_start:\n\n");
+        System.out.println(m_program.getStmts());
         for (NodeStatement statement : m_program.getStmts()) {
             sb.append(generateStatement(statement));
         }

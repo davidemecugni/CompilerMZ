@@ -37,6 +37,8 @@ exit(x);
 - [x] Exit
   - [x] Exit with variable
   - [x] Exit by default(0)
+- [x] Arithmetic operations
+  - [x] Addition
 # Get the compiler working
 ```shell
 sudo apt-get install nasm

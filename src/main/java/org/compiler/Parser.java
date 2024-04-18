@@ -3,8 +3,9 @@ package org.compiler;
 import org.compiler.nodes.NodeExpression;
 import org.compiler.nodes.NodeProgram;
 import org.compiler.nodes.NodeStatement;
-import org.compiler.nodes.expressions.NodeIdent;
-import org.compiler.nodes.expressions.NodeIntLit;
+import org.compiler.nodes.expressions.binary_expressions.NodeBinAdd;
+import org.compiler.nodes.expressions.terms.NodeIdent;
+import org.compiler.nodes.expressions.terms.NodeIntLit;
 import org.compiler.nodes.statements.NodeExit;
 import org.compiler.nodes.statements.NodeLet;
 import org.compiler.peekers.PeekIteratorToken;
@@ -50,12 +51,18 @@ public class Parser {
     }
 
     private NodeExpression parseExpr() {
-        if (it.hasNext() && it.peek().getType() == TokenType.int_lit) {
-            return new NodeIntLit((TokenIntLit) it.next());
-        } else if (it.hasNext() && it.peek().getType() == TokenType.ident) {
-            return new NodeIdent((TokenIdent) it.next());
+        //salva il primo termine
+        NodeExpression term = parseTerm();
+
+        //se dopo c'è un + allora c'è un altro termine
+        if (it.hasNext() && it.peek().getType() == TokenType.plus) {
+            it.next();
+            //salva il secondo termine
+            NodeExpression right = parseExpr();
+            Token plus = new Token(TokenType.plus);
+            return new NodeBinAdd(plus, term, right);
         } else {
-            throw new IllegalArgumentException("Invalid token in expression");
+            return term;
         }
     }
 
@@ -77,7 +84,6 @@ public class Parser {
 
     private NodeLet parseLet() {
         NodeIdent ident;
-        NodeExpression expr;
         if (!it.hasNext() || it.peek().getType() != TokenType.ident) {
             throw new IllegalArgumentException("Invalid token after let, expected identifier");
         }
@@ -85,11 +91,23 @@ public class Parser {
         if (!it.hasNext() || it.next().getType() != TokenType.eq) {
             throw new IllegalArgumentException("Invalid token after ident, expected equal sign");
         }
-        expr = parseExpr();
+        NodeExpression expr = parseExpr();
         if (!it.hasNext() || it.next().getType() != TokenType.semi) {
             throw new IllegalArgumentException("Semicolon not present");
         }
         return new NodeLet(expr, ident);
+    }
+
+    //controlla se c'è un termine e se è un int_lit o un ident
+    private NodeExpression parseTerm() {
+        if (it.hasNext() && it.peek().getType() == TokenType.int_lit) {
+            return new NodeIntLit((TokenIntLit) it.next());
+        }
+        if (it.hasNext() && it.peek().getType() == TokenType.ident) {
+            return new NodeIdent((TokenIdent) it.next());
+        } else {
+            throw new IllegalArgumentException("Invalid token term");
+        }
     }
 
     public NodeProgram getTree() {

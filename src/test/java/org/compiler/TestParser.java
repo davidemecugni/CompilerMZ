@@ -1,7 +1,9 @@
 package org.compiler;
 
+import org.compiler.nodes.expressions.binary_expressions.NodeBinAdd;
 import org.compiler.nodes.statements.NodeExit;
 import org.compiler.nodes.statements.NodeLet;
+import org.compiler.token.TokenType;
 import org.compiler.token.Tokenizer;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -55,5 +57,25 @@ public class TestParser {
         assertThrows(IllegalArgumentException.class, () -> new Parser(invalidIdent2.getTokens()));
         assertThrows(IllegalArgumentException.class, () -> new Parser(invalidIdent3.getTokens()));
         assertThrows(IllegalArgumentException.class, () -> new Parser(invalidIdent4.getTokens()));
+    }
+
+    @Test
+    public void testParserAdd() {
+        Tokenizer validAdd = new Tokenizer("let a = 10 + 5;");
+        Parser parserAdd = new Parser(validAdd.getTokens());
+
+        // control if the statement is an add
+        assertEquals(parserAdd.getTree().getStmts().getFirst().getStmt().getClass(), NodeBinAdd.class);
+
+        // control if the token is +
+        assertEquals(parserAdd.getTree().getStmts().getFirst().getStmt().getExpr().getType(), TokenType.plus);
+
+        // control of error add statement
+        Tokenizer invalidAdd1 = new Tokenizer("let a = 10 +;");
+        Tokenizer invalidAdd2 = new Tokenizer("let a = + 5;");
+        Tokenizer invalidAdd3 = new Tokenizer("let a = 10 5;");
+        assertThrows(IllegalArgumentException.class, () -> new Parser(invalidAdd1.getTokens()));
+        assertThrows(IllegalArgumentException.class, () -> new Parser(invalidAdd2.getTokens()));
+        assertThrows(IllegalArgumentException.class, () -> new Parser(invalidAdd3.getTokens()));
     }
 }
