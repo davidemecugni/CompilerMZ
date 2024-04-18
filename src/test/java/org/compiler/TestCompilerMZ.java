@@ -27,6 +27,11 @@ public class TestCompilerMZ {
                         "src/test/java/org/compiler/testCompilerMZResources/exits42.asm",
                         "src/test/java/org/compiler/testCompilerMZResources/exits42.o",
                         "src/test/java/org/compiler/testCompilerMZResources/exits42"));
-
+        exitCode = CompilerMZ.callFullStackWithReturnCode(
+                "src/test/java/org/compiler/testCompilerMZResources/exits45.mz",
+                "src/test/java/org/compiler/testCompilerMZResources/exits45.asm",
+                "src/test/java/org/compiler/testCompilerMZResources/exits42.o",
+                "src/test/java/org/compiler/testCompilerMZResources/exits42");
+        assertEquals(45, exitCode);
     }
 }

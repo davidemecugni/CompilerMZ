@@ -45,15 +45,15 @@ public class Generator {
             variables.put(nodeLet.getIdentifier().getIdent().getName(), stack_size);
             stmtSB.append(generateExpression(stmt.getStmt()));
         }
-        case null, default -> {
-            throw new IllegalArgumentException("Unknown statement type in generator");
-        }
+        case null, default -> throw new IllegalArgumentException("Unknown statement type in generator");
         }
         return stmtSB.toString();
     }
 
     public String generateTerm(NodeTerm expr) {
         StringBuilder termSB = new StringBuilder();
+
+        //genera i termini dell'espressione quindi per ora o int_lit o ident
         switch (expr) {
         case NodeIntLit nodeIntLit -> {
             termSB.append("     ;;value\n");
@@ -82,10 +82,9 @@ public class Generator {
     public String generateExpression(NodeExpression expr) {
         StringBuilder exprSB = new StringBuilder();
 
+        //se è un termine lo genera altrimenti genera l'espressione
         switch (expr) {
-        case NodeTerm nodeTerm -> {
-            exprSB.append(generateTerm(nodeTerm));
-        }
+        case NodeTerm nodeTerm -> exprSB.append(generateTerm(nodeTerm));
         case NodeBin nodeBin -> {
             exprSB.append(generateExpression(nodeBin.getLeft()));
             exprSB.append(generateExpression(nodeBin.getRight()));
@@ -96,9 +95,7 @@ public class Generator {
             exprSB.append(push("rax"));
             exprSB.append("     ;;/addition\n\n");
         }
-        case null, default -> {
-            throw new IllegalArgumentException("Unknown expression type in generator");
-        }
+        case null, default -> throw new IllegalArgumentException("Unknown expression type in generator");
         }
         return exprSB.toString();
     }
