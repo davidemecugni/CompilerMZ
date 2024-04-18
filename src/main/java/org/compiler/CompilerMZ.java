@@ -24,6 +24,10 @@ public class CompilerMZ {
         if (cmd.hasOption("t")) {
             start = System.currentTimeMillis();
         }
+        if (cmd.hasOption("version")) {
+            System.out.println("1.3.0 Addition\nMZ Compiler by Davide Mecugni, Andrea Zanasi\n(C) 2024");
+            return;
+        }
         if (cmd.hasOption("h")) {
             HelpFormatter formatter = new HelpFormatter();
             System.out.println("MZ Compiler by Davide Mecugni, Andrea Zanasi\n(C) 2024\n");
@@ -48,6 +52,7 @@ public class CompilerMZ {
                 long end = System.currentTimeMillis();
                 System.out.println("Time: " + (end - start) + "ms");
             }
+            return;
         }
 
         // Reading file
@@ -402,6 +407,7 @@ public class CompilerMZ {
         options.addOption("v", "verbose", false, "verbose output");
         options.addOption("c", "compile", false, "compile only, no assembly and linking");
         options.addOption("t", "time", false, "print time for given procedure");
+        options.addOption("V", "version", false, "print version");
         options.addOption("h", "help", false, "print this message");
         return options;
     }

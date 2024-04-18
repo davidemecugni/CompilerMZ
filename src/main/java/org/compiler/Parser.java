@@ -51,13 +51,13 @@ public class Parser {
     }
 
     private NodeExpression parseExpr() {
-        //salva il primo termine
+        // salva il primo termine
         NodeExpression term = parseTerm();
 
-        //se dopo c'è un + allora c'è un altro termine
+        // se dopo c'è un + allora c'è un altro termine
         if (it.hasNext() && it.peek().getType() == TokenType.plus) {
             it.next();
-            //salva il secondo termine
+            // salva il secondo termine
             NodeExpression right = parseExpr();
             Token plus = new Token(TokenType.plus);
             return new NodeBinAdd(plus, term, right);
@@ -98,7 +98,7 @@ public class Parser {
         return new NodeLet(expr, ident);
     }
 
-    //controlla se c'è un termine e se è un int_lit o un ident
+    // controlla se c'è un termine e se è un int_lit o un ident
     private NodeExpression parseTerm() {
         if (it.hasNext() && it.peek().getType() == TokenType.int_lit) {
             return new NodeIntLit((TokenIntLit) it.next());
