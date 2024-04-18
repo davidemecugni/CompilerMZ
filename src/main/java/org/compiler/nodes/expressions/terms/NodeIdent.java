@@ -1,9 +1,8 @@
-package org.compiler.nodes.expressions;
+package org.compiler.nodes.expressions.terms;
 
-import org.compiler.nodes.NodeExpression;
 import org.compiler.token.tokens.TokenIdent;
 
-public class NodeIdent extends NodeExpression {
+public class NodeIdent extends NodeTerm {
     public NodeIdent(TokenIdent ident) {
         super(ident);
     }

@@ -1,12 +1,2 @@
-@ Variabili
-let a = 1;
-let b = 2;
-let c = 3;
-let d = 4;
-
-@@
-Variabile di uscita
-Salva il codice di uscita
-@@
-let exitCode = 100;
-exit(exitCode);
+let a = 2;
+exit(a);

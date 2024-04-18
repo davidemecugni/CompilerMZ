@@ -24,6 +24,7 @@ public class Token {
         wordToTokenMap.put(')', TokenType.close_paren);
         wordToTokenMap.put('=', TokenType.eq);
         wordToTokenMap.put("let", TokenType.let);
+        wordToTokenMap.put("+", TokenType.plus);
         // Add more entries as needed
     }
 

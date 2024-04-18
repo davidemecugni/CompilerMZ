@@ -3,15 +3,16 @@ package org.compiler;
 import org.compiler.nodes.NodeExpression;
 import org.compiler.nodes.NodeProgram;
 import org.compiler.nodes.NodeStatement;
-import org.compiler.nodes.expressions.NodeIdent;
-import org.compiler.nodes.expressions.NodeIntLit;
+import org.compiler.nodes.expressions.terms.NodeIdent;
+import org.compiler.nodes.expressions.binary_expressions.NodeBin;
+import org.compiler.nodes.expressions.binary_expressions.NodeBinAdd;
+import org.compiler.nodes.expressions.terms.NodeTerm;
 import org.compiler.nodes.statements.NodeExit;
 import org.compiler.nodes.statements.NodeLet;
 import org.compiler.peekers.PeekIteratorToken;
 import org.compiler.token.TokenType;
 import org.compiler.token.tokens.Token;
 import org.compiler.token.tokens.TokenIdent;
-import org.compiler.token.tokens.TokenIntLit;
 
 import java.util.ArrayList;
 
@@ -50,12 +51,10 @@ public class Parser {
     }
 
     private NodeExpression parseExpr() {
-        if (it.hasNext() && it.peek().getType() == TokenType.int_lit) {
-            return new NodeIntLit((TokenIntLit) it.next());
-        } else if (it.hasNext() && it.peek().getType() == TokenType.ident) {
-            return new NodeIdent((TokenIdent) it.next());
+        if (it.hasNext() && it.peek().getType() == TokenType.plus) {
+            return parseBinary();
         } else {
-            throw new IllegalArgumentException("Invalid token in expression");
+            return parseTerm();
         }
     }
 
@@ -77,7 +76,6 @@ public class Parser {
 
     private NodeLet parseLet() {
         NodeIdent ident;
-        NodeExpression expr;
         if (!it.hasNext() || it.peek().getType() != TokenType.ident) {
             throw new IllegalArgumentException("Invalid token after let, expected identifier");
         }
@@ -85,11 +83,35 @@ public class Parser {
         if (!it.hasNext() || it.next().getType() != TokenType.eq) {
             throw new IllegalArgumentException("Invalid token after ident, expected equal sign");
         }
-        expr = parseExpr();
+        NodeExpression expr = parseExpr();
         if (!it.hasNext() || it.next().getType() != TokenType.semi) {
             throw new IllegalArgumentException("Semicolon not present");
         }
         return new NodeLet(expr, ident);
+    }
+
+    private NodeBin parseBinary() {
+        NodeExpression left;
+        NodeExpression right;
+        left = parseExpr();
+        right = parseExpr();
+        if (it.hasNext() && it.peek().getType() == TokenType.plus) {
+            return new NodeBinAdd(it.peek() ,left, right);
+        } else {
+            throw new IllegalArgumentException("Unsupported binary expression");
+        }
+    }
+
+    private NodeExpression parseTerm() {
+        if (it.hasNext() && it.peek().getType() == TokenType.int_lit) {
+            return new NodeTerm(it.next());
+        }
+        if (it.hasNext() && it.peek().getType() == TokenType.ident) {
+            return new NodeTerm(it.next());
+        }
+        else {
+            throw new IllegalArgumentException("Invalid token term");
+        }
     }
 
     public NodeProgram getTree() {

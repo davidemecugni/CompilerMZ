@@ -1,9 +1,8 @@
-package org.compiler.nodes.expressions;
+package org.compiler.nodes.expressions.terms;
 
-import org.compiler.nodes.NodeExpression;
 import org.compiler.token.tokens.TokenIntLit;
 
-public class NodeIntLit extends NodeExpression {
+public class NodeIntLit extends NodeTerm {
     public NodeIntLit(TokenIntLit intLit) {
         super(intLit);
     }
