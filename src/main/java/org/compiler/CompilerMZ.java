@@ -1,12 +1,12 @@
 package org.compiler;
 
+import org.apache.commons.cli.*;
 import org.compiler.nodes.NodeProgram;
 import org.compiler.token.Tokenizer;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import org.apache.commons.cli.*;
 
 /**
  * The main class of the compiler

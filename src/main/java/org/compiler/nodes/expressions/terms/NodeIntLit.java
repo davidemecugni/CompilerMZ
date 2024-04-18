@@ -10,4 +10,9 @@ public class NodeIntLit extends NodeTerm {
     public TokenIntLit getIntLit() {
         return (TokenIntLit) getExpr();
     }
+
+    @Override
+    public String toString() {
+        return "NodeIntLit{" + "expr=" + getExpr() + '}';
+    }
 }

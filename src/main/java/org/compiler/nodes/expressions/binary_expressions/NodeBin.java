@@ -3,7 +3,7 @@ package org.compiler.nodes.expressions.binary_expressions;
 import org.compiler.nodes.NodeExpression;
 import org.compiler.token.tokens.Token;
 
-public class NodeBin extends NodeExpression{
+public class NodeBin extends NodeExpression {
     private final NodeExpression left;
     private final NodeExpression right;
 
@@ -23,10 +23,6 @@ public class NodeBin extends NodeExpression{
 
     @Override
     public String toString() {
-        return "NodeBinary{" +
-                "left=" + left +
-                ", right=" + right +
-                '}';
+        return "NodeBinary{" + "left=" + left + ", right=" + right + '}';
     }
 }
-

@@ -7,4 +7,9 @@ public class NodeTerm extends NodeExpression {
     public NodeTerm(Token expr) {
         super(expr);
     }
+
+    @Override
+    public String toString() {
+        return "NodeTerm{" + "expr=" + getExpr() + '}';
+    }
 }

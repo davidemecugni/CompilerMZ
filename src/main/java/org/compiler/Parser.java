@@ -3,16 +3,17 @@ package org.compiler;
 import org.compiler.nodes.NodeExpression;
 import org.compiler.nodes.NodeProgram;
 import org.compiler.nodes.NodeStatement;
-import org.compiler.nodes.expressions.terms.NodeIdent;
 import org.compiler.nodes.expressions.binary_expressions.NodeBin;
 import org.compiler.nodes.expressions.binary_expressions.NodeBinAdd;
-import org.compiler.nodes.expressions.terms.NodeTerm;
+import org.compiler.nodes.expressions.terms.NodeIdent;
+import org.compiler.nodes.expressions.terms.NodeIntLit;
 import org.compiler.nodes.statements.NodeExit;
 import org.compiler.nodes.statements.NodeLet;
 import org.compiler.peekers.PeekIteratorToken;
 import org.compiler.token.TokenType;
 import org.compiler.token.tokens.Token;
 import org.compiler.token.tokens.TokenIdent;
+import org.compiler.token.tokens.TokenIntLit;
 
 import java.util.ArrayList;
 
@@ -96,7 +97,7 @@ public class Parser {
         left = parseExpr();
         right = parseExpr();
         if (it.hasNext() && it.peek().getType() == TokenType.plus) {
-            return new NodeBinAdd(it.peek() ,left, right);
+            return new NodeBinAdd(it.peek(), left, right);
         } else {
             throw new IllegalArgumentException("Unsupported binary expression");
         }
@@ -104,12 +105,11 @@ public class Parser {
 
     private NodeExpression parseTerm() {
         if (it.hasNext() && it.peek().getType() == TokenType.int_lit) {
-            return new NodeTerm(it.next());
+            return new NodeIntLit((TokenIntLit) it.next());
         }
         if (it.hasNext() && it.peek().getType() == TokenType.ident) {
-            return new NodeTerm(it.next());
-        }
-        else {
+            return new NodeIdent((TokenIdent) it.next());
+        } else {
             throw new IllegalArgumentException("Invalid token term");
         }
     }

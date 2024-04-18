@@ -10,9 +10,6 @@ public class NodeBinAdd extends NodeBin {
 
     @Override
     public String toString() {
-        return "NodeBinAdd{" +
-                "left=" + getLeft() +
-                ", right=" + getRight() +
-                '}';
+        return "NodeBinAdd{" + "left=" + getLeft() + ", right=" + getRight() + '}';
     }
 }

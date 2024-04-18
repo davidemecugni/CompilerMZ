@@ -10,4 +10,9 @@ public class NodeIdent extends NodeTerm {
     public TokenIdent getIdent() {
         return (TokenIdent) getExpr();
     }
+
+    @Override
+    public String toString() {
+        return "NodeIdent{" + "expr=" + getExpr() + '}';
+    }
 }
