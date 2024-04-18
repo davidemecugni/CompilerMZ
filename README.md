@@ -48,6 +48,12 @@ To add compilerMZ to your path(if the project is under IdeaProjects and the comm
 ```shell
 echo "alias compilerMZ='java -classpath ~/IdeaProjects/CompilerMZ/target/classes:~/.m2/repository/commons-cli/commons-cli/1.6.0/commons-cli-1.6.0.jar org.compiler.CompilerMZ'" >> ~/.bashrc
 ```
+
+To run the compiler from .jar file:
+```shell
+java -jar CompilerMZ-VERSION-jar-with-dependencies.jar -V
+```
+
 # The idea
 ![CompilerMZ](READMESOURCES/warning.png) \
 The project was born during a OOP course at the University of Modena and Reggio Emilia. \
