@@ -23,6 +23,7 @@ Example:
 let x = 1;
 let y = 2;
 let z = 3;
+let a = (x + y * z) / 2;
 
 exit(x);
 ```
@@ -39,6 +40,10 @@ exit(x);
   - [x] Exit by default(0)
 - [x] Arithmetic operations
   - [x] Addition
+  - [x] Subtraction
+  - [x] Multiplication
+  - [x] Division
+  - [x] Parenthesis operations
 # Get the compiler working
 ```shell
 sudo apt-get install nasm
