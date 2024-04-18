@@ -3,7 +3,6 @@ package org.compiler;
 import org.compiler.nodes.NodeExpression;
 import org.compiler.nodes.NodeProgram;
 import org.compiler.nodes.NodeStatement;
-import org.compiler.nodes.expressions.binary_expressions.NodeBin;
 import org.compiler.nodes.expressions.binary_expressions.NodeBinAdd;
 import org.compiler.nodes.expressions.terms.NodeIdent;
 import org.compiler.nodes.expressions.terms.NodeIntLit;
@@ -52,10 +51,14 @@ public class Parser {
     }
 
     private NodeExpression parseExpr() {
+        NodeExpression term = parseTerm();
         if (it.hasNext() && it.peek().getType() == TokenType.plus) {
-            return parseBinary();
+            it.next();
+            NodeExpression right = parseExpr();
+            Token plus = new Token(TokenType.plus);
+            return new NodeBinAdd(plus, term, right);
         } else {
-            return parseTerm();
+            return term;
         }
     }
 
@@ -89,18 +92,6 @@ public class Parser {
             throw new IllegalArgumentException("Semicolon not present");
         }
         return new NodeLet(expr, ident);
-    }
-
-    private NodeBin parseBinary() {
-        NodeExpression left;
-        NodeExpression right;
-        left = parseExpr();
-        right = parseExpr();
-        if (it.hasNext() && it.peek().getType() == TokenType.plus) {
-            return new NodeBinAdd(it.peek(), left, right);
-        } else {
-            throw new IllegalArgumentException("Unsupported binary expression");
-        }
     }
 
     private NodeExpression parseTerm() {

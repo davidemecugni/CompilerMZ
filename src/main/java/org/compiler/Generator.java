@@ -31,7 +31,6 @@ public class Generator {
         StringBuilder stmtSB = new StringBuilder();
         switch (stmt) {
         case NodeExit nodeExit -> {
-            // prendo l'espressione exit(expr)
             stmtSB.append(generateExpression(stmt.getStmt()));
             stmtSB.append("     ;;exit\n");
             stmtSB.append("     mov rax, 60\n");
@@ -62,7 +61,6 @@ public class Generator {
             termSB.append(push("rax")).append("\n");
         }
         case NodeIdent nodeIdent -> {
-            // per controllare se una variabile è presente nella mappa
             if (!variables.containsKey(nodeIdent.getIdent().getName())) {
                 throw new IllegalArgumentException("Identifier not found");
             }
@@ -91,10 +89,12 @@ public class Generator {
         case NodeBin nodeBin -> {
             exprSB.append(generateExpression(nodeBin.getLeft()));
             exprSB.append(generateExpression(nodeBin.getRight()));
+            exprSB.append("     ;;addition\n");
             exprSB.append(pop("rax"));
             exprSB.append(pop("rbx"));
-            exprSB.append("    add rax, rbx\n");
+            exprSB.append("     add rax, rbx\n");
             exprSB.append(push("rax"));
+            exprSB.append("     ;;/addition\n\n");
         }
         case null, default -> {
             throw new IllegalArgumentException("Unknown expression type in generator");
