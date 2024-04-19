@@ -11,18 +11,15 @@ import java.util.NoSuchElementException;
 public class PeekIteratorChar implements PeekIterator<Character> {
     private final List<Character> list;
     private int cursor;
-
+    private int spaces;
     public PeekIteratorChar(String s) {
         this.list = s.chars().mapToObj(e -> (char) e).toList();
         this.cursor = 0;
+        this.spaces = countSpaces(s);
     }
 
     public boolean hasNext() {
-        int non_whitespace_cursor = cursor;
-        while (non_whitespace_cursor < list.size() && Character.isWhitespace(list.get(non_whitespace_cursor))) {
-            non_whitespace_cursor++;
-        }
-        return non_whitespace_cursor < list.size();
+        return cursor + spaces < list.size();
     }
 
     /**
@@ -38,6 +35,9 @@ public class PeekIteratorChar implements PeekIterator<Character> {
         }
         if (list.get(cursor) != comment_terminal) {
             for (; cursor < list.size(); cursor++) {
+                if(Character.isWhitespace(list.get(cursor))) {
+                    spaces--;
+                }
                 if (list.get(cursor) == '\n') {
                     cursor++;
                     break;
@@ -46,6 +46,9 @@ public class PeekIteratorChar implements PeekIterator<Character> {
         } else {
             cursor++;
             while (cursor < list.size() && list.get(cursor) != comment_terminal) {
+                if(Character.isWhitespace(list.get(cursor))) {
+                    spaces--;
+                }
                 cursor++;
             }
             if ((cursor + 2) >= list.size() || list.get(cursor + 1) != comment_terminal) {
@@ -61,8 +64,12 @@ public class PeekIteratorChar implements PeekIterator<Character> {
      * @return the next non-whitespace character
      */
     private Character getNextNonWhitespaceChar() {
-        while (cursor < list.size() && Character.isWhitespace(list.get(cursor))) {
+        while (cursor + spaces < list.size() && Character.isWhitespace(list.get(cursor))) {
+            spaces--;
             cursor++;
+        }
+        if(cursor >= list.size()) {
+            return null;
         }
         return list.get(cursor++);
     }
@@ -86,5 +93,9 @@ public class PeekIteratorChar implements PeekIterator<Character> {
             return null;
         }
         return list.get(cursor + offset);
+    }
+
+    private static int countSpaces(String str) {
+        return (int) str.chars().filter(Character::isWhitespace).count();
     }
 }
