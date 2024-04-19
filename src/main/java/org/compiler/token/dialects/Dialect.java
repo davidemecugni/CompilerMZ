@@ -15,16 +15,18 @@ public class Dialect {
     private final String name;
 
     private Map<String, TokenType> wordToTokenMap;
+
     public Dialect(String name) {
         this.name = name;
         retrieveDialect();
     }
+
     private void retrieveDialect() {
         Gson gson = new Gson();
         JsonReader reader;
-        try{
-            reader = new JsonReader(
-                    new InputStreamReader(Objects.requireNonNull(getClass().getResourceAsStream("/" + name + ".json"))));
+        try {
+            reader = new JsonReader(new InputStreamReader(
+                    Objects.requireNonNull(getClass().getResourceAsStream("/" + name + ".json"))));
         } catch (NullPointerException e) {
             throw new IllegalArgumentException("Dialect not found: " + name);
         }
@@ -40,9 +42,6 @@ public class Dialect {
 
     @Override
     public String toString() {
-        return "Dialect{" +
-                "name='" + name + '\'' +
-                ", wordToTokenMap=" + wordToTokenMap +
-                '}';
+        return "Dialect{" + "name='" + name + '\'' + ", wordToTokenMap=" + wordToTokenMap + '}';
     }
 }

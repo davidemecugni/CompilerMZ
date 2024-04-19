@@ -3,7 +3,6 @@ package org.compiler;
 import org.apache.commons.cli.*;
 import org.compiler.nodes.NodeProgram;
 import org.compiler.token.Tokenizer;
-import org.compiler.token.dialects.Dialect;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -145,13 +144,20 @@ public class CompilerMZ {
      * @throws IOException
      *             On any problem related to IO on files
      */
-    public static void callFullStack(String fileIn, String fileOut, String fileObj, String fileExe, String dialect) throws IOException {
+    public static void callFullStack(String fileIn, String fileOut, String fileObj, String fileExe, String dialect)
+            throws IOException {
         makeAssembly(fileIn, fileOut, dialect);
         callAssembler(fileOut, fileObj);
         callLinker(fileObj, fileExe);
         callExecutable(fileExe);
     }
-
+    public static void callFullStack(String fileIn, String fileOut, String fileObj, String fileExe)
+            throws IOException {
+        makeAssembly(fileIn, fileOut, "default_dialect");
+        callAssembler(fileOut, fileObj);
+        callLinker(fileObj, fileExe);
+        callExecutable(fileExe);
+    }
     /**
      * Goes from .mz file to exe file
      *
@@ -412,7 +418,7 @@ public class CompilerMZ {
         options.addOption("t", "time", false, "print time for given procedure");
         options.addOption("V", "version", false, "print version");
         options.addOption("h", "help", false, "print this message");
-        //Conflict handling could be implemented
+        // Conflict handling could be implemented
         return options;
     }
 }

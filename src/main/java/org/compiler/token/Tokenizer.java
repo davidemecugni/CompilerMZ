@@ -1,20 +1,13 @@
 package org.compiler.token;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
 import org.compiler.peekers.PeekIteratorChar;
 import org.compiler.token.dialects.Dialect;
 import org.compiler.token.tokens.Token;
 import org.compiler.token.tokens.TokenIdent;
 import org.compiler.token.tokens.TokenIntLit;
 
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Generates a list of tokens from a string input
@@ -59,6 +52,14 @@ public class Tokenizer {
                 buffer.append(it.next());
             }
             word = buffer.toString();
+            //Support for multi-char comment literals
+            if (wordToTokenMap.containsKey(buffer.toString())) {
+                if (wordToTokenMap.get(word) == TokenType.comment) {
+                    it.ignoreComment(word.charAt(0));
+                    buffer.setLength(0);
+                    continue;
+                }
+            }
             AddToken(of(word));
             buffer.setLength(0);
         }
