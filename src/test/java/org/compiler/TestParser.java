@@ -141,4 +141,19 @@ public class TestParser {
         assertThrows(IllegalArgumentException.class, () -> new Parser(invalidSub2.getTokens()));
         assertThrows(IllegalArgumentException.class, () -> new Parser(invalidSub3.getTokens()));
     }
+
+    @Test
+    public void testParserParenthesis() {
+        Tokenizer validParenthesis = new Tokenizer("let a = (10 + 5) * 2;");
+        Parser parserParenthesis = new Parser(validParenthesis.getTokens());
+
+        // control if the nodeTerm is a parenthesis
+        assertEquals(parserParenthesis.getTree().getStmts().getFirst().getStmt().getClass(), NodeBinMulti.class);
+
+        // control of error parenthesis statement
+        Tokenizer invalidParenthesis1 = new Tokenizer("let a = (10 + 5 * 2;");
+        Tokenizer invalidParenthesis2 = new Tokenizer("let a = 10 + 5) * 2;");
+        assertThrows(IllegalArgumentException.class, () -> new Parser(invalidParenthesis1.getTokens()));
+        assertThrows(IllegalArgumentException.class, () -> new Parser(invalidParenthesis2.getTokens()));
+    }
 }
