@@ -32,11 +32,11 @@ public class PeekIteratorChar implements PeekIterator<Character> {
      * @throws NoSuchElementException
      *             if the comment is not closed
      */
-    public void IgnoreComment() {
+    public void ignoreComment(char comment_terminal) {
         if (cursor >= list.size()) {
             return;
         }
-        if (list.get(cursor) != '@') {
+        if (list.get(cursor) != comment_terminal) {
             for (; cursor < list.size(); cursor++) {
                 if (list.get(cursor) == '\n') {
                     cursor++;
@@ -45,10 +45,10 @@ public class PeekIteratorChar implements PeekIterator<Character> {
             }
         } else {
             cursor++;
-            while (cursor < list.size() && list.get(cursor) != '@') {
+            while (cursor < list.size() && list.get(cursor) != comment_terminal) {
                 cursor++;
             }
-            if ((cursor + 2) >= list.size() || list.get(cursor + 1) != '@') {
+            if ((cursor + 2) >= list.size() || list.get(cursor + 1) != comment_terminal) {
                 throw new NoSuchElementException("Multiline comment has not been closed");
             }
             cursor += 2;
