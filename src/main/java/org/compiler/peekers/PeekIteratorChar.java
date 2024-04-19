@@ -12,6 +12,7 @@ public class PeekIteratorChar implements PeekIterator<Character> {
     private final List<Character> list;
     private int cursor;
     private int spaces;
+
     public PeekIteratorChar(String s) {
         this.list = s.chars().mapToObj(e -> (char) e).toList();
         this.cursor = 0;
@@ -35,7 +36,7 @@ public class PeekIteratorChar implements PeekIterator<Character> {
         }
         if (list.get(cursor) != comment_terminal) {
             for (; cursor < list.size(); cursor++) {
-                if(Character.isWhitespace(list.get(cursor))) {
+                if (Character.isWhitespace(list.get(cursor))) {
                     spaces--;
                 }
                 if (list.get(cursor) == '\n') {
@@ -46,7 +47,7 @@ public class PeekIteratorChar implements PeekIterator<Character> {
         } else {
             cursor++;
             while (cursor < list.size() && list.get(cursor) != comment_terminal) {
-                if(Character.isWhitespace(list.get(cursor))) {
+                if (Character.isWhitespace(list.get(cursor))) {
                     spaces--;
                 }
                 cursor++;
@@ -68,7 +69,7 @@ public class PeekIteratorChar implements PeekIterator<Character> {
             spaces--;
             cursor++;
         }
-        if(cursor >= list.size()) {
+        if (cursor >= list.size()) {
             return null;
         }
         return list.get(cursor++);
