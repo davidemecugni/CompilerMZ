@@ -3,6 +3,7 @@ package org.compiler;
 import org.apache.commons.cli.*;
 import org.compiler.nodes.NodeProgram;
 import org.compiler.token.Tokenizer;
+import org.compiler.token.dialects.Dialect;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -34,12 +35,13 @@ public class CompilerMZ {
             formatter.printHelp("CompilerMZ", getOptions());
             return;
         }
-        String fileIn = getCmdFileOption(cmd, "i", "fausto.mz", ".mz");
+        String dialect = cmd.getOptionValue("d", "default_dialect");
+        String fileIn = getCmdFileOption(cmd, "i", "", ".mz");
         String fileOut = getCmdFileOption(cmd, "o", removeExtension(fileIn, ".mz"), ".asm");
         String fileObj = getCmdFileOption(cmd, "O", removeExtension(fileOut, ".asm"), ".o");
         String fileExe = getCmdFileOption(cmd, "e", removeExtension(fileObj, ".o"), "");
         if (!cmd.hasOption("v") && !cmd.hasOption("c")) {
-            callFullStack(fileIn, fileOut, fileObj, fileExe);
+            callFullStack(fileIn, fileOut, fileObj, fileExe, dialect);
             if (cmd.hasOption("t")) {
                 long end = System.currentTimeMillis();
                 System.out.println("Time: " + (end - start) + "ms");
@@ -47,7 +49,7 @@ public class CompilerMZ {
             return;
         }
         if (!cmd.hasOption("v") && cmd.hasOption("c")) {
-            callAssembler(fileIn, fileOut);
+            makeAssembly(fileIn, fileOut, dialect);
             if (cmd.hasOption("t")) {
                 long end = System.currentTimeMillis();
                 System.out.println("Time: " + (end - start) + "ms");
@@ -60,7 +62,7 @@ public class CompilerMZ {
         content = readFile(fileIn);
 
         // Tokenizing
-        Tokenizer tokenizer = new Tokenizer(content);
+        Tokenizer tokenizer = new Tokenizer(content, dialect);
         System.out.println("1) Tokenized!");
         // for debugging
         // System.out.println(tokenizer.getTokens());
@@ -119,9 +121,9 @@ public class CompilerMZ {
      * @throws IOException
      *             on any error through the whole process
      */
-    public static void makeAssembly(String fileIn, String fileASMOut) throws IOException {
+    public static void makeAssembly(String fileIn, String fileASMOut, String dialect) throws IOException {
         String content = readFile(fileIn);
-        Tokenizer tokenizer = new Tokenizer(content);
+        Tokenizer tokenizer = new Tokenizer(content, dialect);
         Parser parser = new Parser(tokenizer.getTokens());
         Generator generator = new Generator(parser.getTree());
         String outputASM = generator.getGenerated();
@@ -143,8 +145,8 @@ public class CompilerMZ {
      * @throws IOException
      *             On any problem related to IO on files
      */
-    public static void callFullStack(String fileIn, String fileOut, String fileObj, String fileExe) throws IOException {
-        makeAssembly(fileIn, fileOut);
+    public static void callFullStack(String fileIn, String fileOut, String fileObj, String fileExe, String dialect) throws IOException {
+        makeAssembly(fileIn, fileOut, dialect);
         callAssembler(fileOut, fileObj);
         callLinker(fileObj, fileExe);
         callExecutable(fileExe);
@@ -169,7 +171,7 @@ public class CompilerMZ {
      */
     public static int callFullStackWithReturnCode(String fileIn, String fileOut, String fileObj, String fileExe)
             throws IOException {
-        makeAssembly(fileIn, fileOut);
+        makeAssembly(fileIn, fileOut, "default_dialect");
         callAssembler(fileOut, fileObj);
         callLinker(fileObj, fileExe);
         return callExecutable(fileExe);
@@ -400,15 +402,17 @@ public class CompilerMZ {
      */
     private static Options getOptions() {
         Options options = new Options();
-        options.addOption("i", "input", true, "input .mz manz file");
+        options.addRequiredOption("i", "input", true, "input .mz manz file");
         options.addOption("o", "output", true, "output .asm assembly file");
         options.addOption("O", "object", true, ".o object file(assembled .asm file)");
         options.addOption("e", "executable", true, "final executable file");
+        options.addOption("d", "dialect", true, "dialect to be used");
         options.addOption("v", "verbose", false, "verbose output");
         options.addOption("c", "compile", false, "compile only, no assembly and linking");
         options.addOption("t", "time", false, "print time for given procedure");
         options.addOption("V", "version", false, "print version");
         options.addOption("h", "help", false, "print this message");
+        //Conflict handling could be implemented
         return options;
     }
 }

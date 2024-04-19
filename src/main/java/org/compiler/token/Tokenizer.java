@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import org.compiler.peekers.PeekIteratorChar;
+import org.compiler.token.dialects.Dialect;
 import org.compiler.token.tokens.Token;
 import org.compiler.token.tokens.TokenIdent;
 import org.compiler.token.tokens.TokenIntLit;
@@ -22,11 +23,19 @@ import java.util.Objects;
 public class Tokenizer {
     private final ArrayList<Token> tokens = new ArrayList<>();
     private final PeekIteratorChar it;
-    private Map<String, TokenType> wordToTokenMap;
+    private final Map<String, TokenType> wordToTokenMap;
 
     public Tokenizer(String input) {
         this.it = new PeekIteratorChar(input);
-        retrieveDialect();
+        Dialect defaultDialect = new Dialect("default_dialect");
+        wordToTokenMap = defaultDialect.getWordToTokenMap();
+        tokenize();
+    }
+
+    public Tokenizer(String input, String dialectName) {
+        this.it = new PeekIteratorChar(input);
+        Dialect dialect = new Dialect(dialectName);
+        wordToTokenMap = dialect.getWordToTokenMap();
         tokenize();
     }
 
@@ -66,17 +75,6 @@ public class Tokenizer {
     @Override
     public String toString() {
         return "Tokenizer{" + "tokens=" + tokens + '}';
-    }
-
-    private void retrieveDialect() {
-        Gson gson = new Gson();
-        JsonReader reader;
-        reader = new JsonReader(
-                new InputStreamReader(Objects.requireNonNull(getClass().getResourceAsStream("/dialect.json"))));
-        Type type = new TypeToken<Map<String, TokenType>>() {
-        }.getType();
-        Map<String, TokenType> data = gson.fromJson(reader, type);
-        wordToTokenMap = new HashMap<>(data);
     }
 
     Token of(String word) {
