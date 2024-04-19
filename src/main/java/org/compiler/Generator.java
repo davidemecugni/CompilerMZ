@@ -53,8 +53,7 @@ public class Generator {
 
     public String generateTerm(NodeTerm expr) {
         StringBuilder termSB = new StringBuilder();
-
-        // genera i termini dell'espressione quindi per ora o int_lit o ident
+        // Generate the term based on the type
         switch (expr) {
         case NodeIntLit nodeIntLit -> {
             termSB.append("     ;;value\n");
@@ -83,7 +82,7 @@ public class Generator {
     public String generateExpression(NodeExpression expr) {
         StringBuilder exprSB = new StringBuilder();
 
-        // se è un termine lo genera altrimenti genera l'espressione
+        // If it's a term, generate the term, otherwise generate the binary expression
         switch (expr) {
         case NodeTerm nodeTerm -> exprSB.append(generateTerm(nodeTerm));
         case NodeBin nodeBin -> {
@@ -108,7 +107,7 @@ public class Generator {
             bin_exprSB.append(push("rax"));
             bin_exprSB.append("     ;;/addition\n\n");
         }
-        // i codici di uscita sono a 8bit quindi non fa vedere un numero negativo
+        // Exit code is 8 bit, so no negative numbers
         case NodeBinSub nodeBinSub -> {
             bin_exprSB.append(generateExpression(nodeBinSub.getRight()));
             bin_exprSB.append(generateExpression(nodeBinSub.getLeft()));
