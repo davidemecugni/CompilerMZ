@@ -43,7 +43,7 @@ public class Tokenizer {
                 buffer.setLength(0);
             } else if (c == '@') {
                 // Single character token
-                it.IgnoreComment();
+                it.ignoreComment('@');
             } else {
                 Token token = Token.of(c);
                 AddToken(token);
