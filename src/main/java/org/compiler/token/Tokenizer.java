@@ -52,7 +52,7 @@ public class Tokenizer {
                 buffer.append(it.next());
             }
             word = buffer.toString();
-            //Support for multi-char comment literals
+            // Support for multi-char comment literals
             if (wordToTokenMap.containsKey(buffer.toString())) {
                 if (wordToTokenMap.get(word) == TokenType.comment) {
                     it.ignoreComment(word.charAt(0));

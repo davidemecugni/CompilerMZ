@@ -151,13 +151,14 @@ public class CompilerMZ {
         callLinker(fileObj, fileExe);
         callExecutable(fileExe);
     }
-    public static void callFullStack(String fileIn, String fileOut, String fileObj, String fileExe)
-            throws IOException {
+
+    public static void callFullStack(String fileIn, String fileOut, String fileObj, String fileExe) throws IOException {
         makeAssembly(fileIn, fileOut, "default_dialect");
         callAssembler(fileOut, fileObj);
         callLinker(fileObj, fileExe);
         callExecutable(fileExe);
     }
+
     /**
      * Goes from .mz file to exe file
      *
