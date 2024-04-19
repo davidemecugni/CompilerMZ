@@ -1,6 +1,9 @@
 package org.compiler;
 
 import org.compiler.nodes.expressions.binary_expressions.NodeBinAdd;
+import org.compiler.nodes.expressions.binary_expressions.NodeBinDiv;
+import org.compiler.nodes.expressions.binary_expressions.NodeBinMulti;
+import org.compiler.nodes.expressions.binary_expressions.NodeBinSub;
 import org.compiler.nodes.statements.NodeExit;
 import org.compiler.nodes.statements.NodeLet;
 import org.compiler.token.TokenType;
@@ -77,5 +80,65 @@ public class TestParser {
         assertThrows(IllegalArgumentException.class, () -> new Parser(invalidAdd1.getTokens()));
         assertThrows(IllegalArgumentException.class, () -> new Parser(invalidAdd2.getTokens()));
         assertThrows(IllegalArgumentException.class, () -> new Parser(invalidAdd3.getTokens()));
+    }
+
+    @Test
+    public void testParserMulti() {
+        Tokenizer validMulti = new Tokenizer("let a = 10 * 5;");
+        Parser parserMulti = new Parser(validMulti.getTokens());
+
+        // control if the statement is a multi
+        assertEquals(parserMulti.getTree().getStmts().getFirst().getStmt().getClass(), NodeBinMulti.class);
+
+        // control if the token is *
+        assertEquals(parserMulti.getTree().getStmts().getFirst().getStmt().getExpr().getType(), TokenType.star);
+
+        // control of error add statement
+        Tokenizer invalidMulti1 = new Tokenizer("let a = 10 *;");
+        Tokenizer invalidMulti2 = new Tokenizer("let a = * 5;");
+        Tokenizer invalidMulti3 = new Tokenizer("let a = 10 5;");
+        assertThrows(IllegalArgumentException.class, () -> new Parser(invalidMulti1.getTokens()));
+        assertThrows(IllegalArgumentException.class, () -> new Parser(invalidMulti2.getTokens()));
+        assertThrows(IllegalArgumentException.class, () -> new Parser(invalidMulti3.getTokens()));
+    }
+
+    @Test
+    public void testParserDiv() {
+        Tokenizer validDiv = new Tokenizer("let a = 10 / 5;");
+        Parser parserDiv = new Parser(validDiv.getTokens());
+
+        // control if the statement is a div
+        assertEquals(parserDiv.getTree().getStmts().getFirst().getStmt().getClass(), NodeBinDiv.class);
+
+        // control if the token is /
+        assertEquals(parserDiv.getTree().getStmts().getFirst().getStmt().getExpr().getType(), TokenType.slash);
+
+        // control of error add statement
+        Tokenizer invalidDiv1 = new Tokenizer("let a = 10 /;");
+        Tokenizer invalidDiv2 = new Tokenizer("let a = / 5;");
+        Tokenizer invalidDiv3 = new Tokenizer("let a = 10 5;");
+        assertThrows(IllegalArgumentException.class, () -> new Parser(invalidDiv1.getTokens()));
+        assertThrows(IllegalArgumentException.class, () -> new Parser(invalidDiv2.getTokens()));
+        assertThrows(IllegalArgumentException.class, () -> new Parser(invalidDiv3.getTokens()));
+    }
+
+    @Test
+    public void testParserSub() {
+        Tokenizer validSub = new Tokenizer("let a = 10 - 5;");
+        Parser parserSub = new Parser(validSub.getTokens());
+
+        // control if the statement is a sub
+        assertEquals(parserSub.getTree().getStmts().getFirst().getStmt().getClass(), NodeBinSub.class);
+
+        // control if the token is -
+        assertEquals(parserSub.getTree().getStmts().getFirst().getStmt().getExpr().getType(), TokenType.minus);
+
+        // control of error add statement
+        Tokenizer invalidSub1 = new Tokenizer("let a = 10 -;");
+        Tokenizer invalidSub2 = new Tokenizer("let a = - 5;");
+        Tokenizer invalidSub3 = new Tokenizer("let a = 10 5;");
+        assertThrows(IllegalArgumentException.class, () -> new Parser(invalidSub1.getTokens()));
+        assertThrows(IllegalArgumentException.class, () -> new Parser(invalidSub2.getTokens()));
+        assertThrows(IllegalArgumentException.class, () -> new Parser(invalidSub3.getTokens()));
     }
 }

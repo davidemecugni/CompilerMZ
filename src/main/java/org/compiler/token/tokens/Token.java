@@ -25,6 +25,9 @@ public class Token {
         wordToTokenMap.put('=', TokenType.eq);
         wordToTokenMap.put("let", TokenType.let);
         wordToTokenMap.put('+', TokenType.plus);
+        wordToTokenMap.put('*', TokenType.star);
+        wordToTokenMap.put('-', TokenType.minus);
+        wordToTokenMap.put('/', TokenType.slash);
         // Add more entries as needed
     }
 
@@ -50,6 +53,19 @@ public class Token {
         } else {
             return new TokenIdent(word.toString());
         }
+    }
+
+    public int BinaryPrecedence(TokenType type) {
+        switch (type) {
+            case TokenType.plus, TokenType.minus -> {
+                return 0;
+            }
+            case TokenType.star, TokenType.slash -> {
+                return 1;
+            }
+        }
+
+        return -1;
     }
 
     @Override

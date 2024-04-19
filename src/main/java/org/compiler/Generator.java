@@ -3,10 +3,11 @@ package org.compiler;
 import org.compiler.nodes.NodeExpression;
 import org.compiler.nodes.NodeProgram;
 import org.compiler.nodes.NodeStatement;
-import org.compiler.nodes.expressions.binary_expressions.NodeBin;
+import org.compiler.nodes.expressions.binary_expressions.*;
 import org.compiler.nodes.expressions.terms.NodeIdent;
 import org.compiler.nodes.expressions.terms.NodeIntLit;
 import org.compiler.nodes.expressions.terms.NodeTerm;
+import org.compiler.nodes.expressions.terms.NodeTermParen;
 import org.compiler.nodes.statements.NodeExit;
 import org.compiler.nodes.statements.NodeLet;
 
@@ -64,15 +65,15 @@ public class Generator {
             if (!variables.containsKey(nodeIdent.getIdent().getName())) {
                 throw new IllegalArgumentException("Identifier not found");
             }
-
             termSB.append("     ;;identifier\n");
-
             long offset = (stack_size - variables.get(nodeIdent.getIdent().getName()) - 1) * 8;
             if (offset < 0) {
                 throw new IllegalArgumentException("Variable might not have been initialized");
             }
-
             termSB.append(push("QWORD [rsp + " + offset + "]")).append("\n");
+        }
+        case NodeTermParen nodeTermParen -> {
+            termSB.append(generateExpression(nodeTermParen.getExprParen()));
         }
         case null, default -> throw new IllegalArgumentException("Unknown term type in generator");
         }
@@ -86,18 +87,62 @@ public class Generator {
         switch (expr) {
         case NodeTerm nodeTerm -> exprSB.append(generateTerm(nodeTerm));
         case NodeBin nodeBin -> {
-            exprSB.append(generateExpression(nodeBin.getLeft()));
-            exprSB.append(generateExpression(nodeBin.getRight()));
-            exprSB.append("     ;;addition\n");
-            exprSB.append(pop("rax"));
-            exprSB.append(pop("rbx"));
-            exprSB.append("     add rax, rbx\n");
-            exprSB.append(push("rax"));
-            exprSB.append("     ;;/addition\n\n");
+            exprSB.append(generateBinaryExpression(nodeBin));
         }
         case null, default -> throw new IllegalArgumentException("Unknown expression type in generator");
         }
         return exprSB.toString();
+    }
+
+    public String generateBinaryExpression(NodeBin bin_expr) {
+        StringBuilder bin_exprSB = new StringBuilder();
+
+        switch (bin_expr) {
+            case NodeBinAdd nodeBinAdd -> {
+                bin_exprSB.append(generateExpression(nodeBinAdd.getLeft()));
+                bin_exprSB.append(generateExpression(nodeBinAdd.getRight()));
+                bin_exprSB.append("     ;;addition\n");
+                bin_exprSB.append(pop("rax"));
+                bin_exprSB.append(pop("rbx"));
+                bin_exprSB.append("     add rax, rbx\n");
+                bin_exprSB.append(push("rax"));
+                bin_exprSB.append("     ;;/addition\n\n");
+            }
+            //i codici di uscita sono a 8bit quindi non fa vedere un numero negativo
+            case NodeBinSub nodeBinSub -> {
+                bin_exprSB.append(generateExpression(nodeBinSub.getRight()));
+                bin_exprSB.append(generateExpression(nodeBinSub.getLeft()));
+                bin_exprSB.append("     ;;subtraction\n");
+                bin_exprSB.append(pop("rax"));
+                bin_exprSB.append(pop("rbx"));
+                bin_exprSB.append("     sub rax, rbx\n");
+                bin_exprSB.append(push("rax"));
+                bin_exprSB.append("     ;;/subtraction\n\n");
+            }
+            case NodeBinMulti nodeBinMulti -> {
+                bin_exprSB.append(generateExpression(nodeBinMulti.getLeft()));
+                bin_exprSB.append(generateExpression(nodeBinMulti.getRight()));
+                bin_exprSB.append("     ;;multiplication\n");
+                bin_exprSB.append(pop("rax"));
+                bin_exprSB.append(pop("rbx"));
+                bin_exprSB.append("     mul rbx\n");
+                bin_exprSB.append(push("rax"));
+                bin_exprSB.append("     ;;/multiplication\n\n");
+            }
+            case NodeBinDiv nodeBinDiv -> {
+                bin_exprSB.append(generateExpression(nodeBinDiv.getRight()));
+                bin_exprSB.append(generateExpression(nodeBinDiv.getLeft()));
+                bin_exprSB.append("     ;;division\n");
+                bin_exprSB.append(pop("rax"));
+                bin_exprSB.append(pop("rbx"));
+                bin_exprSB.append("     div rbx\n");
+                bin_exprSB.append(push("rax"));
+                bin_exprSB.append("     ;;/division\n\n");
+            }
+            case null, default -> throw new IllegalArgumentException("Unknown binary expression type in generator");
+        }
+
+        return bin_exprSB.toString();
     }
 
     public void generateProgram() {
