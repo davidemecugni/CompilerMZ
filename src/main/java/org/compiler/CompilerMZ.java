@@ -25,7 +25,7 @@ public class CompilerMZ {
             start = System.currentTimeMillis();
         }
         if (cmd.hasOption("version")) {
-            System.out.println("0.4.0 Addition\nMZ Compiler by Davide Mecugni, Andrea Zanasi\n(C) 2024");
+            System.out.println("0.4.0-Beta Dialects and Operations\nMZ Compiler by Davide Mecugni, Andrea Zanasi\n(C) 2024");
             return;
         }
         if (cmd.hasOption("h")) {
