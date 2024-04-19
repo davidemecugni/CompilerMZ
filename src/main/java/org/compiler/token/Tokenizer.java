@@ -2,6 +2,7 @@ package org.compiler.token;
 
 import org.compiler.peekers.PeekIteratorChar;
 import org.compiler.token.tokens.Token;
+import org.compiler.token.tokens.TokenIdent;
 import org.compiler.token.tokens.TokenIntLit;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.Map;
 public class Tokenizer {
     private final ArrayList<Token> tokens = new ArrayList<>();
     private final PeekIteratorChar it;
-    private Map<Object, TokenType> wordToTokenMap;
+    private Map<String, TokenType> wordToTokenMap;
 
     public Tokenizer(String input) {
         this.it = new PeekIteratorChar(input);
@@ -37,22 +38,31 @@ public class Tokenizer {
                 buffer.setLength(0);
             }
             // Alphabetic token
-            else if (Character.isAlphabetic(c)) {
+            else {
                 buffer.append(c);
-                while (it.hasNext() && Character.isAlphabetic(it.peek())) {
+                String word = buffer.toString();
+                if (wordToTokenMap.containsKey(buffer.toString())) {
+                    if (wordToTokenMap.get(word) == TokenType.comment) {
+                        it.ignoreComment(word.charAt(0));
+                    } else {
+                        AddToken(of(buffer.toString()));
+                    }
+                    buffer.setLength(0);
+                    continue;
+                }
+                while (it.hasNext() && !Character.isSpaceChar(it.peek())
+                        && !wordToTokenMap.containsKey(it.peek().toString())) {
                     buffer.append(it.next());
                 }
-                Token alphaToken = Token.of(buffer.toString());
-                AddToken(alphaToken);
+                word = buffer.toString();
+                if (wordToTokenMap.get(word) == TokenType.comment) {
+                    it.ignoreComment(word.charAt(0));
+                    buffer.setLength(0);
+                    continue;
+                }
+                AddToken(of(word));
                 buffer.setLength(0);
-            } else if (c == '@') {
-                // Single character token
-                it.ignoreComment('@');
-            } else {
-                Token token = Token.of(c);
-                AddToken(token);
             }
-
         }
     }
 
@@ -72,21 +82,23 @@ public class Tokenizer {
     private void retrieveDialect() {
         wordToTokenMap = new HashMap<>();
         wordToTokenMap.put("exit", TokenType._exit);
-        wordToTokenMap.put(';', TokenType.semi);
-        wordToTokenMap.put('(', TokenType.open_paren);
-        wordToTokenMap.put(')', TokenType.close_paren);
-        wordToTokenMap.put('=', TokenType.eq);
+        wordToTokenMap.put(";", TokenType.semi);
+        wordToTokenMap.put("(", TokenType.open_paren);
+        wordToTokenMap.put(")", TokenType.close_paren);
+        wordToTokenMap.put("=", TokenType.eq);
         wordToTokenMap.put("let", TokenType.let);
-        wordToTokenMap.put('+', TokenType.plus);
-        wordToTokenMap.put('*', TokenType.star);
-        wordToTokenMap.put('-', TokenType.minus);
-        wordToTokenMap.put('/', TokenType.slash);
-        wordToTokenMap.put('@', TokenType.comment);
+        wordToTokenMap.put("+", TokenType.plus);
+        wordToTokenMap.put("*", TokenType.star);
+        wordToTokenMap.put("-", TokenType.minus);
+        wordToTokenMap.put("/", TokenType.slash);
+        wordToTokenMap.put("@", TokenType.comment);
     }
-    Token of(Object word) {
+
+    Token of(String word) {
         if (wordToTokenMap.containsKey(word)) {
             return new Token(wordToTokenMap.get(word));
+        } else {
+            return new TokenIdent(word);
         }
-        return null;
     }
 }

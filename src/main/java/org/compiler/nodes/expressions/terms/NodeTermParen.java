@@ -4,12 +4,11 @@ import org.compiler.nodes.NodeExpression;
 import org.compiler.token.tokens.Token;
 
 /**
- * NodeTermParen is a subclass of NodeTerm in your compiler project.
- * It represents a term within parentheses in the AST. This class has a
- * NodeExpression object, expr, which represents the expression within the parentheses.
+ * NodeTermParen is a subclass of NodeTerm in your compiler project. It represents a term within parentheses in the AST.
+ * This class has a NodeExpression object, expr, which represents the expression within the parentheses.
  */
 
-public class NodeTermParen extends NodeTerm{
+public class NodeTermParen extends NodeTerm {
     NodeExpression expr;
 
     public NodeTermParen(Token token, NodeExpression expr) {
@@ -23,8 +22,6 @@ public class NodeTermParen extends NodeTerm{
 
     @Override
     public String toString() {
-        return "NodeTermParen{" +
-                "expr=" + expr +
-                '}';
+        return "NodeTermParen{" + "expr=" + expr + '}';
     }
 }

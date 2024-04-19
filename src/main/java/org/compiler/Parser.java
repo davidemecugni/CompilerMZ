@@ -56,11 +56,11 @@ public class Parser {
     }
 
     private NodeExpression parseExpr(int minPrec) {
-        //salva il primo termine
+        // salva il primo termine
 
         NodeExpression left = parseTerm();
 
-        //Precedence Climbing Algorithm
+        // Precedence Climbing Algorithm
         while (it.hasNext()) {
             Token curr_token = it.peek();
             int prec;
@@ -76,22 +76,22 @@ public class Parser {
             int nextMinPrec = prec + 1;
             NodeExpression right = parseExpr(nextMinPrec);
             switch (op.getType()) {
-                case TokenType.plus -> {
-                    Token token = new Token(TokenType.plus);
-                    left = new NodeBinAdd(token, left, right);
-                }
-                case TokenType.minus -> {
-                    Token token = new Token(TokenType.minus);
-                    left = new NodeBinSub(token, left, right);
-                }
-                case TokenType.star -> {
-                    Token token = new Token(TokenType.star);
-                    left = new NodeBinMulti(token, left, right);
-                }
-                case TokenType.slash -> {
-                    Token token = new Token(TokenType.slash);
-                    left = new NodeBinDiv(token, left, right);
-                }
+            case TokenType.plus -> {
+                Token token = new Token(TokenType.plus);
+                left = new NodeBinAdd(token, left, right);
+            }
+            case TokenType.minus -> {
+                Token token = new Token(TokenType.minus);
+                left = new NodeBinSub(token, left, right);
+            }
+            case TokenType.star -> {
+                Token token = new Token(TokenType.star);
+                left = new NodeBinMulti(token, left, right);
+            }
+            case TokenType.slash -> {
+                Token token = new Token(TokenType.slash);
+                left = new NodeBinDiv(token, left, right);
+            }
             }
         }
         return left;
@@ -129,7 +129,7 @@ public class Parser {
         return new NodeLet(expr, ident);
     }
 
-    //controlla se c'è un termine e se è un int_lit o un ident
+    // controlla se c'è un termine e se è un int_lit o un ident
     private NodeTerm parseTerm() {
         if (it.hasNext() && it.peek().getType() == TokenType.int_lit) {
             return new NodeIntLit((TokenIntLit) it.next());
@@ -146,7 +146,7 @@ public class Parser {
             if (!it.hasNext() || it.peek().getType() != TokenType.close_paren) {
                 throw new IllegalArgumentException("Parenthesis not closed");
             }
-            return new NodeTermParen(it.next() ,expr);
+            return new NodeTermParen(it.next(), expr);
         } else {
             throw new IllegalArgumentException("Invalid token term");
         }
