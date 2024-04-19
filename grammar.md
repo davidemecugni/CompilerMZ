@@ -1,7 +1,7 @@
 # Grammar for CompilerMZ according to the EBNF ISO/IEC 14977:1996
 
 - prog = stmt*
-- stmt = exit, open_par, space*, expr, space*, close_par | let, space*, ident, space*, eq, space* expr
+- stmt = exit, open_par, space*, expr, space*, close_par | let, space*, ident, space*, eq, space*, expr | comment
 - expr = int_lit | ident | expr, space*, operator, space*, expr | open_par, space*, expr, space*, close_par
 - operator = add | sub | mul | div
 - int_lit = digit+
@@ -15,7 +15,7 @@
 - new_line = ? ISO 6429 character Line Feed ?
 - space = ? ISO 6429 character Space ?
 - any_char = ? Any ASCII Char ? - comment_terminal
-### Editable Terminals
+(* Editable Terminals *)
 - comment_terminal = "@"
 - exit = "exit"
 - open_par = "("
@@ -36,4 +36,5 @@
 - | Either one or the other 
 - "CHAR" The character CHAR or string CHAR
 - ? CHAR ? The special character/string CHAR
+- (* COMMENT *) A comment
 
