@@ -1,0 +1,13 @@
+{
+  "vag_a_ca": "_exit",
+  ";": "semi",
+  "(": "open_paren",
+  ")": "close_paren",
+  "le_uguela": "eq",
+  "vez": "let",
+  "a_ghe_da_agiunger": "plus",
+  "a_ghe_da_multiplicher": "star",
+  "a_ghe_da_sutrer": "minus",
+  "a_ghe_da_divider": "slash",
+  "frega_al_giust": "comment"
+}

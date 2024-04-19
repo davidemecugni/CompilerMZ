@@ -8,7 +8,7 @@ import org.compiler.token.tokens.Token;
  * `left` and `right` operands and overrides the `toString` method for debugging.
  */
 
-public class NodeBinSub extends NodeBin{
+public class NodeBinSub extends NodeBin {
     public NodeBinSub(Token expr, NodeExpression left, NodeExpression right) {
         super(expr, left, right);
     }

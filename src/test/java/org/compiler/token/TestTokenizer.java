@@ -75,5 +75,26 @@ public class TestTokenizer {
         validLet = new Tokenizer("let variable = 10;");
         assertEquals(validLet.getTokens(), List.of(new Token(TokenType.let), new TokenIdent("variable"),
                 new Token(TokenType.eq), new TokenIntLit("10"), new Token(TokenType.semi)));
+        validLet = new Tokenizer("let let = 10;");
+        assertEquals(validLet.getTokens(), List.of(new Token(TokenType.let), new Token(TokenType.let),
+                new Token(TokenType.eq), new TokenIntLit("10"), new Token(TokenType.semi)));
+        validLet = new Tokenizer("letx=10;");
+        assertEquals(validLet.getTokens(), List.of(new TokenIdent("letx"), new Token(TokenType.eq),
+                new TokenIntLit("10"), new Token(TokenType.semi)));
+    }
+
+    @Test
+    public void testTokenizerArithmetic() {
+        Tokenizer validArithmetic = new Tokenizer("let a = 10 + 20 + (29 * 10);");
+        assertEquals(validArithmetic.getTokens(),
+                List.of(new Token(TokenType.let), new TokenIdent("a"), new Token(TokenType.eq), new TokenIntLit("10"),
+                        new Token(TokenType.plus), new TokenIntLit("20"), new Token(TokenType.plus),
+                        new Token(TokenType.open_paren), new TokenIntLit("29"), new Token(TokenType.star),
+                        new TokenIntLit("10"), new Token(TokenType.close_paren), new Token(TokenType.semi)));
+        validArithmetic = new Tokenizer("let x=10*20((");
+        assertEquals(validArithmetic.getTokens(),
+                List.of(new Token(TokenType.let), new TokenIdent("x"), new Token(TokenType.eq), new TokenIntLit("10"),
+                        new Token(TokenType.star), new TokenIntLit("20"), new Token(TokenType.open_paren),
+                        new Token(TokenType.open_paren)));
     }
 }

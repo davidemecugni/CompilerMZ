@@ -1,10 +1,13 @@
 package org.compiler.token;
 
 import org.compiler.peekers.PeekIteratorChar;
+import org.compiler.token.dialects.Dialect;
 import org.compiler.token.tokens.Token;
+import org.compiler.token.tokens.TokenIdent;
 import org.compiler.token.tokens.TokenIntLit;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Generates a list of tokens from a string input
@@ -13,9 +16,19 @@ import java.util.ArrayList;
 public class Tokenizer {
     private final ArrayList<Token> tokens = new ArrayList<>();
     private final PeekIteratorChar it;
+    private final Map<String, TokenType> wordToTokenMap;
 
     public Tokenizer(String input) {
         this.it = new PeekIteratorChar(input);
+        Dialect defaultDialect = new Dialect("default_dialect");
+        wordToTokenMap = defaultDialect.getWordToTokenMap();
+        tokenize();
+    }
+
+    public Tokenizer(String input, String dialectName) {
+        this.it = new PeekIteratorChar(input);
+        Dialect dialect = new Dialect(dialectName);
+        wordToTokenMap = dialect.getWordToTokenMap();
         tokenize();
     }
 
@@ -23,32 +36,32 @@ public class Tokenizer {
         StringBuilder buffer = new StringBuilder();
         while (it.hasNext()) {
             char c = it.next();
-            // Integer token
-            if (Character.isDigit(c)) {
-                buffer.append(c);
-                while (it.hasNext() && Character.isDigit(it.peek())) {
-                    buffer.append(it.next());
+            buffer.append(c);
+            String word = buffer.toString();
+            if (wordToTokenMap.containsKey(buffer.toString())) {
+                if (wordToTokenMap.get(word) == TokenType.comment) {
+                    it.ignoreComment(word.charAt(0));
+                } else {
+                    AddToken(of(buffer.toString()));
                 }
-                AddToken(new TokenIntLit(Integer.parseInt(buffer.toString())));
                 buffer.setLength(0);
+                continue;
             }
-            // Alphabetic token
-            else if (Character.isAlphabetic(c)) {
-                buffer.append(c);
-                while (it.hasNext() && Character.isAlphabetic(it.peek())) {
-                    buffer.append(it.next());
+            while (it.hasNext() && !Character.isSpaceChar(it.peek())
+                    && !wordToTokenMap.containsKey(it.peek().toString())) {
+                buffer.append(it.next());
+            }
+            word = buffer.toString();
+            // Support for multi-char comment literals
+            if (wordToTokenMap.containsKey(buffer.toString())) {
+                if (wordToTokenMap.get(word) == TokenType.comment) {
+                    it.ignoreComment(word.charAt(0));
+                    buffer.setLength(0);
+                    continue;
                 }
-                Token alphaToken = Token.of(buffer.toString());
-                AddToken(alphaToken);
-                buffer.setLength(0);
-            } else if (c == '@') {
-                // Single character token
-                it.ignoreComment('@');
-            } else {
-                Token token = Token.of(c);
-                AddToken(token);
             }
-
+            AddToken(of(word));
+            buffer.setLength(0);
         }
     }
 
@@ -63,5 +76,15 @@ public class Tokenizer {
     @Override
     public String toString() {
         return "Tokenizer{" + "tokens=" + tokens + '}';
+    }
+
+    Token of(String word) {
+        if (wordToTokenMap.containsKey(word)) {
+            return new Token(wordToTokenMap.get(word));
+        } else if (word.matches("[0-9]+")) { // check if the word is a number
+            return new TokenIntLit(word);
+        } else {
+            return new TokenIdent(word);
+        }
     }
 }
