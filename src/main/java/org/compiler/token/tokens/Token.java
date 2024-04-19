@@ -43,7 +43,7 @@ public class Token {
      * Converts an alphabetic token to a TokenType
      *
      * @param word
-     *       import org.compiler.nodes.expressions.binary_expressions.NodeBin;     used to identify the TokenType
+     *            import org.compiler.nodes.expressions.binary_expressions.NodeBin; used to identify the TokenType
      *
      * @return the corresponding TokenType
      */

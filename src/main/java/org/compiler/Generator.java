@@ -54,7 +54,7 @@ public class Generator {
     public String generateTerm(NodeTerm expr) {
         StringBuilder termSB = new StringBuilder();
 
-        //genera i termini dell'espressione quindi per ora o int_lit o ident
+        // genera i termini dell'espressione quindi per ora o int_lit o ident
         switch (expr) {
         case NodeIntLit nodeIntLit -> {
             termSB.append("     ;;value\n");
@@ -83,7 +83,7 @@ public class Generator {
     public String generateExpression(NodeExpression expr) {
         StringBuilder exprSB = new StringBuilder();
 
-        //se è un termine lo genera altrimenti genera l'espressione
+        // se è un termine lo genera altrimenti genera l'espressione
         switch (expr) {
         case NodeTerm nodeTerm -> exprSB.append(generateTerm(nodeTerm));
         case NodeBin nodeBin -> {
@@ -148,7 +148,6 @@ public class Generator {
     public void generateProgram() {
         StringBuilder sb = new StringBuilder();
         sb.append("global _start\n_start:\n\n");
-        System.out.println(m_program.getStmts());
         for (NodeStatement statement : m_program.getStmts()) {
             sb.append(generateStatement(statement));
         }
