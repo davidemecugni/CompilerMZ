@@ -38,6 +38,7 @@ public class Tokenizer {
             char c = it.next();
             buffer.append(c);
             String word = buffer.toString();
+
             // If mono char literal
             if (wordToTokenMap.containsKey(buffer.toString())) {
                 if (wordToTokenMap.get(word) == TokenType.comment) {
