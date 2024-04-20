@@ -14,5 +14,6 @@
   "}": "close_curly",
   "se": "_if",
   "altrimenti": "_else",
-  "oppure": "elif"
+  "oppure": "elif",
+  "finchè": "_while"
 }
