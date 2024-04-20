@@ -88,22 +88,10 @@ public class Parser {
             int nextMinPrec = prec + 1;
             NodeExpression right = parseExpr(nextMinPrec);
             switch (op.getType()) {
-            case TokenType.plus -> {
-                Token token = new Token(TokenType.plus);
-                left = new NodeBinAdd(token, left, right);
-            }
-            case TokenType.minus -> {
-                Token token = new Token(TokenType.minus);
-                left = new NodeBinSub(token, left, right);
-            }
-            case TokenType.star -> {
-                Token token = new Token(TokenType.star);
-                left = new NodeBinMulti(token, left, right);
-            }
-            case TokenType.slash -> {
-                Token token = new Token(TokenType.slash);
-                left = new NodeBinDiv(token, left, right);
-            }
+            case TokenType.plus -> left = new NodeBinAdd(curr_token, left, right);
+            case TokenType.minus -> left = new NodeBinSub(curr_token, left, right);
+            case TokenType.star -> left = new NodeBinMulti(curr_token, left, right);
+            case TokenType.slash -> left = new NodeBinDiv(curr_token, left, right);
             }
         }
         return left;
@@ -174,8 +162,10 @@ public class Parser {
             return new NodeIntLit((TokenIntLit) it.next());
         }
         if (it.hasNext() && it.peek().getType() == TokenType.ident) {
-            return new NodeIdent((TokenIdent) it.next());
+            TokenIdent ident = (TokenIdent) it.next();
+            return new NodeIdent(ident);
         }
+
         if (it.hasNext() && it.peek().getType() == TokenType.open_paren) {
             it.next();
             NodeExpression expr = parseExpr();
