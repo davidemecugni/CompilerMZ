@@ -35,7 +35,7 @@ public class CompilerMZ {
             formatter.printHelp("CompilerMZ", getOptions());
             return;
         }
-        String dialect = cmd.getOptionValue("d", "default_dialect.json");
+        String dialect = cmd.getOptionValue("d", "default_dialect");
         String fileIn = getCmdFileOption(cmd, "i", "", ".mz");
         String fileOut = getCmdFileOption(cmd, "o", removeExtension(fileIn, ".mz"), ".asm");
         String fileObj = getCmdFileOption(cmd, "O", removeExtension(fileOut, ".asm"), ".o");
@@ -154,7 +154,7 @@ public class CompilerMZ {
     }
 
     public static void callFullStack(String fileIn, String fileOut, String fileObj, String fileExe) throws IOException {
-        makeAssembly(fileIn, fileOut, "default_dialect.json");
+        makeAssembly(fileIn, fileOut, "default_dialect");
         callAssembler(fileOut, fileObj);
         callLinker(fileObj, fileExe);
         callExecutable(fileExe);
@@ -179,7 +179,7 @@ public class CompilerMZ {
      */
     public static int callFullStackWithReturnCode(String fileIn, String fileOut, String fileObj, String fileExe)
             throws IOException {
-        makeAssembly(fileIn, fileOut, "default_dialect.json");
+        makeAssembly(fileIn, fileOut, "default_dialect");
         callAssembler(fileOut, fileObj);
         callLinker(fileObj, fileExe);
         return callExecutable(fileExe);
