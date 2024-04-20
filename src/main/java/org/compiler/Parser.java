@@ -13,6 +13,7 @@ import org.compiler.nodes.expressions.terms.NodeTerm;
 import org.compiler.nodes.expressions.terms.NodeTermParen;
 import org.compiler.nodes.statements.NodeExit;
 import org.compiler.nodes.statements.NodeLet;
+import org.compiler.nodes.statements.NodeScope;
 import org.compiler.peekers.PeekIteratorToken;
 import org.compiler.token.TokenType;
 import org.compiler.token.tokens.Token;
@@ -28,7 +29,8 @@ import java.util.ArrayList;
  */
 public class Parser {
     private final PeekIteratorToken it;
-    NodeProgram tree;
+    private NodeProgram tree;
+    private final ArrayList<NodeStatement> stmts = new ArrayList<>();
 
     public Parser(ArrayList<Token> tokens) {
         this.it = new PeekIteratorToken(tokens);
@@ -36,7 +38,6 @@ public class Parser {
     }
 
     private void parseProgram() {
-        ArrayList<NodeStatement> stmts = new ArrayList<>();
         while (it.hasNext()) {
             stmts.add(parseStmt());
         }
@@ -50,6 +51,9 @@ public class Parser {
         } else if (it.hasNext() && it.peek().getType() == TokenType.let) {
             it.next();
             return parseLet();
+        } else if (it.hasNext() && it.peek().getType() == TokenType.open_curly) {
+            it.next();
+            return parseScope();
         } else {
             throw new IllegalArgumentException("Invalid token in statement");
         }
@@ -97,6 +101,18 @@ public class Parser {
             }
         }
         return left;
+    }
+
+    private NodeScope parseScope() {
+        ArrayList<NodeStatement> statements = new ArrayList<>();
+        while (it.peek().getType() != TokenType.close_curly) {
+            if (!it.hasNext()) {
+                throw  new IllegalArgumentException("Curly braces not closed");
+            }
+            statements.add(parseStmt());
+        }
+        it.next();
+        return new NodeScope(null, statements);
     }
 
     private NodeExit parseExit() {

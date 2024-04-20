@@ -10,7 +10,9 @@ import org.compiler.nodes.expressions.terms.NodeTerm;
 import org.compiler.nodes.expressions.terms.NodeTermParen;
 import org.compiler.nodes.statements.NodeExit;
 import org.compiler.nodes.statements.NodeLet;
+import org.compiler.nodes.statements.NodeScope;
 
+import java.util.ArrayList;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -22,6 +24,7 @@ public class Generator {
     private final NodeProgram m_program;
     private long stack_size = 0;
     private final SortedMap<String, Long> variables = new TreeMap<>();
+    private final ArrayList<Integer> scopes = new ArrayList<>();
 
     public Generator(NodeProgram program) {
         this.m_program = program;
@@ -45,6 +48,15 @@ public class Generator {
             }
             variables.put(nodeLet.getIdentifier().getIdent().getName(), stack_size);
             stmtSB.append(generateExpression(stmt.getStmt()));
+        }
+        case NodeScope nodeScope -> {
+            beginScope();
+            stmtSB.append("     ;;begin scope\n\n");
+            for (NodeStatement nodeStatement : nodeScope.getStmts()) {
+                stmtSB.append(generateStatement(nodeStatement));
+            }
+            stmtSB.append(endScope());
+            stmtSB.append("     ;;/end scope\n\n");
         }
         case null, default -> throw new IllegalArgumentException("Unknown statement type in generator");
         }
@@ -185,6 +197,20 @@ public class Generator {
     public String pop(String reg) {
         stack_size--;
         return "     pop " + reg + "\n";
+    }
+
+    public void beginScope() {
+        scopes.add(variables.size());
+    }
+
+    public String endScope() {
+        int pop_count = variables.size() - scopes.getLast();
+        stack_size -= pop_count;
+        for (int i = 0; i < pop_count; i++) {
+            variables.remove(variables.lastKey());
+        }
+        scopes.removeLast();
+        return "     add rsp, " + pop_count * 8 + "\n\n";
     }
 
     public String getGenerated() {

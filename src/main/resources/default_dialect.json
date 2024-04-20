@@ -9,5 +9,7 @@
   "*": "star",
   "-": "minus",
   "/": "slash",
-  "@": "comment"
+  "@": "comment",
+  "{": "open_curly",
+  "}": "close_curly"
 }
