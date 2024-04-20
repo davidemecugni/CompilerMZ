@@ -1,6 +1,5 @@
 package org.compiler;
 
-import org.compiler.nodes.NodeExpression;
 import org.compiler.nodes.expressions.binary_expressions.NodeBinAdd;
 import org.compiler.nodes.expressions.binary_expressions.NodeBinDiv;
 import org.compiler.nodes.expressions.binary_expressions.NodeBinMulti;
@@ -161,14 +160,15 @@ public class TestParser {
         assertThrows(IllegalArgumentException.class, () -> new Parser(invalidParenthesis2.getTokens()));
     }
 
-    @Test void testParserScope() {
+    @Test
+    void testParserScope() {
         Tokenizer validScope = new Tokenizer("{ exit(10); }");
         Parser parserScope = new Parser(validScope.getTokens());
 
-        //control if the first statement is a scope
+        // control if the first statement is a scope
         assertEquals(NodeScope.class, parserScope.getTree().getStmts().getFirst().getClass());
 
-        //control error in scopes
+        // control error in scopes
         Tokenizer invalidScope = new Tokenizer("{ exit(10); ");
         assertThrows(NullPointerException.class, () -> new Parser(invalidScope.getTokens()));
     }
@@ -178,13 +178,13 @@ public class TestParser {
         Tokenizer validIf = new Tokenizer("if (x) { exit(1); }");
         Parser parserIf = new Parser(validIf.getTokens());
 
-        //control if the first statement is an if
+        // control if the first statement is an if
         assertEquals(NodeIf.class, parserIf.getTree().getStmts().getFirst().getClass());
 
-        //control if the second token is an expression
+        // control if the second token is an expression
         assertEquals(NodeIdent.class, parserIf.getTree().getStmts().getFirst().getStmt().getClass());
 
-        //control errors in if statements
+        // control errors in if statements
         Tokenizer invalidIf1 = new Tokenizer("if { exit(1); }");
         Tokenizer invalidIf2 = new Tokenizer("if (x) { exit(1); ");
         assertThrows(IllegalArgumentException.class, () -> new Parser(invalidIf1.getTokens()));
