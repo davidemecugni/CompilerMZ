@@ -19,14 +19,14 @@ public class TestPeekIteratorToken {
 
         PeekIteratorToken peek = new PeekIteratorToken(tokens);
         assertTrue(peek.hasNext());
-        assertEquals(peek.peek(), new Token(TokenType._exit));
-        assertEquals(peek.next(), new Token(TokenType._exit));
+        assertEquals(new Token(TokenType._exit), peek.peek());
+        assertEquals(new Token(TokenType._exit), peek.next());
         assertTrue(peek.hasNext());
         assertEquals(peek.peek(), new TokenIntLit("42"));
         assertEquals(peek.next(), new TokenIntLit("42"));
         assertTrue(peek.hasNext());
-        assertEquals(peek.peek(), new Token(TokenType.semi));
-        assertEquals(peek.next(), new Token(TokenType.semi));
+        assertEquals(new Token(TokenType.semi), peek.peek());
+        assertEquals(new Token(TokenType.semi), peek.next());
         assertFalse(peek.hasNext());
         assertNull(peek.peek());
         assertNull(peek.next());

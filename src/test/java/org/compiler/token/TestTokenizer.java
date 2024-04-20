@@ -84,6 +84,24 @@ public class TestTokenizer {
     }
 
     @Test
+    public void testTokenizerInvalidLet() {
+        assertThrows(IllegalArgumentException.class, () -> new Tokenizer("let 1x = 10"));
+        assertThrows(IllegalArgumentException.class, () -> new Tokenizer("let 1010x = 10"));
+        assertDoesNotThrow(() -> new Tokenizer("let x1 = 10"));
+    }
+
+    @Test
+    public void testTokenizeLetEmojis() {
+        Tokenizer validLet = new Tokenizer("let 🤔 = 10;");
+        assertEquals(validLet.getTokens(), List.of(new Token(TokenType.let), new TokenIdent("🤔"),
+                new Token(TokenType.eq), new TokenIntLit("10"), new Token(TokenType.semi)));
+
+        validLet = new Tokenizer("let 🤡🤡🤡 = 10;");
+        assertEquals(validLet.getTokens(), List.of(new Token(TokenType.let), new TokenIdent("🤡🤡🤡"),
+                new Token(TokenType.eq), new TokenIntLit("10"), new Token(TokenType.semi)));
+    }
+
+    @Test
     public void testTokenizerArithmetic() {
         Tokenizer validArithmetic = new Tokenizer("let a = 10 + 20 + (29 * 10);");
         assertEquals(validArithmetic.getTokens(),

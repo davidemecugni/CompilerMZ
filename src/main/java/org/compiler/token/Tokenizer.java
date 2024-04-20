@@ -87,8 +87,10 @@ public class Tokenizer {
             return new Token(wordToTokenMap.get(word));
         } else if (word.matches("[0-9]+")) { // check if the word is a number
             return new TokenIntLit(word);
-        } else {
+        } else if (word.matches("^[^\\d].*")) {
             return new TokenIdent(word);
+        } else {
+            throw new IllegalArgumentException("Invalid variable name");
         }
     }
 }
