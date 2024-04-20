@@ -11,8 +11,6 @@ import org.compiler.nodes.expressions.terms.NodeTermParen;
 import org.compiler.nodes.statements.NodeExit;
 import org.compiler.nodes.statements.NodeLet;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -73,9 +71,7 @@ public class Generator {
             }
             termSB.append(push("QWORD [rsp + " + offset + "]")).append("\n");
         }
-        case NodeTermParen nodeTermParen -> {
-            termSB.append(generateExpression(nodeTermParen.getExprParen()));
-        }
+        case NodeTermParen nodeTermParen -> termSB.append(generateExpression(nodeTermParen.getExprParen()));
         case null, default -> throw new IllegalArgumentException("Unknown term type in generator");
         }
         return termSB.toString();
@@ -87,9 +83,7 @@ public class Generator {
         // If it's a term, generate the term, otherwise generate the binary expression
         switch (expr) {
         case NodeTerm nodeTerm -> exprSB.append(generateTerm(nodeTerm));
-        case NodeBin nodeBin -> {
-            exprSB.append(generateBinaryExpression(nodeBin));
-        }
+        case NodeBin nodeBin -> exprSB.append(generateBinaryExpression(nodeBin));
         case null, default -> throw new IllegalArgumentException("Unknown expression type in generator");
         }
         return exprSB.toString();
