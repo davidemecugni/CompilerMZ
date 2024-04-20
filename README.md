@@ -24,8 +24,12 @@ let x = 1;
 let y = 2;
 let z = 3;
 let a = (x + y * z) / (2 - 1);
-if (x) {
+if (x - 1) {
   exit(1);
+} elif (x - 2) {
+  exit(2);
+} else {
+  exit(3);
 }
 
 exit(x);
@@ -50,6 +54,7 @@ exit(x);
 - [x] If statement
   - [x] Condition expression
   - [x] Scope
+  - [x] Elif and Else
 # Get the compiler working
 ```shell
 sudo apt-get install nasm

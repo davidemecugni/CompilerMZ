@@ -2,8 +2,10 @@
 
 - prog = stmt*
 - stmt = scope | exit_stmt | let_stmt | if_stmt | comment_stmt
-- scope = open_curly, stmt*, close_curly
-- if_stmt = if, space*, #TBC
+- scope = open_curly, space*, stmt*, space*, close_curly
+- if_stmt = if, space*, open_par, space*, expr, space*, close_par, space*, scope
+- elif_stmt = elif, space*, open_par, space*, expr, space*, close_par, space*, scope, space*, elif_stmt, space*, [else_stmt]
+- else_stmt = else, space*, scope
 - exit_stmt = exit, space*, open_par, space*, expr, space*, close_par, semi
 - let_stmt = let, space*, ident, space*, eq, space*, expr, semi
 - expr = int_lit | ident | expr, space*, operator, space*, expr | open_par, space*, expr, space*, close_par
