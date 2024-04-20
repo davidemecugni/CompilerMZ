@@ -12,6 +12,7 @@ import org.compiler.nodes.expressions.terms.NodeIntLit;
 import org.compiler.nodes.expressions.terms.NodeTerm;
 import org.compiler.nodes.expressions.terms.NodeTermParen;
 import org.compiler.nodes.statements.NodeExit;
+import org.compiler.nodes.statements.NodeIf;
 import org.compiler.nodes.statements.NodeLet;
 import org.compiler.nodes.statements.NodeScope;
 import org.compiler.peekers.PeekIteratorToken;
@@ -54,6 +55,9 @@ public class Parser {
         } else if (it.hasNext() && it.peek().getType() == TokenType.open_curly) {
             it.next();
             return parseScope();
+        } else if (it.hasNext() && it.peek().getType() == TokenType._if) {
+            it.next();
+            return parseIf();
         } else {
             throw new IllegalArgumentException("Invalid token in statement");
         }
@@ -104,6 +108,7 @@ public class Parser {
     }
 
     private NodeScope parseScope() {
+        it.next();
         ArrayList<NodeStatement> statements = new ArrayList<>();
         while (it.peek().getType() != TokenType.close_curly) {
             if (!it.hasNext()) {
@@ -113,6 +118,20 @@ public class Parser {
         }
         it.next();
         return new NodeScope(null, statements);
+    }
+
+    private NodeIf parseIf() {
+        if (it.peek().getType() != TokenType.open_paren) {
+            throw new IllegalArgumentException("invalid token after if statement, expected parenthesis");
+        }
+        it.next();
+        NodeExpression expr = parseExpr();
+        if (it.peek().getType() != TokenType.close_paren) {
+            throw new IllegalArgumentException("Parenthesis not closed");
+        }
+        it.next();
+        NodeScope scope = parseScope();
+        return new NodeIf(expr, scope);
     }
 
     private NodeExit parseExit() {

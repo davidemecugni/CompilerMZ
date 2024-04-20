@@ -11,5 +11,6 @@
   "/": "slash",
   "@": "comment",
   "{": "open_curly",
-  "}": "close_curly"
+  "}": "close_curly",
+  "if": "_if"
 }

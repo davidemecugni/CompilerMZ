@@ -9,6 +9,7 @@ import org.compiler.nodes.expressions.terms.NodeIntLit;
 import org.compiler.nodes.expressions.terms.NodeTerm;
 import org.compiler.nodes.expressions.terms.NodeTermParen;
 import org.compiler.nodes.statements.NodeExit;
+import org.compiler.nodes.statements.NodeIf;
 import org.compiler.nodes.statements.NodeLet;
 import org.compiler.nodes.statements.NodeScope;
 
@@ -25,6 +26,7 @@ public class Generator {
     private long stack_size = 0;
     private final SortedMap<String, Long> variables = new TreeMap<>();
     private final ArrayList<Integer> scopes = new ArrayList<>();
+    private int label_counter = 0;
 
     public Generator(NodeProgram program) {
         this.m_program = program;
@@ -57,6 +59,17 @@ public class Generator {
             }
             stmtSB.append(endScope());
             stmtSB.append("     ;;/end scope\n\n");
+        }
+        case NodeIf nodeIf -> {
+            String label = create_label();
+            stmtSB.append("     ;;if\n\n");
+            stmtSB.append(generateExpression(nodeIf.getStmt()));
+            stmtSB.append(pop("rax"));
+            stmtSB.append("     test rax, rax\n");
+            stmtSB.append("     jz ").append(label).append("\n\n");
+            stmtSB.append(generateStatement(nodeIf.getNodeScope()));
+            stmtSB.append(label).append(":\n\n");
+            stmtSB.append("     ;;/if\n\n");
         }
         case null, default -> throw new IllegalArgumentException("Unknown statement type in generator");
         }
@@ -211,6 +224,10 @@ public class Generator {
         }
         scopes.removeLast();
         return "     add rsp, " + pop_count * 8 + "\n\n";
+    }
+
+    public String create_label() {
+        return "label" + label_counter++;
     }
 
     public String getGenerated() {
