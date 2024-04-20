@@ -45,5 +45,6 @@ public class TestCompilerMZ {
                 "src/test/java/org/compiler/testCompilerMZResources/exits15.o",
                 "src/test/java/org/compiler/testCompilerMZResources/exits15");
         assertEquals(10, exitCode);
+
     }
 }
