@@ -13,6 +13,8 @@ import org.compiler.nodes.statements.NodeLet;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * Generates a string representation of the assembly code
@@ -21,7 +23,7 @@ public class Generator {
     private String generated = "";
     private final NodeProgram m_program;
     private long stack_size = 0;
-    private final Map<String, Long> variables = new HashMap<>();
+    private final SortedMap<String, Long> variables = new TreeMap<>();
 
     public Generator(NodeProgram program) {
         this.m_program = program;
