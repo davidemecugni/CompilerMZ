@@ -110,7 +110,6 @@ public class Parser {
     }
 
     private NodeScope parseScope() {
-        it.next();
         ArrayList<NodeStatement> statements = new ArrayList<>();
         while (it.peek().getType() != TokenType.close_curly) {
             if (!it.hasNext()) {
@@ -131,6 +130,7 @@ public class Parser {
         if (it.peek().getType() != TokenType.close_paren) {
             throw new IllegalArgumentException("Parenthesis not closed");
         }
+        it.next();
         it.next();
         NodeScope scope = parseScope();
         return new NodeIf(expr, scope);

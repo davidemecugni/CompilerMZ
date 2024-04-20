@@ -1,11 +1,15 @@
 package org.compiler;
 
+import org.compiler.nodes.NodeExpression;
 import org.compiler.nodes.expressions.binary_expressions.NodeBinAdd;
 import org.compiler.nodes.expressions.binary_expressions.NodeBinDiv;
 import org.compiler.nodes.expressions.binary_expressions.NodeBinMulti;
 import org.compiler.nodes.expressions.binary_expressions.NodeBinSub;
+import org.compiler.nodes.expressions.terms.NodeIdent;
 import org.compiler.nodes.statements.NodeExit;
+import org.compiler.nodes.statements.NodeIf;
 import org.compiler.nodes.statements.NodeLet;
+import org.compiler.nodes.statements.NodeScope;
 import org.compiler.token.TokenType;
 import org.compiler.token.Tokenizer;
 import static org.junit.jupiter.api.Assertions.*;
@@ -155,5 +159,35 @@ public class TestParser {
         Tokenizer invalidParenthesis2 = new Tokenizer("let a = 10 + 5) * 2;");
         assertThrows(IllegalArgumentException.class, () -> new Parser(invalidParenthesis1.getTokens()));
         assertThrows(IllegalArgumentException.class, () -> new Parser(invalidParenthesis2.getTokens()));
+    }
+
+    @Test void testParserScope() {
+        Tokenizer validScope = new Tokenizer("{ exit(10); }");
+        Parser parserScope = new Parser(validScope.getTokens());
+
+        //control if the first statement is a scope
+        assertEquals(NodeScope.class, parserScope.getTree().getStmts().getFirst().getClass());
+
+        //control error in scopes
+        Tokenizer invalidScope = new Tokenizer("{ exit(10); ");
+        assertThrows(NullPointerException.class, () -> new Parser(invalidScope.getTokens()));
+    }
+
+    @Test
+    public void testParserIf() {
+        Tokenizer validIf = new Tokenizer("if (x) { exit(1); }");
+        Parser parserIf = new Parser(validIf.getTokens());
+
+        //control if the first statement is an if
+        assertEquals(NodeIf.class, parserIf.getTree().getStmts().getFirst().getClass());
+
+        //control if the second token is an expression
+        assertEquals(NodeIdent.class, parserIf.getTree().getStmts().getFirst().getStmt().getClass());
+
+        //control errors in if statements
+        Tokenizer invalidIf1 = new Tokenizer("if { exit(1); }");
+        Tokenizer invalidIf2 = new Tokenizer("if (x) { exit(1); ");
+        assertThrows(IllegalArgumentException.class, () -> new Parser(invalidIf1.getTokens()));
+        assertThrows(NullPointerException.class, () -> new Parser(invalidIf2.getTokens()));
     }
 }
