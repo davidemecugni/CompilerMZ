@@ -155,6 +155,7 @@ public class Generator {
     }
 
     public void printStmt() {
+
         for (NodeStatement statement : m_program.getStmts()) {
             System.out.println(statement.getStmt().getExpr().getType().toString());
         }
