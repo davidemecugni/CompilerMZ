@@ -13,9 +13,9 @@ public class TestPeekIteratorChar {
         assertEquals('h', peek.peek());
         assertEquals('o', peek.peek(4));
         assertTrue(peek.hasNext());
-        assertEquals(peek.peek(), 'h');
+        assertEquals('h', peek.peek());
         for (char c : new char[] { 'h', 'e', 'l', 'l', 'o', 'w', 'o', 'r', 'l', 'd', '!' }) {
-            assertEquals(peek.next(), c);
+            assertEquals(c, peek.next());
         }
         assertFalse(peek.hasNext());
         assertNull(peek.peek());

@@ -38,6 +38,7 @@ public class Tokenizer {
             char c = it.next();
             buffer.append(c);
             String word = buffer.toString();
+
             // If mono char literal
             if (wordToTokenMap.containsKey(buffer.toString())) {
                 if (wordToTokenMap.get(word) == TokenType.comment) {
@@ -49,7 +50,9 @@ public class Tokenizer {
                 continue;
             }
             while (it.hasNext() && !Character.isSpaceChar(it.peek())
-                    && !wordToTokenMap.containsKey(it.peek().toString()) && ! (wordToTokenMap.containsKey(buffer.toString()) && wordToTokenMap.get(buffer.toString()) == TokenType.comment)) {
+                    && !wordToTokenMap.containsKey(it.peek().toString())
+                    && !(wordToTokenMap.containsKey(buffer.toString())
+                            && wordToTokenMap.get(buffer.toString()) == TokenType.comment)) {
                 buffer.append(it.next());
             }
             word = buffer.toString();
@@ -84,8 +87,10 @@ public class Tokenizer {
             return new Token(wordToTokenMap.get(word));
         } else if (word.matches("[0-9]+")) { // check if the word is a number
             return new TokenIntLit(word);
-        } else {
+        } else if (word.matches("^[^\\d].*")) {
             return new TokenIdent(word);
+        } else {
+            throw new IllegalArgumentException("Invalid variable name");
         }
     }
 }

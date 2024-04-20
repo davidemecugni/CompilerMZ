@@ -12,7 +12,9 @@ import org.compiler.nodes.expressions.terms.NodeIntLit;
 import org.compiler.nodes.expressions.terms.NodeTerm;
 import org.compiler.nodes.expressions.terms.NodeTermParen;
 import org.compiler.nodes.statements.NodeExit;
+import org.compiler.nodes.statements.NodeIf;
 import org.compiler.nodes.statements.NodeLet;
+import org.compiler.nodes.statements.NodeScope;
 import org.compiler.peekers.PeekIteratorToken;
 import org.compiler.token.TokenType;
 import org.compiler.token.tokens.Token;
@@ -28,7 +30,8 @@ import java.util.ArrayList;
  */
 public class Parser {
     private final PeekIteratorToken it;
-    NodeProgram tree;
+    private NodeProgram tree;
+    private final ArrayList<NodeStatement> stmts = new ArrayList<>();
 
     public Parser(ArrayList<Token> tokens) {
         this.it = new PeekIteratorToken(tokens);
@@ -36,7 +39,6 @@ public class Parser {
     }
 
     private void parseProgram() {
-        ArrayList<NodeStatement> stmts = new ArrayList<>();
         while (it.hasNext()) {
             stmts.add(parseStmt());
         }
@@ -50,13 +52,21 @@ public class Parser {
         } else if (it.hasNext() && it.peek().getType() == TokenType.let) {
             it.next();
             return parseLet();
+        } else if (it.hasNext() && it.peek().getType() == TokenType.open_curly) {
+            it.next();
+            return parseScope();
+        } else if (it.hasNext() && it.peek().getType() == TokenType._if) {
+            it.next();
+            return parseIf();
         } else {
             throw new IllegalArgumentException("Invalid token in statement");
         }
     }
-    private NodeExpression parseExpr(){
+
+    private NodeExpression parseExpr() {
         return parseExpr(0);
     }
+
     private NodeExpression parseExpr(int minPrec) {
         // salva il primo termine
 
@@ -78,25 +88,40 @@ public class Parser {
             int nextMinPrec = prec + 1;
             NodeExpression right = parseExpr(nextMinPrec);
             switch (op.getType()) {
-            case TokenType.plus -> {
-                Token token = new Token(TokenType.plus);
-                left = new NodeBinAdd(token, left, right);
-            }
-            case TokenType.minus -> {
-                Token token = new Token(TokenType.minus);
-                left = new NodeBinSub(token, left, right);
-            }
-            case TokenType.star -> {
-                Token token = new Token(TokenType.star);
-                left = new NodeBinMulti(token, left, right);
-            }
-            case TokenType.slash -> {
-                Token token = new Token(TokenType.slash);
-                left = new NodeBinDiv(token, left, right);
-            }
+            case TokenType.plus -> left = new NodeBinAdd(curr_token, left, right);
+            case TokenType.minus -> left = new NodeBinSub(curr_token, left, right);
+            case TokenType.star -> left = new NodeBinMulti(curr_token, left, right);
+            case TokenType.slash -> left = new NodeBinDiv(curr_token, left, right);
             }
         }
         return left;
+    }
+
+    private NodeScope parseScope() {
+        ArrayList<NodeStatement> statements = new ArrayList<>();
+        while (it.peek().getType() != TokenType.close_curly) {
+            if (!it.hasNext()) {
+                throw new IllegalArgumentException("Curly braces not closed");
+            }
+            statements.add(parseStmt());
+        }
+        it.next();
+        return new NodeScope(null, statements);
+    }
+
+    private NodeIf parseIf() {
+        if (it.peek().getType() != TokenType.open_paren) {
+            throw new IllegalArgumentException("invalid token after if statement, expected parenthesis");
+        }
+        it.next();
+        NodeExpression expr = parseExpr();
+        if (it.peek().getType() != TokenType.close_paren) {
+            throw new IllegalArgumentException("Parenthesis not closed");
+        }
+        it.next();
+        it.next();
+        NodeScope scope = parseScope();
+        return new NodeIf(expr, scope);
     }
 
     private NodeExit parseExit() {
@@ -137,8 +162,10 @@ public class Parser {
             return new NodeIntLit((TokenIntLit) it.next());
         }
         if (it.hasNext() && it.peek().getType() == TokenType.ident) {
-            return new NodeIdent((TokenIdent) it.next());
+            TokenIdent ident = (TokenIdent) it.next();
+            return new NodeIdent(ident);
         }
+
         if (it.hasNext() && it.peek().getType() == TokenType.open_paren) {
             it.next();
             NodeExpression expr = parseExpr();

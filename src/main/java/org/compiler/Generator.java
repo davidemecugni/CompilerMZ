@@ -9,10 +9,13 @@ import org.compiler.nodes.expressions.terms.NodeIntLit;
 import org.compiler.nodes.expressions.terms.NodeTerm;
 import org.compiler.nodes.expressions.terms.NodeTermParen;
 import org.compiler.nodes.statements.NodeExit;
+import org.compiler.nodes.statements.NodeIf;
 import org.compiler.nodes.statements.NodeLet;
+import org.compiler.nodes.statements.NodeScope;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * Generates a string representation of the assembly code
@@ -21,7 +24,9 @@ public class Generator {
     private String generated = "";
     private final NodeProgram m_program;
     private long stack_size = 0;
-    private final Map<String, Long> variables = new HashMap<>();
+    private final SortedMap<String, Long> variables = new TreeMap<>();
+    private final ArrayList<Integer> scopes = new ArrayList<>();
+    private int label_counter = 0;
 
     public Generator(NodeProgram program) {
         this.m_program = program;
@@ -45,6 +50,26 @@ public class Generator {
             }
             variables.put(nodeLet.getIdentifier().getIdent().getName(), stack_size);
             stmtSB.append(generateExpression(stmt.getStmt()));
+        }
+        case NodeScope nodeScope -> {
+            beginScope();
+            stmtSB.append("     ;;begin scope\n\n");
+            for (NodeStatement nodeStatement : nodeScope.getStmts()) {
+                stmtSB.append(generateStatement(nodeStatement));
+            }
+            stmtSB.append(endScope());
+            stmtSB.append("     ;;/end scope\n\n");
+        }
+        case NodeIf nodeIf -> {
+            String label = create_label();
+            stmtSB.append("     ;;if\n\n");
+            stmtSB.append(generateExpression(nodeIf.getStmt()));
+            stmtSB.append(pop("rax"));
+            stmtSB.append("     test rax, rax\n");
+            stmtSB.append("     jz ").append(label).append("\n\n");
+            stmtSB.append(generateStatement(nodeIf.getNodeScope()));
+            stmtSB.append(label).append(":\n\n");
+            stmtSB.append("     ;;/if\n\n");
         }
         case null, default -> throw new IllegalArgumentException("Unknown statement type in generator");
         }
@@ -71,9 +96,7 @@ public class Generator {
             }
             termSB.append(push("QWORD [rsp + " + offset + "]")).append("\n");
         }
-        case NodeTermParen nodeTermParen -> {
-            termSB.append(generateExpression(nodeTermParen.getExprParen()));
-        }
+        case NodeTermParen nodeTermParen -> termSB.append(generateExpression(nodeTermParen.getExprParen()));
         case null, default -> throw new IllegalArgumentException("Unknown term type in generator");
         }
         return termSB.toString();
@@ -85,9 +108,7 @@ public class Generator {
         // If it's a term, generate the term, otherwise generate the binary expression
         switch (expr) {
         case NodeTerm nodeTerm -> exprSB.append(generateTerm(nodeTerm));
-        case NodeBin nodeBin -> {
-            exprSB.append(generateBinaryExpression(nodeBin));
-        }
+        case NodeBin nodeBin -> exprSB.append(generateBinaryExpression(nodeBin));
         case null, default -> throw new IllegalArgumentException("Unknown expression type in generator");
         }
         return exprSB.toString();
@@ -159,6 +180,7 @@ public class Generator {
     }
 
     public void printStmt() {
+
         for (NodeStatement statement : m_program.getStmts()) {
             System.out.println(statement.getStmt().getExpr().getType().toString());
         }
@@ -188,6 +210,24 @@ public class Generator {
     public String pop(String reg) {
         stack_size--;
         return "     pop " + reg + "\n";
+    }
+
+    public void beginScope() {
+        scopes.add(variables.size());
+    }
+
+    public String endScope() {
+        int pop_count = variables.size() - scopes.getLast();
+        stack_size -= pop_count;
+        for (int i = 0; i < pop_count; i++) {
+            variables.remove(variables.lastKey());
+        }
+        scopes.removeLast();
+        return "     add rsp, " + pop_count * 8 + "\n\n";
+    }
+
+    public String create_label() {
+        return "label" + label_counter++;
     }
 
     public String getGenerated() {
