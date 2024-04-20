@@ -18,6 +18,7 @@ import org.compiler.nodes.statements.NodeScope;
 import org.compiler.nodes.statements.conditionals.Conditional;
 import org.compiler.nodes.statements.conditionals.NodeElif;
 import org.compiler.nodes.statements.conditionals.NodeIf;
+import org.compiler.nodes.statements.conditionals.NodeWhile;
 import org.compiler.peekers.PeekIteratorToken;
 import org.compiler.token.TokenType;
 import org.compiler.token.tokens.Token;
@@ -77,6 +78,10 @@ public class Parser {
                 nodeIf.setScopeElse(parseScope());
             }
             return nodeIf;
+        } else if (it.hasNext() && it.peek().getType() == TokenType._while) {
+            it.next();
+            Conditional conditional = parseCondition();
+            return new NodeWhile(conditional.getStmt(), conditional.getScope());
         } else {
             throw new IllegalArgumentException("Invalid token in statement");
         }

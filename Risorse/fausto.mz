@@ -1,9 +1,7 @@
-let x = 10;
-if (1) {
-    x = 1;
-} elif (1) {
-    x = 2;
-} else {
-    x = 3;
+let contatore = 5;
+let x = 0;
+while (contatore) {
+    x = x + 1;
+    contatore = contatore - 1;
 }
 exit(x);

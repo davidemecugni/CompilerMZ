@@ -14,5 +14,6 @@
   "}": "close_curly",
   "if": "_if",
   "else": "_else",
-  "elif": "elif"
+  "elif": "elif",
+  "while": "_while"
 }

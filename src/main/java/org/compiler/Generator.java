@@ -13,6 +13,8 @@ import org.compiler.nodes.statements.NodeExit;
 import org.compiler.nodes.statements.NodeLet;
 import org.compiler.nodes.statements.NodeScope;
 import org.compiler.nodes.statements.conditionals.NodeIf;
+import org.compiler.nodes.statements.conditionals.NodeWhile;
+
 import java.util.ArrayList;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -104,6 +106,22 @@ public class Generator {
             }
             stmtSB.append(finalLabel).append(":\n\n");
             stmtSB.append("     ;;/if\n\n");
+        }
+        case NodeWhile nodeWhile -> {
+            String labelStart = create_label();
+            String labelEnd = create_label();
+
+            stmtSB.append("     ;;while\n");
+            stmtSB.append(labelStart).append(":\n");
+            stmtSB.append(generateExpression(nodeWhile.getStmt()));
+            stmtSB.append(pop("rax"));
+            stmtSB.append("     test rax, rax\n");
+            stmtSB.append("     jz ").append(labelEnd).append("\n");
+            stmtSB.append(generateStatement(nodeWhile.getScope()));
+            stmtSB.append("     jmp ").append(labelStart).append("\n");
+            stmtSB.append(labelEnd).append(":\n");
+            stmtSB.append("     ;;/while\n");
+
         }
         case null, default -> throw new IllegalArgumentException("Unknown statement type in generator");
         }
