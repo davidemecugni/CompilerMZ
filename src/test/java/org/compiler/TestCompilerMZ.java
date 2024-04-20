@@ -45,6 +45,30 @@ public class TestCompilerMZ {
                 "src/test/java/org/compiler/testCompilerMZResources/out.o",
                 "src/test/java/org/compiler/testCompilerMZResources/out");
         assertEquals(10, exitCode);
+        exitCode = CompilerMZ.callFullStackWithReturnCode(
+                "src/test/java/org/compiler/testCompilerMZResources/exits1.mz",
+                "src/test/java/org/compiler/testCompilerMZResources/out.asm",
+                "src/test/java/org/compiler/testCompilerMZResources/out.o",
+                "src/test/java/org/compiler/testCompilerMZResources/out");
+        assertEquals(1, exitCode);
+        exitCode = CompilerMZ.callFullStackWithReturnCode(
+                "src/test/java/org/compiler/testCompilerMZResources/exits2.mz",
+                "src/test/java/org/compiler/testCompilerMZResources/out.asm",
+                "src/test/java/org/compiler/testCompilerMZResources/out.o",
+                "src/test/java/org/compiler/testCompilerMZResources/out");
+        assertEquals(2, exitCode);
+        exitCode = CompilerMZ.callFullStackWithReturnCode(
+                "src/test/java/org/compiler/testCompilerMZResources/exits69.mz",
+                "src/test/java/org/compiler/testCompilerMZResources/out.asm",
+                "src/test/java/org/compiler/testCompilerMZResources/out.o",
+                "src/test/java/org/compiler/testCompilerMZResources/out");
+        assertEquals(69, exitCode);
+        exitCode = CompilerMZ.callFullStackWithReturnCode(
+                "src/test/java/org/compiler/testCompilerMZResources/exits111.mz",
+                "src/test/java/org/compiler/testCompilerMZResources/out.asm",
+                "src/test/java/org/compiler/testCompilerMZResources/out.o",
+                "src/test/java/org/compiler/testCompilerMZResources/out");
+        assertEquals(111, exitCode);
 
     }
 }
