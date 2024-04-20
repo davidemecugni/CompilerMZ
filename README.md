@@ -25,7 +25,7 @@ let y = 2;
 let z = 3;
 let a = (x + y * z) / (2 - 1);
 if (x - 1) {
-  exit(1);
+  x = 1;
 } elif (x - 2) {
   exit(2);
 } else {
@@ -55,6 +55,7 @@ exit(x);
   - [x] Condition expression
   - [x] Scope
   - [x] Elif and Else
+- [x] Variable Reassignment
 # Get the compiler working
 ```shell
 sudo apt-get install nasm

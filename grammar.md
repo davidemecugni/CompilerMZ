@@ -1,7 +1,7 @@
 # Grammar for CompilerMZ according to the EBNF ISO/IEC 14977:1996
 
 - prog = stmt*
-- stmt = scope | exit_stmt | let_stmt | if_stmt | comment_stmt
+- stmt = scope | exit_stmt | let_stmt | if_stmt | comment_stmt | assignment
 - scope = open_curly, ws*, stmt*, ws*, close_curly
 - if_stmt = if, ws*, open_par, ws*, expr, ws*, close_par, ws*, scope
 - elif_stmt = elif, ws*, open_par, ws*, expr, ws*, close_par, ws*, scope, ws*, elif_stmt, ws*, [else_stmt]
@@ -12,6 +12,7 @@
 - operator = add | sub | mul | div
 - int_lit = digit+
 - ident = (valid_char - digit), valid_char*
+- assignment = ident, ws*, eq, vws*, expr, ws*, semi
 - comment_stmt = comment_stmt_single | comment_stmt_multi
 - comment_stmt_single = comment, ((? UNICODE ?) - comment)*,  (? UNICODE ?)*, new_line
 - comment_stmt_multi = comment, comment, ((? UNICODE ?) - comment)*, comment, comment

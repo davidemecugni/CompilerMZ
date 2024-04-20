@@ -8,11 +8,11 @@ import org.compiler.nodes.expressions.terms.NodeIdent;
 import org.compiler.nodes.expressions.terms.NodeIntLit;
 import org.compiler.nodes.expressions.terms.NodeTerm;
 import org.compiler.nodes.expressions.terms.NodeTermParen;
+import org.compiler.nodes.statements.NodeAssign;
 import org.compiler.nodes.statements.NodeExit;
 import org.compiler.nodes.statements.NodeLet;
 import org.compiler.nodes.statements.NodeScope;
 import org.compiler.nodes.statements.conditionals.NodeIf;
-
 import java.util.ArrayList;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -51,6 +51,15 @@ public class Generator {
             variables.put(nodeLet.getIdentifier().getIdent().getName(), stack_size);
             stmtSB.append(generateExpression(stmt.getStmt()));
         }
+        case NodeAssign nodeAssign -> {
+            if (!variables.containsKey(nodeAssign.getTokenIdent().getName())) {
+                throw new IllegalArgumentException("Undeclared Identifier");
+            }
+            long offset = (stack_size - variables.get(nodeAssign.getTokenIdent().getName()) - 1) * 8;
+            stmtSB.append(generateExpression(nodeAssign.getStmt()));
+            stmtSB.append(pop("rax"));
+            stmtSB.append("     mov [rsp + ").append(offset).append("], rax\n");
+        }
         case NodeScope nodeScope -> {
             beginScope();
             stmtSB.append("     ;;begin scope\n\n");
@@ -75,16 +84,16 @@ public class Generator {
             stmtSB.append("     jmp ").append(finalLabel).append("\n\n");
             int i;
             for (i = 0; i < numberOfElifs; i++) {
-                    stmtSB.append("     ;;elif\n");
-                    stmtSB.append(label).append(i).append(":\n\n");
-                    stmtSB.append("     ;;elif condition\n");
-                    stmtSB.append(generateExpression(nodeIf.getNthScopeElif(i).getStmt()));
-                    stmtSB.append(pop("rax"));
-                    stmtSB.append("     test rax, rax\n");
-                    stmtSB.append("     jz ").append(label).append(i + 1).append("\n");
-                    stmtSB.append("     ;;/elif condition\n");
-                    stmtSB.append(generateStatement(nodeIf.getNthScopeElif(i).getScope()));
-                    stmtSB.append("     ;;/elif\n");
+                stmtSB.append("     ;;elif\n");
+                stmtSB.append(label).append(i).append(":\n\n");
+                stmtSB.append("     ;;elif condition\n");
+                stmtSB.append(generateExpression(nodeIf.getNthScopeElif(i).getStmt()));
+                stmtSB.append(pop("rax"));
+                stmtSB.append("     test rax, rax\n");
+                stmtSB.append("     jz ").append(label).append(i + 1).append("\n");
+                stmtSB.append("     ;;/elif condition\n");
+                stmtSB.append(generateStatement(nodeIf.getNthScopeElif(i).getScope()));
+                stmtSB.append("     ;;/elif\n");
             }
             stmtSB.append(label).append(i).append(":\n\n");
             if (nodeIf.hasElse()) {

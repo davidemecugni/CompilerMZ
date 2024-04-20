@@ -11,6 +11,7 @@ import org.compiler.nodes.expressions.terms.NodeIdent;
 import org.compiler.nodes.expressions.terms.NodeIntLit;
 import org.compiler.nodes.expressions.terms.NodeTerm;
 import org.compiler.nodes.expressions.terms.NodeTermParen;
+import org.compiler.nodes.statements.NodeAssign;
 import org.compiler.nodes.statements.NodeExit;
 import org.compiler.nodes.statements.NodeLet;
 import org.compiler.nodes.statements.NodeScope;
@@ -54,6 +55,9 @@ public class Parser {
         } else if (it.hasNext() && it.peek().getType() == TokenType.let) {
             it.next();
             return parseLet();
+        } else if (it.hasNext() && it.peek().getType() == TokenType.ident && it.hasNext()
+                && it.peek(1).getType() == TokenType.eq) {
+            return parseAssign();
         } else if (it.hasNext() && it.peek().getType() == TokenType.open_curly) {
             it.next();
             return parseScope();
@@ -110,6 +114,16 @@ public class Parser {
             }
         }
         return left;
+    }
+
+    private NodeAssign parseAssign() {
+        TokenIdent ident = (TokenIdent) it.next();
+        it.next();
+        NodeExpression expr = parseExpr();
+        if (it.next().getType() != TokenType.semi) {
+            throw new IllegalArgumentException("Semicolon expected");
+        }
+        return new NodeAssign(expr, ident);
     }
 
     private NodeScope parseScope() {
