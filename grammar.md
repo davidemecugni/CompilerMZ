@@ -2,13 +2,13 @@
 
 - prog = stmt*
 - stmt = scope | exit_stmt | let_stmt | if_stmt | comment_stmt
-- scope = open_curly, space*, stmt*, space*, close_curly
-- if_stmt = if, space*, open_par, space*, expr, space*, close_par, space*, scope
-- elif_stmt = elif, space*, open_par, space*, expr, space*, close_par, space*, scope, space*, elif_stmt, space*, [else_stmt]
-- else_stmt = else, space*, scope
-- exit_stmt = exit, space*, open_par, space*, expr, space*, close_par, semi
-- let_stmt = let, space*, ident, space*, eq, space*, expr, semi
-- expr = int_lit | ident | expr, space*, operator, space*, expr | open_par, space*, expr, space*, close_par
+- scope = open_curly, ws*, stmt*, ws*, close_curly
+- if_stmt = if, ws*, open_par, ws*, expr, ws*, close_par, ws*, scope
+- elif_stmt = elif, ws*, open_par, ws*, expr, ws*, close_par, ws*, scope, ws*, elif_stmt, ws*, [else_stmt]
+- else_stmt = else, ws*, scope
+- exit_stmt = exit, ws*, open_par, ws*, expr, ws*, close_par, semi
+- let_stmt = let, ws*, ident, ws*, eq, ws*, expr, semi
+- expr = int_lit | ident | expr, ws*, operator, ws*, expr | open_par, ws*, expr, ws*, close_par
 - operator = add | sub | mul | div
 - int_lit = digit+
 - ident = (valid_char - digit), valid_char*
@@ -18,8 +18,8 @@
 # Terminals
 - digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 - new_line = (? ISO 6429 character Line Feed ?)
-- space = (? ISO 6429 character Whitespace ?) - new_line
-- valid_char = ((? UNICODE ?) - (? Single char comment ?)) - space - (? Single char terminal ?)
+- ws = (? ISO 6429 character Whitespace ?)
+- valid_char = (? UNICODE ?) - (? Single char comment ?) - ws - (? Single char terminal ?)
 
 (* Editable Terminals, might depend on dialect *)
 

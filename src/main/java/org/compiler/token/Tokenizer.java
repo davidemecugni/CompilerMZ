@@ -49,7 +49,7 @@ public class Tokenizer {
                 buffer.setLength(0);
                 continue;
             }
-            while (it.hasNext() && !Character.isSpaceChar(it.peek())
+            while (it.hasNext() && !Character.isWhitespace(it.peek())
                     && !wordToTokenMap.containsKey(it.peek().toString())
                     && !(wordToTokenMap.containsKey(buffer.toString())
                             && wordToTokenMap.get(buffer.toString()) == TokenType.comment)) {
