@@ -62,9 +62,11 @@ public class Parser {
             throw new IllegalArgumentException("Invalid token in statement");
         }
     }
-    private NodeExpression parseExpr(){
+
+    private NodeExpression parseExpr() {
         return parseExpr(0);
     }
+
     private NodeExpression parseExpr(int minPrec) {
         // salva il primo termine
 
@@ -112,7 +114,7 @@ public class Parser {
         ArrayList<NodeStatement> statements = new ArrayList<>();
         while (it.peek().getType() != TokenType.close_curly) {
             if (!it.hasNext()) {
-                throw  new IllegalArgumentException("Curly braces not closed");
+                throw new IllegalArgumentException("Curly braces not closed");
             }
             statements.add(parseStmt());
         }

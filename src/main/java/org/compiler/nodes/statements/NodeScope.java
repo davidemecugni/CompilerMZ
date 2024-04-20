@@ -19,8 +19,6 @@ public class NodeScope extends NodeStatement {
 
     @Override
     public String toString() {
-        return "NodeScope{" +
-                "stmts=" + stmts +
-                '}';
+        return "NodeScope{" + "stmts=" + stmts + '}';
     }
 }

@@ -17,8 +17,6 @@ public class NodeIf extends NodeStatement {
 
     @Override
     public String toString() {
-        return "NodeIf{" +
-                "nodeScope=" + nodeScope +
-                '}';
+        return "NodeIf{" + "nodeScope=" + nodeScope + '}';
     }
 }
