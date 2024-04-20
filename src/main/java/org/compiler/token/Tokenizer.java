@@ -20,7 +20,7 @@ public class Tokenizer {
 
     public Tokenizer(String input) {
         this.it = new PeekIteratorChar(input);
-        Dialect defaultDialect = new Dialect("default_dialect");
+        Dialect defaultDialect = new Dialect("default_dialect.json");
         wordToTokenMap = defaultDialect.getWordToTokenMap();
         tokenize();
     }

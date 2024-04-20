@@ -191,4 +191,10 @@ public class TestParser {
         assertThrows(IllegalArgumentException.class, () -> new Parser(invalidIf1.getTokens()));
         assertThrows(NullPointerException.class, () -> new Parser(invalidIf2.getTokens()));
     }
+
+    @Test
+    public void testParserWhile() {
+        Tokenizer validWhile = new Tokenizer("while (10) { let x = 1; }");
+        Parser parserWhile = new Parser(validWhile.getTokens());
+    }
 }

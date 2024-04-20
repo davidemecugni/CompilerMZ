@@ -1,0 +1,19 @@
+{
+  "exit": "_exit",
+  ";": "semi",
+  "(": "open_paren",
+  ")": "close_paren",
+  "=": "eq",
+  "let": "let",
+  "+": "plus",
+  "*": "star",
+  "-": "minus",
+  "/": "slash",
+  "@": "comment",
+  "{": "open_curly",
+  "}": "close_curly",
+  "if": "_if",
+  "else": "_else",
+  "elif": "elif",
+  "while": "_while"
+}
