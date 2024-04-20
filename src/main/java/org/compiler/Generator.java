@@ -63,35 +63,35 @@ public class Generator {
         case NodeIf nodeIf -> {
             String label = create_label();
             int numberOfElifs = nodeIf.countElif();
-            String finalLabel = label + (numberOfElifs + 2);
+            String finalLabel = label + "final";
             stmtSB.append("     ;;if\n\n");
             stmtSB.append(generateExpression(nodeIf.getStmt()));
             stmtSB.append(pop("rax"));
             stmtSB.append("     test rax, rax\n");
+            if (numberOfElifs != 0) {
+                stmtSB.append("     jz ").append(label).append(0).append("\n\n");
+            }
+            stmtSB.append(generateStatement(nodeIf.getIfScope()));
+            stmtSB.append("     jmp ").append(finalLabel).append("\n\n");
             int i;
-            for (i = 0; i < numberOfElifs + 1; i++) {
-                if (i > 0) {
-                    stmtSB.append(";;elif\n");
+            for (i = 0; i < numberOfElifs; i++) {
+                    stmtSB.append("     ;;elif\n");
                     stmtSB.append(label).append(i).append(":\n\n");
                     stmtSB.append("     ;;elif condition\n");
-                    System.out.println(nodeIf.getNthScopeElif(i - 1));
-                    stmtSB.append(generateExpression(nodeIf.getNthScopeElif(i - 1).getStmt()));
+                    stmtSB.append(generateExpression(nodeIf.getNthScopeElif(i).getStmt()));
                     stmtSB.append(pop("rax"));
                     stmtSB.append("     test rax, rax\n");
-                    stmtSB.append("     jz ").append(label).append(i + 1).append("\n\n");
-                    stmtSB.append(generateStatement(nodeIf.getNthScopeElif(i - 1).getScope()));
-                }
-
-                if (i == 0) {
-                    stmtSB.append("     jz ").append(label).append(i + 1).append("\n\n");
-                    stmtSB.append(generateStatement(nodeIf.getIfScope()));
-                }
-                stmtSB.append("     jmp ").append(finalLabel).append("\n\n");
+                    stmtSB.append("     jz ").append(label).append(i + 1).append("\n");
+                    stmtSB.append("     ;;/elif condition\n");
+                    stmtSB.append(generateStatement(nodeIf.getNthScopeElif(i).getScope()));
+                    stmtSB.append("     ;;/elif\n");
             }
             stmtSB.append(label).append(i).append(":\n\n");
             if (nodeIf.hasElse()) {
+                stmtSB.append("     ;;else\n");
                 stmtSB.append(generateStatement(nodeIf.getScopeElse()));
                 stmtSB.append("     jmp ").append(finalLabel).append("\n\n");
+                stmtSB.append("     ;;/else\n");
             }
             stmtSB.append(finalLabel).append(":\n\n");
             stmtSB.append("     ;;/if\n\n");
