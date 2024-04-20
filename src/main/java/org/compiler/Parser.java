@@ -12,9 +12,11 @@ import org.compiler.nodes.expressions.terms.NodeIntLit;
 import org.compiler.nodes.expressions.terms.NodeTerm;
 import org.compiler.nodes.expressions.terms.NodeTermParen;
 import org.compiler.nodes.statements.NodeExit;
-import org.compiler.nodes.statements.NodeIf;
 import org.compiler.nodes.statements.NodeLet;
 import org.compiler.nodes.statements.NodeScope;
+import org.compiler.nodes.statements.conditionals.Conditional;
+import org.compiler.nodes.statements.conditionals.NodeElif;
+import org.compiler.nodes.statements.conditionals.NodeIf;
 import org.compiler.peekers.PeekIteratorToken;
 import org.compiler.token.TokenType;
 import org.compiler.token.tokens.Token;
@@ -57,7 +59,20 @@ public class Parser {
             return parseScope();
         } else if (it.hasNext() && it.peek().getType() == TokenType._if) {
             it.next();
-            return parseIf();
+            Conditional conditional = parseCondition();
+            NodeIf nodeIf = new NodeIf(conditional.getStmt(), conditional.getScope());
+            while (it.hasNext() && it.peek().getType() == TokenType.elif) {
+                it.next();
+                Conditional conditionalElif = parseCondition();
+                System.out.println(conditionalElif);
+                nodeIf.addScopeElif(new NodeElif(conditionalElif.getStmt(), conditionalElif.getScope()));
+            }
+            if (it.hasNext() && it.peek().getType() == TokenType._else) {
+                it.next();
+                it.next(); // consume curly braces
+                nodeIf.setScopeElse(parseScope());
+            }
+            return nodeIf;
         } else {
             throw new IllegalArgumentException("Invalid token in statement");
         }
@@ -109,7 +124,7 @@ public class Parser {
         return new NodeScope(null, statements);
     }
 
-    private NodeIf parseIf() {
+    private Conditional parseCondition() {
         if (it.peek().getType() != TokenType.open_paren) {
             throw new IllegalArgumentException("invalid token after if statement, expected parenthesis");
         }
@@ -118,10 +133,11 @@ public class Parser {
         if (it.peek().getType() != TokenType.close_paren) {
             throw new IllegalArgumentException("Parenthesis not closed");
         }
-        it.next();
-        it.next();
+        it.next(); // consume close_paren
+        it.next(); // consume open_curly brace
         NodeScope scope = parseScope();
-        return new NodeIf(expr, scope);
+
+        return new Conditional(expr, scope);
     }
 
     private NodeExit parseExit() {

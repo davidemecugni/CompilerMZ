@@ -9,9 +9,9 @@ import org.compiler.nodes.expressions.terms.NodeIntLit;
 import org.compiler.nodes.expressions.terms.NodeTerm;
 import org.compiler.nodes.expressions.terms.NodeTermParen;
 import org.compiler.nodes.statements.NodeExit;
-import org.compiler.nodes.statements.NodeIf;
 import org.compiler.nodes.statements.NodeLet;
 import org.compiler.nodes.statements.NodeScope;
+import org.compiler.nodes.statements.conditionals.NodeIf;
 
 import java.util.ArrayList;
 import java.util.SortedMap;
@@ -62,13 +62,38 @@ public class Generator {
         }
         case NodeIf nodeIf -> {
             String label = create_label();
+            int numberOfElifs = nodeIf.countElif();
+            String finalLabel = label + (numberOfElifs + 2);
             stmtSB.append("     ;;if\n\n");
             stmtSB.append(generateExpression(nodeIf.getStmt()));
             stmtSB.append(pop("rax"));
             stmtSB.append("     test rax, rax\n");
-            stmtSB.append("     jz ").append(label).append("\n\n");
-            stmtSB.append(generateStatement(nodeIf.getNodeScope()));
-            stmtSB.append(label).append(":\n\n");
+            int i;
+            for (i = 0; i < numberOfElifs + 1; i++) {
+                if (i > 0) {
+                    stmtSB.append(";;elif\n");
+                    stmtSB.append(label).append(i).append(":\n\n");
+                    stmtSB.append("     ;;elif condition\n");
+                    System.out.println(nodeIf.getNthScopeElif(i - 1));
+                    stmtSB.append(generateExpression(nodeIf.getNthScopeElif(i - 1).getStmt()));
+                    stmtSB.append(pop("rax"));
+                    stmtSB.append("     test rax, rax\n");
+                    stmtSB.append("     jz ").append(label).append(i + 1).append("\n\n");
+                    stmtSB.append(generateStatement(nodeIf.getNthScopeElif(i - 1).getScope()));
+                }
+
+                if (i == 0) {
+                    stmtSB.append("     jz ").append(label).append(i + 1).append("\n\n");
+                    stmtSB.append(generateStatement(nodeIf.getIfScope()));
+                }
+                stmtSB.append("     jmp ").append(finalLabel).append("\n\n");
+            }
+            stmtSB.append(label).append(i).append(":\n\n");
+            if (nodeIf.hasElse()) {
+                stmtSB.append(generateStatement(nodeIf.getScopeElse()));
+                stmtSB.append("     jmp ").append(finalLabel).append("\n\n");
+            }
+            stmtSB.append(finalLabel).append(":\n\n");
             stmtSB.append("     ;;/if\n\n");
         }
         case null, default -> throw new IllegalArgumentException("Unknown statement type in generator");

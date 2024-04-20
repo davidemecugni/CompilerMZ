@@ -6,7 +6,7 @@ import org.compiler.nodes.expressions.binary_expressions.NodeBinMulti;
 import org.compiler.nodes.expressions.binary_expressions.NodeBinSub;
 import org.compiler.nodes.expressions.terms.NodeIdent;
 import org.compiler.nodes.statements.NodeExit;
-import org.compiler.nodes.statements.NodeIf;
+import org.compiler.nodes.statements.conditionals.NodeIf;
 import org.compiler.nodes.statements.NodeLet;
 import org.compiler.nodes.statements.NodeScope;
 import org.compiler.token.TokenType;

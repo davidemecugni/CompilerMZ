@@ -12,5 +12,7 @@
   "@": "comment",
   "{": "open_curly",
   "}": "close_curly",
-  "if": "_if"
+  "if": "_if",
+  "else": "_else",
+  "elif": "elif"
 }
