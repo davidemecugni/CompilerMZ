@@ -54,7 +54,9 @@ public class Parser {
             throw new IllegalArgumentException("Invalid token in statement");
         }
     }
-
+    private NodeExpression parseExpr(){
+        return parseExpr(0);
+    }
     private NodeExpression parseExpr(int minPrec) {
         // salva il primo termine
 
@@ -65,7 +67,7 @@ public class Parser {
             Token curr_token = it.peek();
             int prec;
             if (curr_token != null) {
-                prec = curr_token.BinaryPrecedence(curr_token.getType());
+                prec = curr_token.getPrecedence();
                 if (prec < minPrec) {
                     break;
                 }
@@ -102,7 +104,7 @@ public class Parser {
         if (!it.hasNext() || it.next().getType() != TokenType.open_paren) {
             throw new IllegalArgumentException("Invalid token after exit, expected open parenthesis");
         }
-        expr = parseExpr(0);
+        expr = parseExpr();
         NodeExit exit = new NodeExit(expr);
         if (!it.hasNext() || it.next().getType() != TokenType.close_paren) {
             throw new IllegalArgumentException("Parenthesis not closed");
@@ -122,7 +124,7 @@ public class Parser {
         if (!it.hasNext() || it.next().getType() != TokenType.eq) {
             throw new IllegalArgumentException("Invalid token after ident, expected equal sign");
         }
-        NodeExpression expr = parseExpr(0);
+        NodeExpression expr = parseExpr();
         if (!it.hasNext() || it.next().getType() != TokenType.semi) {
             throw new IllegalArgumentException("Semicolon not present");
         }
@@ -139,7 +141,7 @@ public class Parser {
         }
         if (it.hasNext() && it.peek().getType() == TokenType.open_paren) {
             it.next();
-            NodeExpression expr = parseExpr(0);
+            NodeExpression expr = parseExpr();
             if (expr == null) {
                 throw new IllegalArgumentException("Expected expression");
             }

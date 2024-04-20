@@ -1,7 +1,5 @@
-frega_al_giust Quest che le un commento
+frega_al_giustQuest che le un commento
 
-vez x le_uguela 5 ;
-vez y le_uguela 3 ;
-vez z le_uguela 2 ;
-vez al_cod_ed_turner_a_ca le_uguela (x a_ghe_da_agiunger y) a_ghe_da_multiplicher z ;
-vag_a_ca( al_cod_ed_turner_a_ca );
+frega_al_giustvezxle_uguela5;frega_al_giustvezyle_uguela3;frega_al_giustvezzle_uguela2;
+frega_al_giustvez al_cod_ed_turner_a_ca le_uguela (x a_ghe_da_agiunger y) a_ghe_da_multiplicher z ;
+vag_a_ca( 10 );

@@ -9,9 +9,11 @@ import org.compiler.token.TokenType;
  */
 public class Token {
     private final TokenType type;
+    private final int precedence;
 
     public Token(TokenType type) {
         this.type = type;
+        this.precedence = BinaryPrecedence(type);
     }
 
     public TokenType getType() {
@@ -29,6 +31,10 @@ public class Token {
         }
 
         return -1;
+    }
+
+    public int getPrecedence() {
+        return precedence;
     }
 
     @Override
