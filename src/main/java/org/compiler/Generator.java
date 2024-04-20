@@ -139,7 +139,7 @@ public class Generator {
         }
         case NodeIdent nodeIdent -> {
             if (!variables.containsKey(nodeIdent.getIdent().getName())) {
-                throw new IllegalArgumentException("Identifier not found");
+                throw new IllegalArgumentException("Identifier " + nodeIdent.getIdent().getName() +  " not found");
             }
             termSB.append("     ;;identifier\n");
             long offset = (stack_size - variables.get(nodeIdent.getIdent().getName()) - 1) * 8;

@@ -1,7 +1,8 @@
 let contatore = 5;
 let x = 0;
 while (contatore) {
-    x = x + 1;
+    let y = x + 1;
     contatore = contatore - 1;
+    x = y;
 }
-exit(x);
+exit(y);
