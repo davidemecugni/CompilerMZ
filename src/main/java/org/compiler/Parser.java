@@ -141,6 +141,7 @@ public class Parser {
     }
 
     private NodeLet parseLet() {
+
         NodeIdent ident;
         if (!it.hasNext() || it.peek().getType() != TokenType.ident) {
             throw new IllegalArgumentException("Invalid token after let, expected identifier");
