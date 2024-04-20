@@ -8,5 +8,8 @@ elif(0){
 elif(0){
     exit(3);
 }
+else{
+    exit(4);
+}
 
 exit(111);
