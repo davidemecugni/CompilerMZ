@@ -6,16 +6,17 @@ import org.compiler.nodes.expressions.binary_expressions.NodeBinMulti;
 import org.compiler.nodes.expressions.binary_expressions.NodeBinSub;
 import org.compiler.nodes.expressions.terms.NodeIdent;
 import org.compiler.nodes.statements.NodeExit;
-import org.compiler.nodes.statements.conditionals.NodeIf;
 import org.compiler.nodes.statements.NodeLet;
 import org.compiler.nodes.statements.NodeScope;
+import org.compiler.nodes.statements.conditionals.NodeIf;
 import org.compiler.token.TokenType;
 import org.compiler.token.Tokenizer;
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.compiler.token.tokens.TokenIdent;
 import org.compiler.token.tokens.TokenIntLit;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TestParser {
 
