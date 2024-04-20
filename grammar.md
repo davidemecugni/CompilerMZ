@@ -9,7 +9,7 @@
 - expr = int_lit | ident | expr, space*, operator, space*, expr | open_par, space*, expr, space*, close_par
 - operator = add | sub | mul | div
 - int_lit = digit+
-- ident = valid_char+
+- ident = (valid_char - digit), valid_char*
 - comment_stmt = comment_stmt_single | comment_stmt_multi
 - comment_stmt_single = comment, ((? UNICODE ?) - comment)*,  (? UNICODE ?)*, new_line
 - comment_stmt_multi = comment, comment, ((? UNICODE ?) - comment)*, comment, comment
@@ -17,7 +17,7 @@
 - digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 - new_line = (? ISO 6429 character Line Feed ?)
 - space = (? ISO 6429 character Whitespace ?) - new_line
-- valid_char = ((? UNICODE ?) - comment) + - space+  - terminal+
+- valid_char = ((? UNICODE ?) - (? Single char comment ?)) - space - (? Single char terminal ?)
 
 (* Editable Terminals, might depend on dialect *)
 
