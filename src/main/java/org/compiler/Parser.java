@@ -69,7 +69,6 @@ public class Parser {
             while (it.hasNext() && it.peek().getType() == TokenType.elif) {
                 it.next();
                 Conditional conditionalElif = parseCondition();
-                System.out.println(conditionalElif);
                 nodeIf.addScopeElif(new NodeElif(conditionalElif.getStmt(), conditionalElif.getScope()));
             }
             if (it.hasNext() && it.peek().getType() == TokenType._else) {

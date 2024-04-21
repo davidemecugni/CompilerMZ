@@ -50,7 +50,6 @@ public class Generator {
                 throw new IllegalArgumentException("Identifier already used");
             }
             variables.put(nodeLet.getIdentifier().getIdent().getName(), stack_size);
-            System.out.println(variables);
             stmtSB.append(generateExpression(stmt.getStmt()));
         }
         case NodeAssign nodeAssign -> {
@@ -63,9 +62,7 @@ public class Generator {
             stmtSB.append("     mov [rsp + ").append(offset).append("], rax\n");
         }
         case NodeScope nodeScope -> {
-            System.out.println(variables);
             beginScope();
-            System.out.println(scopes);
             stmtSB.append("     ;;begin scope\n\n");
             for (NodeStatement nodeStatement : nodeScope.getStmts()) {
                 stmtSB.append(generateStatement(nodeStatement));
@@ -271,9 +268,6 @@ public class Generator {
     }
 
     public String endScope() {
-        System.out.println("size: " + variables.size());
-        System.out.println("last: " + scopes.getLast());
-
         int pop_count = variables.size() - scopes.getLast();
         String out = "";
         if (pop_count != 0) {

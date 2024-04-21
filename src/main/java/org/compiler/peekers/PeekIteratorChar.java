@@ -1,5 +1,7 @@
 package org.compiler.peekers;
 
+import org.compiler.token.tokens.CharLineColumn;
+
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -8,15 +10,19 @@ import java.util.NoSuchElementException;
  *
  * @see PeekIterator
  */
-public class PeekIteratorChar implements PeekIterator<Character> {
+public class PeekIteratorChar implements PeekIterator<CharLineColumn> {
     private final List<Character> list;
     private int cursor;
     private int spaces;
+    private int line;
+    private int charsUpToLastNewline;
 
     public PeekIteratorChar(String s) {
         this.list = s.chars().mapToObj(e -> (char) e).toList();
         this.cursor = 0;
         this.spaces = countSpaces(s);
+        this.line = 1;
+        this.charsUpToLastNewline = 0;
     }
 
     public boolean hasNext() {
@@ -40,6 +46,7 @@ public class PeekIteratorChar implements PeekIterator<Character> {
                     spaces--;
                 }
                 if (list.get(cursor) == '\n') {
+                    updateLineAndColumnCount(cursor);
                     cursor++;
                     break;
                 }
@@ -49,11 +56,14 @@ public class PeekIteratorChar implements PeekIterator<Character> {
             while (cursor < list.size() && list.get(cursor) != comment_terminal) {
                 if (Character.isWhitespace(list.get(cursor))) {
                     spaces--;
+                    if (list.get(cursor) == '\n') {
+                        updateLineAndColumnCount(cursor);
+                    }
                 }
                 cursor++;
             }
             if ((cursor + 2) >= list.size() || list.get(cursor + 1) != comment_terminal) {
-                throw new NoSuchElementException("Multiline comment has not been closed");
+                throw new NoSuchElementException("Multiline comment has not been closed at line " + line);
             }
             cursor += 2;
         }
@@ -64,39 +74,59 @@ public class PeekIteratorChar implements PeekIterator<Character> {
      *
      * @return the next non-whitespace character
      */
-    private Character getNextNonWhitespaceChar() {
+    private CharLineColumn getNextNonWhitespaceChar() {
         while (cursor + spaces < list.size() && Character.isWhitespace(list.get(cursor))) {
             spaces--;
+            if (list.get(cursor) == '\n') {
+                updateLineAndColumnCount(cursor);
+            }
             cursor++;
         }
         if (cursor >= list.size()) {
             return null;
         }
-        return list.get(cursor++);
+        return generateCharLineColumn(list.get(cursor++));
     }
 
-    public Character next() {
+    public CharLineColumn next() {
         if (!hasNext()) {
             return null;
         }
         return getNextNonWhitespaceChar();
     }
 
-    public Character peek() {
+    public CharLineColumn peek() {
         if (!hasNext()) {
             return null;
         }
-        return list.get(cursor);
+        return generateCharLineColumn(list.get(cursor));
     }
 
-    public Character peek(int offset) {
+    public CharLineColumn peek(int offset) {
         if (cursor + offset >= list.size()) {
             return null;
         }
-        return list.get(cursor + offset);
+        return generateCharLineColumn(list.get(cursor + offset));
     }
 
     private static int countSpaces(String str) {
         return (int) str.chars().filter(Character::isWhitespace).count();
+    }
+
+    private void updateLineAndColumnCount(int cursor) {
+        line++;
+        charsUpToLastNewline = cursor;
+    }
+
+    private int getCurrentColumn() {
+        return cursor - charsUpToLastNewline - 1;
+    }
+
+    public int getLine() {
+        return line;
+    }
+
+    private CharLineColumn generateCharLineColumn(char c) {
+        return new CharLineColumn(c, getLine(), getCurrentColumn());
     }
 }
