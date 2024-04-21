@@ -1,0 +1,12 @@
+if(1){
+    exit(1);
+}
+elif(0){
+    exit(2);
+}
+elif(0){
+    exit(3);
+} else {
+    exit(69);
+}
+exit(111);

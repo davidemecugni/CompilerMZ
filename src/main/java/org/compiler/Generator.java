@@ -8,14 +8,14 @@ import org.compiler.nodes.expressions.terms.NodeIdent;
 import org.compiler.nodes.expressions.terms.NodeIntLit;
 import org.compiler.nodes.expressions.terms.NodeTerm;
 import org.compiler.nodes.expressions.terms.NodeTermParen;
+import org.compiler.nodes.statements.NodeAssign;
 import org.compiler.nodes.statements.NodeExit;
-import org.compiler.nodes.statements.NodeIf;
 import org.compiler.nodes.statements.NodeLet;
 import org.compiler.nodes.statements.NodeScope;
+import org.compiler.nodes.statements.conditionals.NodeIf;
+import org.compiler.nodes.statements.conditionals.NodeWhile;
 
-import java.util.ArrayList;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Generates a string representation of the assembly code
@@ -23,8 +23,8 @@ import java.util.TreeMap;
 public class Generator {
     private String generated = "";
     private final NodeProgram m_program;
-    private long stack_size = 0;
-    private final SortedMap<String, Long> variables = new TreeMap<>();
+    private int stack_size = 0;
+    private final Map<String, Integer> variables = new HashMap<>();
     private final ArrayList<Integer> scopes = new ArrayList<>();
     private int label_counter = 0;
 
@@ -34,6 +34,7 @@ public class Generator {
     }
 
     public String generateStatement(NodeStatement stmt) {
+
         StringBuilder stmtSB = new StringBuilder();
         switch (stmt) {
         case NodeExit nodeExit -> {
@@ -49,10 +50,22 @@ public class Generator {
                 throw new IllegalArgumentException("Identifier already used");
             }
             variables.put(nodeLet.getIdentifier().getIdent().getName(), stack_size);
+            System.out.println(variables);
             stmtSB.append(generateExpression(stmt.getStmt()));
         }
+        case NodeAssign nodeAssign -> {
+            if (!variables.containsKey(nodeAssign.getTokenIdent().getName())) {
+                throw new IllegalArgumentException("Undeclared Identifier");
+            }
+            long offset = (stack_size - variables.get(nodeAssign.getTokenIdent().getName()) - 1) * 8L;
+            stmtSB.append(generateExpression(nodeAssign.getStmt()));
+            stmtSB.append(pop("rax"));
+            stmtSB.append("     mov [rsp + ").append(offset).append("], rax\n");
+        }
         case NodeScope nodeScope -> {
+            System.out.println(variables);
             beginScope();
+            System.out.println(scopes);
             stmtSB.append("     ;;begin scope\n\n");
             for (NodeStatement nodeStatement : nodeScope.getStmts()) {
                 stmtSB.append(generateStatement(nodeStatement));
@@ -62,14 +75,55 @@ public class Generator {
         }
         case NodeIf nodeIf -> {
             String label = create_label();
+            int numberOfElifs = nodeIf.countElif();
+            String finalLabel = label + "final";
             stmtSB.append("     ;;if\n\n");
             stmtSB.append(generateExpression(nodeIf.getStmt()));
             stmtSB.append(pop("rax"));
             stmtSB.append("     test rax, rax\n");
-            stmtSB.append("     jz ").append(label).append("\n\n");
-            stmtSB.append(generateStatement(nodeIf.getNodeScope()));
-            stmtSB.append(label).append(":\n\n");
+            if (numberOfElifs != 0) {
+                stmtSB.append("     jz ").append(label).append(0).append("\n\n");
+            }
+            stmtSB.append(generateStatement(nodeIf.getIfScope()));
+            stmtSB.append("     jmp ").append(finalLabel).append("\n\n");
+            int i;
+            for (i = 0; i < numberOfElifs; i++) {
+                stmtSB.append("     ;;elif\n");
+                stmtSB.append(label).append(i).append(":\n\n");
+                stmtSB.append("     ;;elif condition\n");
+                stmtSB.append(generateExpression(nodeIf.getNthScopeElif(i).getStmt()));
+                stmtSB.append(pop("rax"));
+                stmtSB.append("     test rax, rax\n");
+                stmtSB.append("     jz ").append(label).append(i + 1).append("\n");
+                stmtSB.append("     ;;/elif condition\n");
+                stmtSB.append(generateStatement(nodeIf.getNthScopeElif(i).getScope()));
+                stmtSB.append("     ;;/elif\n");
+            }
+            stmtSB.append(label).append(i).append(":\n\n");
+            if (nodeIf.hasElse()) {
+                stmtSB.append("     ;;else\n");
+                stmtSB.append(generateStatement(nodeIf.getScopeElse()));
+                stmtSB.append("     jmp ").append(finalLabel).append("\n\n");
+                stmtSB.append("     ;;/else\n");
+            }
+            stmtSB.append(finalLabel).append(":\n\n");
             stmtSB.append("     ;;/if\n\n");
+        }
+        case NodeWhile nodeWhile -> {
+            String labelStart = create_label();
+            String labelEnd = create_label();
+
+            stmtSB.append("     ;;while\n");
+            stmtSB.append(labelStart).append(":\n");
+            stmtSB.append(generateExpression(nodeWhile.getStmt()));
+            stmtSB.append(pop("rax"));
+            stmtSB.append("     test rax, rax\n");
+            stmtSB.append("     jz ").append(labelEnd).append("\n");
+            stmtSB.append(generateStatement(nodeWhile.getScope()));
+            stmtSB.append("     jmp ").append(labelStart).append("\n");
+            stmtSB.append(labelEnd).append(":\n");
+            stmtSB.append("     ;;/while\n");
+
         }
         case null, default -> throw new IllegalArgumentException("Unknown statement type in generator");
         }
@@ -87,10 +141,10 @@ public class Generator {
         }
         case NodeIdent nodeIdent -> {
             if (!variables.containsKey(nodeIdent.getIdent().getName())) {
-                throw new IllegalArgumentException("Identifier not found");
+                throw new IllegalArgumentException("Identifier " + nodeIdent.getIdent().getName() + " not found");
             }
             termSB.append("     ;;identifier\n");
-            long offset = (stack_size - variables.get(nodeIdent.getIdent().getName()) - 1) * 8;
+            long offset = (stack_size - variables.get(nodeIdent.getIdent().getName()) - 1) * 8L;
             if (offset < 0) {
                 throw new IllegalArgumentException("Variable might not have been initialized");
             }
@@ -217,13 +271,20 @@ public class Generator {
     }
 
     public String endScope() {
+        System.out.println("size: " + variables.size());
+        System.out.println("last: " + scopes.getLast());
+
         int pop_count = variables.size() - scopes.getLast();
+        String out = "";
+        if (pop_count != 0) {
+            out = "     add rsp, " + pop_count * 8 + "\n\n";
+        }
         stack_size -= pop_count;
         for (int i = 0; i < pop_count; i++) {
-            variables.remove(variables.lastKey());
+            variables.remove(getKeyWithHighestValue(variables));
         }
         scopes.removeLast();
-        return "     add rsp, " + pop_count * 8 + "\n\n";
+        return out;
     }
 
     public String create_label() {
@@ -232,5 +293,24 @@ public class Generator {
 
     public String getGenerated() {
         return generated;
+    }
+
+    public static String getKeyWithHighestValue(Map<String, Integer> map) {
+        // Initialize variables to keep track of the key and value with the highest value
+        String keyWithHighestValue = null;
+        int highestValue = Integer.MIN_VALUE;
+
+        // Iterate through the entries of the map
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            // If the value of the current entry is higher than the highest value encountered so far
+            if (entry.getValue() > highestValue) {
+                // Update the key and highest value
+                keyWithHighestValue = entry.getKey();
+                highestValue = entry.getValue();
+            }
+        }
+
+        // Return the key associated with the highest value
+        return keyWithHighestValue;
     }
 }

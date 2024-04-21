@@ -102,6 +102,38 @@ public class TestTokenizer {
     }
 
     @Test
+    public void testTokenizerIf() {
+        Tokenizer validIf = new Tokenizer("if(10) { exit 0; }");
+        assertEquals(validIf.getTokens(),
+                List.of(new Token(TokenType._if), new Token(TokenType.open_paren), new TokenIntLit("10"),
+                        new Token(TokenType.close_paren), new Token(TokenType.open_curly), new Token(TokenType._exit),
+                        new TokenIntLit("0"), new Token(TokenType.semi), new Token(TokenType.close_curly)));
+    }
+
+    @Test
+    public void testTokenizerIfElif() {
+        Tokenizer validIfElif = new Tokenizer("if(10) { exit 0; } elif(20) { exit 1; }");
+        assertEquals(validIfElif.getTokens(),
+                List.of(new Token(TokenType._if), new Token(TokenType.open_paren), new TokenIntLit("10"),
+                        new Token(TokenType.close_paren), new Token(TokenType.open_curly), new Token(TokenType._exit),
+                        new TokenIntLit("0"), new Token(TokenType.semi), new Token(TokenType.close_curly),
+                        new Token(TokenType.elif), new Token(TokenType.open_paren), new TokenIntLit("20"),
+                        new Token(TokenType.close_paren), new Token(TokenType.open_curly), new Token(TokenType._exit),
+                        new TokenIntLit("1"), new Token(TokenType.semi), new Token(TokenType.close_curly)));
+    }
+
+    @Test
+    public void testTokenizerIfElse() {
+        Tokenizer validIfElse = new Tokenizer("if(10) { exit 0; } else { exit 1; }");
+        assertEquals(validIfElse.getTokens(),
+                List.of(new Token(TokenType._if), new Token(TokenType.open_paren), new TokenIntLit("10"),
+                        new Token(TokenType.close_paren), new Token(TokenType.open_curly), new Token(TokenType._exit),
+                        new TokenIntLit("0"), new Token(TokenType.semi), new Token(TokenType.close_curly),
+                        new Token(TokenType._else), new Token(TokenType.open_curly), new Token(TokenType._exit),
+                        new TokenIntLit("1"), new Token(TokenType.semi), new Token(TokenType.close_curly)));
+    }
+
+    @Test
     public void testTokenizerArithmetic() {
         Tokenizer validArithmetic = new Tokenizer("let a = 10 + 20 + (29 * 10);");
         assertEquals(validArithmetic.getTokens(),

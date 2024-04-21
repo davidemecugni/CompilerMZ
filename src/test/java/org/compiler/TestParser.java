@@ -5,17 +5,19 @@ import org.compiler.nodes.expressions.binary_expressions.NodeBinDiv;
 import org.compiler.nodes.expressions.binary_expressions.NodeBinMulti;
 import org.compiler.nodes.expressions.binary_expressions.NodeBinSub;
 import org.compiler.nodes.expressions.terms.NodeIdent;
+import org.compiler.nodes.expressions.terms.NodeIntLit;
 import org.compiler.nodes.statements.NodeExit;
-import org.compiler.nodes.statements.NodeIf;
 import org.compiler.nodes.statements.NodeLet;
 import org.compiler.nodes.statements.NodeScope;
+import org.compiler.nodes.statements.conditionals.NodeIf;
+import org.compiler.nodes.statements.conditionals.NodeWhile;
 import org.compiler.token.TokenType;
 import org.compiler.token.Tokenizer;
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.compiler.token.tokens.TokenIdent;
 import org.compiler.token.tokens.TokenIntLit;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestParser {
 
@@ -189,5 +191,23 @@ public class TestParser {
         Tokenizer invalidIf2 = new Tokenizer("if (x) { exit(1); ");
         assertThrows(IllegalArgumentException.class, () -> new Parser(invalidIf1.getTokens()));
         assertThrows(NullPointerException.class, () -> new Parser(invalidIf2.getTokens()));
+    }
+
+    @Test
+    public void testParserWhile() {
+        Tokenizer validWhile = new Tokenizer("while (10) { let x = 1; }");
+        Parser parserWhile = new Parser(validWhile.getTokens());
+
+        // control if the first statement is a while
+        assertEquals(NodeWhile.class, parserWhile.getTree().getStmts().getFirst().getClass());
+
+        // control if the second token is an expression
+        assertEquals(NodeIntLit.class, parserWhile.getTree().getStmts().getFirst().getStmt().getClass());
+
+        // control errors in while statements
+        Tokenizer invalidIWhile1 = new Tokenizer("while 10 { x = x + 1; }");
+        Tokenizer invalidIWhile2 = new Tokenizer("while { x = x + 1; }");
+        assertThrows(IllegalArgumentException.class, () -> new Parser(invalidIWhile1.getTokens()));
+        assertThrows(IllegalArgumentException.class, () -> new Parser(invalidIWhile2.getTokens()));
     }
 }

@@ -1,0 +1,19 @@
+{
+  "esco_con": "_exit",
+  "e_basta": "semi",
+  "(": "open_paren",
+  ")": "close_paren",
+  "è": "eq",
+  "giuro": "let",
+  "più": "plus",
+  "per": "star",
+  "meno": "minus",
+  "fratto": "slash",
+  "comunque": "comment",
+  "{": "open_curly",
+  "}": "close_curly",
+  "se": "_if",
+  "altrimenti": "_else",
+  "oppure": "elif",
+  "finchè": "_while"
+}

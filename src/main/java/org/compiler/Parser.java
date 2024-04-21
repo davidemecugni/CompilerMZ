@@ -11,10 +11,14 @@ import org.compiler.nodes.expressions.terms.NodeIdent;
 import org.compiler.nodes.expressions.terms.NodeIntLit;
 import org.compiler.nodes.expressions.terms.NodeTerm;
 import org.compiler.nodes.expressions.terms.NodeTermParen;
+import org.compiler.nodes.statements.NodeAssign;
 import org.compiler.nodes.statements.NodeExit;
-import org.compiler.nodes.statements.NodeIf;
 import org.compiler.nodes.statements.NodeLet;
 import org.compiler.nodes.statements.NodeScope;
+import org.compiler.nodes.statements.conditionals.Conditional;
+import org.compiler.nodes.statements.conditionals.NodeElif;
+import org.compiler.nodes.statements.conditionals.NodeIf;
+import org.compiler.nodes.statements.conditionals.NodeWhile;
 import org.compiler.peekers.PeekIteratorToken;
 import org.compiler.token.TokenType;
 import org.compiler.token.tokens.Token;
@@ -52,12 +56,32 @@ public class Parser {
         } else if (it.hasNext() && it.peek().getType() == TokenType.let) {
             it.next();
             return parseLet();
+        } else if (it.hasNext() && it.peek().getType() == TokenType.ident && it.hasNext()
+                && it.peek(1).getType() == TokenType.eq) {
+            return parseAssign();
         } else if (it.hasNext() && it.peek().getType() == TokenType.open_curly) {
             it.next();
             return parseScope();
         } else if (it.hasNext() && it.peek().getType() == TokenType._if) {
             it.next();
-            return parseIf();
+            Conditional conditional = parseCondition();
+            NodeIf nodeIf = new NodeIf(conditional.getStmt(), conditional.getScope());
+            while (it.hasNext() && it.peek().getType() == TokenType.elif) {
+                it.next();
+                Conditional conditionalElif = parseCondition();
+                System.out.println(conditionalElif);
+                nodeIf.addScopeElif(new NodeElif(conditionalElif.getStmt(), conditionalElif.getScope()));
+            }
+            if (it.hasNext() && it.peek().getType() == TokenType._else) {
+                it.next();
+                it.next(); // consume curly braces
+                nodeIf.setScopeElse(parseScope());
+            }
+            return nodeIf;
+        } else if (it.hasNext() && it.peek().getType() == TokenType._while) {
+            it.next();
+            Conditional conditional = parseCondition();
+            return new NodeWhile(conditional.getStmt(), conditional.getScope());
         } else {
             throw new IllegalArgumentException("Invalid token in statement");
         }
@@ -97,6 +121,16 @@ public class Parser {
         return left;
     }
 
+    private NodeAssign parseAssign() {
+        TokenIdent ident = (TokenIdent) it.next();
+        it.next();
+        NodeExpression expr = parseExpr();
+        if (it.next().getType() != TokenType.semi) {
+            throw new IllegalArgumentException("Semicolon expected");
+        }
+        return new NodeAssign(expr, ident);
+    }
+
     private NodeScope parseScope() {
         ArrayList<NodeStatement> statements = new ArrayList<>();
         while (it.peek().getType() != TokenType.close_curly) {
@@ -109,7 +143,7 @@ public class Parser {
         return new NodeScope(null, statements);
     }
 
-    private NodeIf parseIf() {
+    private Conditional parseCondition() {
         if (it.peek().getType() != TokenType.open_paren) {
             throw new IllegalArgumentException("invalid token after if statement, expected parenthesis");
         }
@@ -118,10 +152,11 @@ public class Parser {
         if (it.peek().getType() != TokenType.close_paren) {
             throw new IllegalArgumentException("Parenthesis not closed");
         }
-        it.next();
-        it.next();
+        it.next(); // consume close_paren
+        it.next(); // consume open_curly brace
         NodeScope scope = parseScope();
-        return new NodeIf(expr, scope);
+
+        return new Conditional(expr, scope);
     }
 
     private NodeExit parseExit() {
@@ -141,6 +176,7 @@ public class Parser {
     }
 
     private NodeLet parseLet() {
+
         NodeIdent ident;
         if (!it.hasNext() || it.peek().getType() != TokenType.ident) {
             throw new IllegalArgumentException("Invalid token after let, expected identifier");

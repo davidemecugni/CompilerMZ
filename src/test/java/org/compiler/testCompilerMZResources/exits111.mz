@@ -1,0 +1,10 @@
+if(0){
+    exit(1);
+}
+elif(0){
+    exit(2);
+}
+elif(0){
+    exit(3);
+}
+exit(111);

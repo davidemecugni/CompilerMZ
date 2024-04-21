@@ -1,0 +1,7 @@
+giuro x è 5 e_basta
+giuro y è 6 e_basta
+giuro il_cazzo_che_voglio è 100 e_basta
+se (x meno 5) { esco_con (1) e_basta }
+oppure (y meno 6) { esco_con (2) e_basta }
+altrimenti { esco_con (il_cazzo_che_voglio) e_basta }
+comunque vez oggettivo
