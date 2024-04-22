@@ -3,10 +3,7 @@ package org.compiler;
 import org.compiler.nodes.NodeExpression;
 import org.compiler.nodes.NodeProgram;
 import org.compiler.nodes.NodeStatement;
-import org.compiler.nodes.expressions.binary_expressions.NodeBinAdd;
-import org.compiler.nodes.expressions.binary_expressions.NodeBinDiv;
-import org.compiler.nodes.expressions.binary_expressions.NodeBinMulti;
-import org.compiler.nodes.expressions.binary_expressions.NodeBinSub;
+import org.compiler.nodes.expressions.binary_expressions.*;
 import org.compiler.nodes.expressions.terms.NodeIdent;
 import org.compiler.nodes.expressions.terms.NodeIntLit;
 import org.compiler.nodes.expressions.terms.NodeTerm;
@@ -115,6 +112,7 @@ public class Parser {
             case TokenType.minus -> left = new NodeBinSub(curr_token, left, right);
             case TokenType.star -> left = new NodeBinMulti(curr_token, left, right);
             case TokenType.slash -> left = new NodeBinDiv(curr_token, left, right);
+            case TokenType.percent -> left = new NodeBinMod(curr_token, left, right);
             }
         }
         return left;
