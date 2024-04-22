@@ -31,6 +31,10 @@ if (x - 1) {
 } else {
   exit(3);
 }
+while (z) {
+    z = z - 1;
+    z = x + 1;
+}
 
 exit(x);
 ```
@@ -56,6 +60,9 @@ exit(x);
   - [x] Scope
   - [x] Elif and Else
 - [x] Variable Reassignment
+- [x] While loop
+  - [x] Condition expression
+  - [x] Scope
 # Get the compiler working
 ```shell
 sudo apt-get install nasm

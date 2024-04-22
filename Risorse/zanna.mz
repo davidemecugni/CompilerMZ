@@ -1,7 +1,17 @@
-giuro x è 5 e_basta
-giuro y è 6 e_basta
-giuro il_cazzo_che_voglio è 100 e_basta
-se (x meno 5) { esco_con (1) e_basta }
-oppure (y meno 6) { esco_con (2) e_basta }
-altrimenti { esco_con (il_cazzo_che_voglio) e_basta }
-comunque vez oggettivo
+giuro variabile è 5 e_basta
+giuro altra_variabile è 7 e_basta
+se apro variabile chiudo inizio
+variabile è 7 e_basta
+finisco
+oppure apro variabile meno 5 chiudo inizio
+variabile è 2 e_basta
+finisco
+altrimenti inizio
+variabile è 12 e_basta
+finisco
+finche apro altra_variabile chiudo inizio
+altra_variabile è altra_variabile meno 1 e_basta
+variabile è variabile più 1 e_basta
+finisco
+esco apro variabile chiudo e_basta
+comunque in teoria esce con 14
