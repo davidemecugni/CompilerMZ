@@ -99,14 +99,24 @@ public class PeekIteratorChar implements PeekIterator<CharLineColumn> {
         if (!hasNext()) {
             return null;
         }
-        return generateCharLineColumn(list.get(cursor));
+        return new CharLineColumn(list.get(cursor), getLine(), getCurrentColumn() + 1);
     }
 
     public CharLineColumn peek(int offset) {
         if (cursor + offset >= list.size()) {
+            System.out.println("Cursor: " + cursor + " Offset: " + offset + " List size: " + list.size());
             return null;
+        } else {
+            int line_offset = (int) list.subList(cursor, cursor + offset).stream().filter(e -> e == '\n').count();
+            int new_col;
+            if (line_offset == 0) {
+                new_col = getCurrentColumn() + offset + 1;
+            } else {
+                new_col = (cursor + offset) - list.subList(cursor, cursor + offset).lastIndexOf('\n');
+            }
+            return new CharLineColumn(list.get(cursor + offset), line + line_offset, new_col);
         }
-        return generateCharLineColumn(list.get(cursor + offset));
+
     }
 
     private static int countSpaces(String str) {
@@ -119,7 +129,10 @@ public class PeekIteratorChar implements PeekIterator<CharLineColumn> {
     }
 
     private int getCurrentColumn() {
-        return cursor - charsUpToLastNewline - 1;
+        if (line > 1) {
+            return cursor - charsUpToLastNewline - 1;
+        }
+        return cursor - charsUpToLastNewline;
     }
 
     public int getLine() {

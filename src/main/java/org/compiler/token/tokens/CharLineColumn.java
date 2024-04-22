@@ -13,18 +13,6 @@ public class CharLineColumn {
         this.column = column;
     }
 
-    /**
-     * Used in tests
-     *
-     * @param c
-     *            Char to be saved
-     */
-    public CharLineColumn(char c) {
-        this.c = c;
-        this.line = -1;
-        this.column = -1;
-    }
-
     public char getChar() {
         return c;
     }
@@ -44,12 +32,12 @@ public class CharLineColumn {
         if (o == null || getClass() != o.getClass())
             return false;
         CharLineColumn that = (CharLineColumn) o;
-        return c == that.c;
+        return c == that.c && line == that.line && column == that.column;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(c);
+        return Objects.hash(c, line, column);
     }
 
     @Override
