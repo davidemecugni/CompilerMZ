@@ -36,7 +36,7 @@ public class Token {
         case TokenType.plus, TokenType.minus -> {
             return 0;
         }
-        case TokenType.star, TokenType.slash -> {
+        case TokenType.star, TokenType.slash, TokenType.percent -> {
             return 1;
         }
         }

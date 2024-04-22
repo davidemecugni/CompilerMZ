@@ -9,6 +9,7 @@
   "*": "star",
   "-": "minus",
   "/": "slash",
+  "%": "percent",
   "@": "comment",
   "{": "open_curly",
   "}": "close_curly",

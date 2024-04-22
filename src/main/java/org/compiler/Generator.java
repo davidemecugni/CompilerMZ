@@ -210,6 +210,17 @@ public class Generator {
             bin_exprSB.append(push("rax"));
             bin_exprSB.append("     ;;/division\n\n");
         }
+        case NodeBinMod nodeBinMod -> {
+            bin_exprSB.append(generateExpression(nodeBinMod.getRight()));
+            bin_exprSB.append(generateExpression(nodeBinMod.getLeft()));
+            bin_exprSB.append("     ;;modulus\n");
+            bin_exprSB.append(pop("rax"));
+            bin_exprSB.append(pop("rbx"));
+            bin_exprSB.append("     xor rdx, rdx\n");
+            bin_exprSB.append("     div rbx\n");
+            bin_exprSB.append(push("rdx"));
+            bin_exprSB.append("     ;;/modulus\n\n");
+        }
         case null, default -> throw new IllegalArgumentException("Unknown binary expression type in generator");
         }
 

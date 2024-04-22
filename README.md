@@ -23,6 +23,7 @@ Example:
 let x = 1;
 let y = 2;
 let z = 3;
+let u = z % 2;
 let a = (x + y * z) / (2 - 1);
 if (x - 1) {
   x = 1;

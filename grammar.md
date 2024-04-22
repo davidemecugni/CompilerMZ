@@ -10,7 +10,7 @@
 - exit_stmt = exit, ws*, open_par, ws*, expr, ws*, close_par, semi
 - let_stmt = let, ws*, ident, ws*, eq, ws*, expr, semi
 - expr = int_lit | ident | expr, ws*, operator, ws*, expr | open_par, ws*, expr, ws*, close_par
-- operator = add | sub | mul | div
+- operator = add | sub | mul | div | mod
 - int_lit = digit+
 - ident = (valid_char - digit), valid_char*
 - assignment = ident, ws*, eq, vws*, expr, ws*, semi
@@ -36,6 +36,7 @@
 - sub = "-"
 - mul = "*"
 - div = "/"
+- mod = "%"
 - semi = ";"
 - open_curly = "{"
 - close_curly = "}"
