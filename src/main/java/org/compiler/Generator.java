@@ -301,22 +301,8 @@ public class Generator {
     }
 
     public static String getKeyWithHighestValue(Map<String, Integer> map) {
-        // Initialize variables to keep track of the key and value with the highest value
-        String keyWithHighestValue = null;
-        int highestValue = Integer.MIN_VALUE;
-
-        // Make map a list and sort it
-        // Iterate through the entries of the map
-        for (Map.Entry<String, Integer> entry : map.entrySet()) {
-            // If the value of the current entry is higher than the highest value encountered so far
-            if (entry.getValue() > highestValue) {
-                // Update the key and highest value
-                keyWithHighestValue = entry.getKey();
-                highestValue = entry.getValue();
-            }
-        }
-
-        // Return the key associated with the highest value
-        return keyWithHighestValue;
+        List<Map.Entry<String, Integer>> list = new ArrayList<>(map.entrySet());
+        list.sort(Map.Entry.comparingByValue());
+        return list.getLast().getKey();
     }
 }
