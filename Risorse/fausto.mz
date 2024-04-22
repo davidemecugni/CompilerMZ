@@ -1,2 +1,8 @@
-let z = (100 / 3) * ( 97 % 13) % 2 + 11;
-exit(z);
+let x = 0;
+let y = 2;
+let z = 3;
+while (z) {
+    x = x + y;
+    z = z - 1;
+}
+exit(x);
