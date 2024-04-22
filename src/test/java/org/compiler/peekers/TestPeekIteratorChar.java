@@ -1,5 +1,6 @@
 package org.compiler.peekers;
 
+import org.compiler.token.tokens.CharLineColumn;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,12 +11,12 @@ public class TestPeekIteratorChar {
     public void testPeekIteratorChar() {
         String s = "hello world!";
         PeekIteratorChar peek = new PeekIteratorChar(s);
-        assertEquals('h', peek.peek());
-        assertEquals('o', peek.peek(4));
+        assertEquals(new CharLineColumn('h'), peek.peek());
+        assertEquals(new CharLineColumn('o'), peek.peek(4));
         assertTrue(peek.hasNext());
-        assertEquals('h', peek.peek());
+        assertEquals(new CharLineColumn('h'), peek.peek());
         for (char c : new char[] { 'h', 'e', 'l', 'l', 'o', 'w', 'o', 'r', 'l', 'd', '!' }) {
-            assertEquals(c, peek.next());
+            assertEquals(new CharLineColumn(c), peek.next());
         }
         assertFalse(peek.hasNext());
         assertNull(peek.peek());

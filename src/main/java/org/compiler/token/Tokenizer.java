@@ -2,6 +2,7 @@ package org.compiler.token;
 
 import org.compiler.peekers.PeekIteratorChar;
 import org.compiler.token.dialects.Dialect;
+import org.compiler.token.tokens.CharLineColumn;
 import org.compiler.token.tokens.Token;
 import org.compiler.token.tokens.TokenIdent;
 import org.compiler.token.tokens.TokenIntLit;
@@ -35,25 +36,28 @@ public class Tokenizer {
     private void tokenize() {
         StringBuilder buffer = new StringBuilder();
         while (it.hasNext()) {
-            char c = it.next();
+            CharLineColumn clc = it.next();
+            char c = clc.getChar();
             buffer.append(c);
             String word = buffer.toString();
 
+            int line = clc.getLine();
+            int startingColumn = clc.getColumn();
             // If mono char literal
             if (wordToTokenMap.containsKey(buffer.toString())) {
                 if (wordToTokenMap.get(word) == TokenType.comment) {
                     it.ignoreComment(word.charAt(0));
                 } else {
-                    AddToken(of(buffer.toString()));
+                    AddToken(of(buffer.toString(), line, startingColumn));
                 }
                 buffer.setLength(0);
                 continue;
             }
-            while (it.hasNext() && !Character.isWhitespace(it.peek())
-                    && !wordToTokenMap.containsKey(it.peek().toString())
+            while (it.hasNext() && !Character.isWhitespace(it.peek().getChar())
+                    && !wordToTokenMap.containsKey(String.valueOf(it.peek().getChar()))
                     && !(wordToTokenMap.containsKey(buffer.toString())
                             && wordToTokenMap.get(buffer.toString()) == TokenType.comment)) {
-                buffer.append(it.next());
+                buffer.append(it.next().getChar());
             }
             word = buffer.toString();
             // Support for multi-char comment literals
@@ -64,7 +68,7 @@ public class Tokenizer {
                     continue;
                 }
             }
-            AddToken(of(word));
+            AddToken(of(word, line, startingColumn));
             buffer.setLength(0);
         }
     }
@@ -82,15 +86,15 @@ public class Tokenizer {
         return "Tokenizer{" + "tokens=" + tokens + '}';
     }
 
-    Token of(String word) {
+    Token of(String word, int line, int column) {
         if (wordToTokenMap.containsKey(word)) {
-            return new Token(wordToTokenMap.get(word));
+            return new Token(wordToTokenMap.get(word), line, column);
         } else if (word.matches("[0-9]+")) { // check if the word is a number
-            return new TokenIntLit(word);
+            return new TokenIntLit(word, line, column);
         } else if (word.matches("^[^\\d].*")) {
-            return new TokenIdent(word);
+            return new TokenIdent(word, line, column);
         } else {
-            throw new IllegalArgumentException("Invalid variable name");
+            throw new IllegalArgumentException("Invalid variable name: " + word);
         }
     }
 }
