@@ -305,6 +305,7 @@ public class Generator {
         String keyWithHighestValue = null;
         int highestValue = Integer.MIN_VALUE;
 
+        // Make map a list and sort it
         // Iterate through the entries of the map
         for (Map.Entry<String, Integer> entry : map.entrySet()) {
             // If the value of the current entry is higher than the highest value encountered so far

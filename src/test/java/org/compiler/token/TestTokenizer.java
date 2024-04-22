@@ -87,7 +87,10 @@ public class TestTokenizer {
     public void testTokenizerInvalidLet() {
         assertThrows(IllegalArgumentException.class, () -> new Tokenizer("let 1x = 10"));
         assertThrows(IllegalArgumentException.class, () -> new Tokenizer("let 1010x = 10"));
-        assertDoesNotThrow(() -> new Tokenizer("let x1 = 10"));
+        assertDoesNotThrow(() -> new Tokenizer("let x1 = 10;"));
+        assertDoesNotThrow(() -> new Tokenizer("let x1010 = 10"));
+        assertDoesNotThrow(() -> new Tokenizer("let x = 10;"));
+
     }
 
     @Test

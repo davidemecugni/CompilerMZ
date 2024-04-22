@@ -11,20 +11,23 @@ public class Token {
     private final TokenType type;
     private final int precedence;
     private final int line;
-    private final int column;
+    private final int column_start;
+    private final int column_end;
 
-    public Token(TokenType type, int line, int column) {
+    public Token(TokenType type, int line, int column_start, int column_end) {
         this.type = type;
         this.precedence = BinaryPrecedence(type);
         this.line = line;
-        this.column = column;
+        this.column_start = column_start;
+        this.column_end = column_end;
     }
 
     public Token(TokenType type) {
         this.type = type;
         this.precedence = BinaryPrecedence(type);
         this.line = -1;
-        this.column = -1;
+        this.column_start = -1;
+        this.column_end = -1;
     }
 
     public TokenType getType() {
@@ -52,13 +55,17 @@ public class Token {
         return line;
     }
 
-    public int getColumn() {
-        return column;
+    public int getColumnStart() {
+        return column_start;
+    }
+
+    public int getColumnEnd() {
+        return column_end;
     }
 
     @Override
     public String toString() {
-        return "Token{" + "type=" + type + ", l=" + line + ", col=" + column + '}';
+        return "Token{" + "type=" + type + ", l=" + line + ", col_s=" + column_start + ", col_e=" + column_end + '}';
     }
 
     @Override
