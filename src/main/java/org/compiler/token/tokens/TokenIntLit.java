@@ -7,8 +7,8 @@ import java.util.Objects;
 public class TokenIntLit extends Token {
     private final int value;
 
-    public TokenIntLit(String value, int line, int column) {
-        super(TokenType.int_lit, line, column);
+    public TokenIntLit(String value, int line, int column_start, int column_end) {
+        super(TokenType.int_lit, line, column_start, column_end);
         this.value = Integer.parseInt(value);
     }
 
@@ -23,7 +23,8 @@ public class TokenIntLit extends Token {
 
     @Override
     public String toString() {
-        return "TokenIntLit{" + "value='" + value + '\'' + ", l=" + getLine() + ", col=" + getColumn() + '}';
+        return "TokenIntLit{" + "value='" + value + '\'' + ", l=" + getLine() + ", col_s=" + getColumnStart()
+                + ", col_e=" + getColumnEnd() + '}';
     }
 
     @Override
