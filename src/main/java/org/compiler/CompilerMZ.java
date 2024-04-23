@@ -1,6 +1,7 @@
 package org.compiler;
 
 import org.apache.commons.cli.*;
+import org.compiler.errors.TokenError;
 import org.compiler.nodes.NodeProgram;
 import org.compiler.token.Tokenizer;
 
@@ -18,7 +19,7 @@ public class CompilerMZ {
      * @param args
      *            eventual input and output files, default fausto.mz and output.asm
      */
-    public static void main(String[] args) throws IOException, ParseException {
+    public static void main(String[] args) throws IOException, ParseException, TokenError {
         CommandLine cmd = getCmd(args);
         long start = 0;
         if (cmd.hasOption("t")) {
@@ -121,7 +122,7 @@ public class CompilerMZ {
      * @throws IOException
      *             on any error through the whole process
      */
-    public static void makeAssembly(String fileIn, String fileASMOut, String dialect) throws IOException {
+    public static void makeAssembly(String fileIn, String fileASMOut, String dialect) throws IOException, TokenError {
         String content = readFile(fileIn);
         Tokenizer tokenizer = new Tokenizer(content, dialect);
         Parser parser = new Parser(tokenizer.getTokens());
@@ -146,14 +147,14 @@ public class CompilerMZ {
      *             On any problem related to IO on files
      */
     public static void callFullStack(String fileIn, String fileOut, String fileObj, String fileExe, String dialect)
-            throws IOException {
+            throws IOException, TokenError {
         makeAssembly(fileIn, fileOut, dialect);
         callAssembler(fileOut, fileObj);
         callLinker(fileObj, fileExe);
         callExecutable(fileExe);
     }
 
-    public static void callFullStack(String fileIn, String fileOut, String fileObj, String fileExe) throws IOException {
+    public static void callFullStack(String fileIn, String fileOut, String fileObj, String fileExe) throws IOException, TokenError {
         makeAssembly(fileIn, fileOut, "default_dialect");
         callAssembler(fileOut, fileObj);
         callLinker(fileObj, fileExe);
@@ -178,7 +179,7 @@ public class CompilerMZ {
      *             On any problem related to IO on files
      */
     public static int callFullStackWithReturnCode(String fileIn, String fileOut, String fileObj, String fileExe)
-            throws IOException {
+            throws IOException, TokenError {
         makeAssembly(fileIn, fileOut, "default_dialect");
         callAssembler(fileOut, fileObj);
         callLinker(fileObj, fileExe);
