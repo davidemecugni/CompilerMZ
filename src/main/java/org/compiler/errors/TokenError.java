@@ -5,7 +5,6 @@ public class TokenError extends Exception {
     private final int columnStart;
     private final int columnEnd;
 
-
     public TokenError(String message, int line, int columnStart, int columnEnd) {
         super(message);
         this.line = line;

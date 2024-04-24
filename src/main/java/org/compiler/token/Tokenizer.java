@@ -102,20 +102,22 @@ public class Tokenizer {
         } else if (word.matches("^[^\\d].*")) {
             return new TokenIdent(word, line, column_start, column_end);
         } else {
-            throw new TokenError("Unrecognised token type",line,column_start,column_end);
+            throw new TokenError("Unrecognised token type", line, column_start, column_end);
         }
     }
 
-    private void substituteMultiTokenTokens(){
+    private void substituteMultiTokenTokens() {
         ArrayList<Token> tokenCopy = new ArrayList<>();
         for (int i = 0; i < tokens.size(); i++) {
             Token token = tokens.get(i);
-            if(token.getType() == TokenType.minus && i+1 < tokens.size() && i -1 > 0) {
+            if (token.getType() == TokenType.minus && i + 1 < tokens.size() && i - 1 > 0) {
                 if (tokens.get(i + 1).getType() == TokenType.int_lit) {
                     TokenType prec = tokens.get(i - 1).getType();
-                    if (prec == TokenType.open_paren || prec == TokenType.eq || prec == TokenType.plus || prec == TokenType.minus || prec == TokenType.star || prec == TokenType.slash) {
+                    if (prec == TokenType.open_paren || prec == TokenType.eq || prec == TokenType.plus
+                            || prec == TokenType.minus || prec == TokenType.star || prec == TokenType.slash) {
                         TokenIntLit number = (TokenIntLit) tokens.get(i + 1);
-                        tokenCopy.add(new TokenIntLit(Integer.toString(-number.getValue()), token.getLine(), token.getColumnStart(), token.getColumnEnd()));
+                        tokenCopy.add(new TokenIntLit(Integer.toString(-number.getValue()), token.getLine(),
+                                token.getColumnStart(), token.getColumnEnd()));
                         ++i;
                         continue;
                     }

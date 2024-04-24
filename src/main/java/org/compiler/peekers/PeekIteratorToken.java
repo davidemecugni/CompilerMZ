@@ -43,13 +43,10 @@ public class PeekIteratorToken implements PeekIterator<Token> {
     }
 
     public Token peekPrevious() {
-        if (cursor - 1 < 0) {
-            return null;
-        }
-        return list.get(cursor - 1);
+        return peekPrevious(1);
     }
 
-    public Token peekPrevius(int offset) {
+    public Token peekPrevious(int offset) {
         if (cursor - offset < 0) {
             return null;
         }

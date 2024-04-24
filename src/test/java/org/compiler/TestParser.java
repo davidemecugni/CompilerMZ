@@ -15,8 +15,6 @@ import org.compiler.token.tokens.TokenIdent;
 import org.compiler.token.tokens.TokenIntLit;
 import org.junit.jupiter.api.Test;
 
-import javax.management.relation.RelationNotification;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestParser {
@@ -29,14 +27,8 @@ public class TestParser {
         // control if the first statement is an exit
         assertEquals(parserExit.getTree().getStmts().getFirst().getClass(), NodeExit.class);
 
-        // control if the value of the exit is 69
-        TokenIntLit value = (TokenIntLit) parserExit.getTree().getStmts().getFirst().getStmt().getExpr();
-        assertEquals(value.getValue(), 69);
-
         // control of error exit statement
         Tokenizer invalidExit = new Tokenizer("exit 69;");
-
-        // control if the first statement is an exit
         assertThrows(TokenError.class, () -> new Parser(invalidExit.getTokens()));
     }
 

@@ -48,7 +48,7 @@ public class Parser {
     }
 
     private NodeStatement parseStmt() throws TokenError {
-        throwRuntime();
+        checkForNext();
         if (it.peek().getType() == TokenType._exit) {
             it.next();
             return parseExit();
@@ -72,7 +72,7 @@ public class Parser {
             }
             if (it.hasNext() && it.peek().getType() == TokenType._else) {
                 it.next();
-                throwError("open curly brace");
+                CheckForType(TokenType.open_curly);
                 it.next(); // consume curly braces
                 nodeIf.setScopeElse(parseScope());
             }
@@ -82,7 +82,7 @@ public class Parser {
             Conditional conditional = parseCondition();
             return new NodeWhile(conditional.getStmt(), conditional.getScope());
         } else {
-            throwError("statement type");
+            GenerateErrorMessage("Invalid token in statement of type ");
         }
         return null;
     }
@@ -107,7 +107,7 @@ public class Parser {
             } else {
                 break;
             }
-            throwRuntime();
+            checkForNext();
             Token op = it.next();
             int nextMinPrec = prec + 1;
             NodeExpression right = parseExpr(nextMinPrec);
@@ -117,7 +117,7 @@ public class Parser {
             case TokenType.star -> left = new NodeBinMulti(curr_token, left, right);
             case TokenType.slash -> left = new NodeBinDiv(curr_token, left, right);
             case TokenType.percent -> left = new NodeBinMod(curr_token, left, right);
-            default -> throwError("expression type");
+            default -> GenerateErrorMessage("Invalid token in expression of type ");
             }
         }
         return left;
@@ -127,7 +127,7 @@ public class Parser {
         TokenIdent ident = (TokenIdent) it.next();
         it.next();
         NodeExpression expr = parseExpr();
-        throwError("semicolon");
+        CheckForType(TokenType.semi);
         it.next();
         return new NodeAssign(expr, ident);
     }
@@ -135,21 +135,21 @@ public class Parser {
     private NodeScope parseScope() throws TokenError {
         ArrayList<NodeStatement> statements = new ArrayList<>();
         while (it.hasNext() && it.peek().getType() != TokenType.close_curly) {
-            throwRuntime();
+            checkForNext();
             statements.add(parseStmt());
         }
-        throwError("close curly brace");
+        CheckForType(TokenType.close_curly);
         it.next();
         return new NodeScope(null, statements);
     }
 
     private Conditional parseCondition() throws TokenError {
-        throwError("open paren");
+        CheckForType(TokenType.open_paren);
         it.next();
         NodeExpression expr = parseExpr();
-        throwError("close paren");
+        CheckForType(TokenType.close_paren);
         it.next(); // consume close_paren
-        throwError("open curly brace");
+        CheckForType(TokenType.open_curly);
         it.next(); // consume open_curly brace
         NodeScope scope = parseScope();
         return new Conditional(expr, scope);
@@ -157,48 +157,47 @@ public class Parser {
 
     private NodeExit parseExit() throws TokenError {
         NodeExpression expr;
-        throwError("open paren");
+        CheckForType(TokenType.open_paren);
         expr = parseExpr();
         NodeExit exit = new NodeExit(expr);
-        throwError("close paren");
-        it.next();
-        throwError("semicolon");
+        // CheckForType(TokenType.close_paren);
+        // it.next();
+        CheckForType(TokenType.semi);
         it.next();
         return exit;
     }
 
     private NodeLet parseLet() throws TokenError {
         NodeIdent ident;
-        throwError("ident");
+        CheckForType(TokenType.ident);
         ident = new NodeIdent((TokenIdent) it.next());
-        throwError("equals");
+        CheckForType(TokenType.eq);
         it.next();
         NodeExpression expr = parseExpr();
-        throwError("semicolon");
+        CheckForType(TokenType.semi);
         it.next();
         return new NodeLet(expr, ident);
     }
 
     // controlla se c'è un termine e se è un int_lit o un ident
     private NodeTerm parseTerm() throws TokenError {
-        throwRuntime();
+        checkForNext();
         if (it.peek().getType() == TokenType.int_lit) {
             return new NodeIntLit((TokenIntLit) it.next());
-        }
-        else if (it.peek().getType() == TokenType.ident) {
+        } else if (it.peek().getType() == TokenType.ident) {
             TokenIdent ident = (TokenIdent) it.next();
             return new NodeIdent(ident);
-        }
-        else if (it.peek().getType() == TokenType.open_paren) {
+        } else if (it.peek().getType() == TokenType.open_paren) {
             it.next();
             NodeExpression expr = parseExpr();
             if (expr == null) {
-                throwError("expression");
+                GenerateErrorMessage("Invalid structure, expected expression, found ");
             }
-            throwError("close paren");
+            CheckForType(TokenType.close_paren);
             return new NodeTermParen(it.next(), expr);
         } else {
-            throw new TokenError("Invalid token, expected number, variable or expression, found " + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
+            throw new TokenError("Invalid token, expected number, variable or expression, found " + it.peek().getType(),
+                    it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
         }
     }
 
@@ -206,53 +205,23 @@ public class Parser {
         return tree;
     }
 
-    private void throwError(String type) throws TokenError {
-        throwRuntime();
-        switch (type) {
-            case "expression" -> throw new TokenError("Invalid structure, expected expression, found " + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
-            case "semicolon" -> {
-                if (it.peek().getType() != TokenType.semi) {
-                    throw new TokenError("Invalid Token, expected semicolon, found " + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
-                }
-            }
-            case "close paren" -> {
-                if (it.peek().getType() != TokenType.close_paren) {
-                throw new TokenError("Invalid Token, expected close parenthesis, found " + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
-                }
-            }
-            case "open paren" -> {
-                if (it.next().getType() != TokenType.open_paren) {
-                    throw new TokenError("Invalid Token, expected open parenthesis, found " + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
-                }
-            }
-            case "equals" -> {
-                if(it.peek().getType() != TokenType.eq){
-                    throw new TokenError("Invalid Token, expected equals sign, found " + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
-                }
-            }
-            case "ident" -> {
-                if(it.peek().getType() != TokenType.ident){
-                    throw new TokenError("Invalid token, expected identity token(reserved keyword?), provided " + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
-                }
-            }
-            case "expression type" -> throw new TokenError("Invalid token in expression of type " + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
-            case "statement type" -> throw new TokenError("Invalid token in statement of type " + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
-            case "open curly brace" -> {
-                if(it.peek().getType() != TokenType.open_curly){
-                    throw new TokenError("Invalid Token, expected open curly braces, found " + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
-                }
-            }
-            case "close curly brace" -> {
-                if(it.peek().getType() != TokenType.close_curly){
-                    throw new TokenError("Invalid Token, expected close curly braces, found " + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
-                }
-            }
+    private void CheckForType(TokenType type) throws TokenError {
+        checkForNext();
+        if (it.peek().getType() != type) {
+            throw new TokenError("Invalid Token, expected " + type + ", found " + it.peek().getType(),
+                    it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
         }
     }
 
-    private void throwRuntime() {
+    private void GenerateErrorMessage(String message) throws TokenError {
+        throw new TokenError(message + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(),
+                it.peek().getColumnEnd());
+    }
+
+    private void checkForNext() {
         if (!it.hasNext()) {
-            throw new RuntimeException("Invalid structure, expected token at line: " + it.peekPrevious().getLine() + " and column: " + it.peekPrevious().getColumnEnd());
+            throw new RuntimeException("Invalid structure, expected token at line: " + it.peekPrevious().getLine()
+                    + " and column: " + it.peekPrevious().getColumnEnd());
         }
     }
 
