@@ -42,8 +42,4 @@ public interface PeekIterator<E> extends Iterator<E> {
      * @return the next element
      */
     E next();
-
-    E peekPrevious();
-
-    E peekPrevious(int offset);
 }

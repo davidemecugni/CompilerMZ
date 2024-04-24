@@ -119,17 +119,6 @@ public class PeekIteratorChar implements PeekIterator<CharLineColumn> {
 
     }
 
-    public CharLineColumn peekPrevious() {
-        return peekPrevious(1);
-    }
-
-    public CharLineColumn peekPrevious(int offset) {
-        if (cursor - offset < 0) {
-            return null;
-        }
-        return new CharLineColumn(list.get(cursor - offset), getLine(), getCurrentColumn() - offset);
-    }
-
     private static int countSpaces(String str) {
         return (int) str.chars().filter(Character::isWhitespace).count();
     }
