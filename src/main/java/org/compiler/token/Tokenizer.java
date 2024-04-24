@@ -1,5 +1,6 @@
 package org.compiler.token;
 
+import org.compiler.errors.TokenError;
 import org.compiler.peekers.PeekIteratorChar;
 import org.compiler.token.dialects.Dialect;
 import org.compiler.token.tokens.CharLineColumn;
@@ -15,25 +16,27 @@ import java.util.Map;
  *
  */
 public class Tokenizer {
-    private final ArrayList<Token> tokens = new ArrayList<>();
+    private ArrayList<Token> tokens = new ArrayList<>();
     private final PeekIteratorChar it;
     private final Map<String, TokenType> wordToTokenMap;
 
-    public Tokenizer(String input) {
+    public Tokenizer(String input) throws TokenError {
         this.it = new PeekIteratorChar(input);
         Dialect defaultDialect = new Dialect("default_dialect");
         wordToTokenMap = defaultDialect.getWordToTokenMap();
         tokenize();
+        substituteMultiTokenTokens();
     }
 
-    public Tokenizer(String input, String dialectName) {
+    public Tokenizer(String input, String dialectName) throws TokenError {
         this.it = new PeekIteratorChar(input);
         Dialect dialect = new Dialect(dialectName);
         wordToTokenMap = dialect.getWordToTokenMap();
         tokenize();
+        substituteMultiTokenTokens();
     }
 
-    private void tokenize() {
+    private void tokenize() throws TokenError {
         StringBuilder buffer = new StringBuilder();
         while (it.hasNext()) {
             CharLineColumn clc = it.next();
@@ -91,7 +94,7 @@ public class Tokenizer {
         return "Tokenizer{" + "tokens=" + tokens + '}';
     }
 
-    Token of(String word, int line, int column_start, int column_end) {
+    private Token of(String word, int line, int column_start, int column_end) throws TokenError {
         if (wordToTokenMap.containsKey(word)) {
             return new Token(wordToTokenMap.get(word), line, column_start, column_end);
         } else if (word.matches("[0-9]+")) { // check if the word is a number
@@ -99,7 +102,27 @@ public class Tokenizer {
         } else if (word.matches("^[^\\d].*")) {
             return new TokenIdent(word, line, column_start, column_end);
         } else {
-            throw new IllegalArgumentException("Invalid variable name: " + word);
+            throw new TokenError("Unrecognised token type",line,column_start,column_end);
         }
+    }
+
+    private void substituteMultiTokenTokens(){
+        ArrayList<Token> tokenCopy = new ArrayList<>();
+        for (int i = 0; i < tokens.size(); i++) {
+            Token token = tokens.get(i);
+            if(token.getType() == TokenType.minus && i+1 < tokens.size() && i -1 > 0) {
+                if (tokens.get(i + 1).getType() == TokenType.int_lit) {
+                    TokenType prec = tokens.get(i - 1).getType();
+                    if (prec == TokenType.open_paren || prec == TokenType.eq || prec == TokenType.plus || prec == TokenType.minus || prec == TokenType.star || prec == TokenType.slash) {
+                        TokenIntLit number = (TokenIntLit) tokens.get(i + 1);
+                        tokenCopy.add(new TokenIntLit(Integer.toString(-number.getValue()), token.getLine(), token.getColumnStart(), token.getColumnEnd()));
+                        ++i;
+                        continue;
+                    }
+                }
+            }
+            tokenCopy.add(token);
+        }
+        tokens = tokenCopy;
     }
 }

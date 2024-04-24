@@ -1,5 +1,6 @@
 package org.compiler.token;
 
+import org.compiler.errors.TokenError;
 import org.compiler.token.tokens.Token;
 import org.compiler.token.tokens.TokenIdent;
 import org.compiler.token.tokens.TokenIntLit;
@@ -12,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestTokenizer {
     @Test
-    public void testTokenizer() {
+    public void testTokenizer() throws TokenError {
         Tokenizer validExit = new Tokenizer("exit 69;");
         assertEquals(validExit.getTokens(),
                 List.of(new Token(TokenType._exit), new TokenIntLit("69"), new Token(TokenType.semi)));
@@ -26,7 +27,7 @@ public class TestTokenizer {
     }
 
     @Test
-    public void testTokenizerComments() {
+    public void testTokenizerComments() throws TokenError {
         Tokenizer validComment = new Tokenizer("@ commento");
         assertEquals(validComment.getTokens(), List.of());
         validComment = new Tokenizer("@ commento\n");
@@ -47,7 +48,7 @@ public class TestTokenizer {
     }
 
     @Test
-    public void testTokenizerLet() {
+    public void testTokenizerLet() throws TokenError {
         Tokenizer validLet = new Tokenizer("let x = 10;");
         assertEquals(validLet.getTokens(), List.of(new Token(TokenType.let), new TokenIdent("x"),
                 new Token(TokenType.eq), new TokenIntLit("10"), new Token(TokenType.semi)));
@@ -85,8 +86,8 @@ public class TestTokenizer {
 
     @Test
     public void testTokenizerInvalidLet() {
-        assertThrows(IllegalArgumentException.class, () -> new Tokenizer("let 1x = 10"));
-        assertThrows(IllegalArgumentException.class, () -> new Tokenizer("let 1010x = 10"));
+        assertThrows(TokenError.class, () -> new Tokenizer("let 1x = 10"));
+        assertThrows(TokenError.class, () -> new Tokenizer("let 1010x = 10"));
         assertDoesNotThrow(() -> new Tokenizer("let x1 = 10;"));
         assertDoesNotThrow(() -> new Tokenizer("let x1010 = 10"));
         assertDoesNotThrow(() -> new Tokenizer("let x = 10;"));
@@ -94,7 +95,7 @@ public class TestTokenizer {
     }
 
     @Test
-    public void testTokenizeLetEmojis() {
+    public void testTokenizeLetEmojis() throws TokenError {
         Tokenizer validLet = new Tokenizer("let 🤔 = 10;");
         assertEquals(validLet.getTokens(), List.of(new Token(TokenType.let), new TokenIdent("🤔"),
                 new Token(TokenType.eq), new TokenIntLit("10"), new Token(TokenType.semi)));
@@ -105,7 +106,7 @@ public class TestTokenizer {
     }
 
     @Test
-    public void testTokenizerIf() {
+    public void testTokenizerIf() throws TokenError {
         Tokenizer validIf = new Tokenizer("if(10) { exit 0; }");
         assertEquals(validIf.getTokens(),
                 List.of(new Token(TokenType._if), new Token(TokenType.open_paren), new TokenIntLit("10"),
@@ -114,7 +115,7 @@ public class TestTokenizer {
     }
 
     @Test
-    public void testTokenizerIfElif() {
+    public void testTokenizerIfElif() throws TokenError {
         Tokenizer validIfElif = new Tokenizer("if(10) { exit 0; } elif(20) { exit 1; }");
         assertEquals(validIfElif.getTokens(),
                 List.of(new Token(TokenType._if), new Token(TokenType.open_paren), new TokenIntLit("10"),
@@ -126,7 +127,7 @@ public class TestTokenizer {
     }
 
     @Test
-    public void testTokenizerIfElse() {
+    public void testTokenizerIfElse() throws TokenError {
         Tokenizer validIfElse = new Tokenizer("if(10) { exit 0; } else { exit 1; }");
         assertEquals(validIfElse.getTokens(),
                 List.of(new Token(TokenType._if), new Token(TokenType.open_paren), new TokenIntLit("10"),
@@ -137,7 +138,7 @@ public class TestTokenizer {
     }
 
     @Test
-    public void testTokenizerArithmetic() {
+    public void testTokenizerArithmetic() throws TokenError {
         Tokenizer validArithmetic = new Tokenizer("let a = 10 + 20 + (29 * 10);");
         assertEquals(validArithmetic.getTokens(),
                 List.of(new Token(TokenType.let), new TokenIdent("a"), new Token(TokenType.eq), new TokenIntLit("10"),

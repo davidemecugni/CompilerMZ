@@ -1,5 +1,6 @@
 package org.compiler;
 
+import org.compiler.errors.TokenError;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -9,7 +10,7 @@ import java.nio.file.NoSuchFileException;
 
 public class TestCompilerMZ {
     @Test
-    public void testCompilerMZ() throws IOException {
+    public void testCompilerMZ() throws IOException, TokenError {
         int exitCode = CompilerMZ.callFullStackWithReturnCode(
                 "src/test/java/org/compiler/testCompilerMZResources/exits100.mz",
                 "src/test/java/org/compiler/testCompilerMZResources/out.asm",

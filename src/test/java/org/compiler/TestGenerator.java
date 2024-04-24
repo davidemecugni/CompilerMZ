@@ -1,12 +1,13 @@
 package org.compiler;
 
+import org.compiler.errors.TokenError;
 import org.compiler.token.Tokenizer;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestGenerator {
     @Test
-    public void testGeneratorEmpty() {
+    public void testGeneratorEmpty() throws TokenError {
         Tokenizer tokenizer = new Tokenizer("");
         Parser parser = new Parser(tokenizer.getTokens());
         Generator generator = new Generator(parser.getTree());
@@ -17,7 +18,7 @@ public class TestGenerator {
     }
 
     @Test
-    public void testGeneratorExit() {
+    public void testGeneratorExit() throws TokenError {
         Tokenizer tokenizer = new Tokenizer("exit(42);");
         Parser parser = new Parser(tokenizer.getTokens());
         Generator generator = new Generator(parser.getTree());
@@ -35,7 +36,7 @@ public class TestGenerator {
     }
 
     @Test
-    public void testGeneratorLet() {
+    public void testGeneratorLet() throws TokenError {
         Tokenizer tokenizer = new Tokenizer("let x = 42;");
         Parser parser = new Parser(tokenizer.getTokens());
         Generator generator = new Generator(parser.getTree());
@@ -64,7 +65,7 @@ public class TestGenerator {
     }
 
     @Test
-    public void testGeneratorIdentity() {
+    public void testGeneratorIdentity() throws TokenError {
         Tokenizer tokenizer = new Tokenizer("exit(x);");
         Parser parser = new Parser(tokenizer.getTokens());
         Parser finalParser = parser;
