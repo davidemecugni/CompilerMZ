@@ -16,5 +16,6 @@
   "if": "_if",
   "else": "_else",
   "elif": "elif",
-  "while": "_while"
+  "while": "_while",
+  "!": "not"
 }

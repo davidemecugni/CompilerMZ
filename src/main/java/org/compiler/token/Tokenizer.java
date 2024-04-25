@@ -50,7 +50,8 @@ public class Tokenizer {
             if (wordToTokenMap.containsKey(buffer.toString())) {
                 if (wordToTokenMap.get(word) == TokenType.comment) {
                     it.ignoreComment(word.charAt(0));
-                } else {
+                }
+                else {
                     AddToken(of(buffer.toString(), line, column_start, column_start));
                 }
                 buffer.setLength(0);
@@ -117,11 +118,21 @@ public class Tokenizer {
                             || prec == TokenType.minus || prec == TokenType.star || prec == TokenType.slash) {
                         TokenIntLit number = (TokenIntLit) tokens.get(i + 1);
                         tokenCopy.add(new TokenIntLit(Integer.toString(-number.getValue()), token.getLine(),
-                                token.getColumnStart(), token.getColumnEnd()));
+                                token.getColumnStart(), number.getColumnEnd()));
                         ++i;
                         continue;
                     }
                 }
+            }
+            if(token.getType() == TokenType.not && i + 1 < tokens.size() && tokens.get(i + 1).getType() == TokenType.eq) {
+                tokenCopy.add(new Token(TokenType.logic_not_eq, token.getLine(), token.getColumnStart(), token.getColumnEnd() + 1));
+                ++i;
+                continue;
+            }
+            if(token.getType() == TokenType.eq && i + 1 < tokens.size() && tokens.get(i + 1).getType() == TokenType.eq) {
+                tokenCopy.add(new Token(TokenType.logic_eq, token.getLine(), token.getColumnStart(), token.getColumnEnd() + 1));
+                ++i;
+                continue;
             }
             tokenCopy.add(token);
         }

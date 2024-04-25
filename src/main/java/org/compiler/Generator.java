@@ -74,18 +74,19 @@ public class Generator {
             String label = create_label();
             int numberOfElifs = nodeIf.countElif();
             String finalLabel = label + "final";
-            stmtSB.append("     ;;if\n\n");
+            stmtSB.append("     ;;if(label: ").append(label).append(")\n\n");
             stmtSB.append(generateExpression(nodeIf.getStmt()));
             stmtSB.append(pop("rax"));
             stmtSB.append("     test rax, rax\n");
             if (numberOfElifs != 0) {
                 stmtSB.append("     jz ").append(label).append(0).append("\n\n");
             }
+            stmtSB.append("     jz ").append(label).append(numberOfElifs).append("\n");
             stmtSB.append(generateStatement(nodeIf.getIfScope()));
             stmtSB.append("     jmp ").append(finalLabel).append("\n\n");
             int i;
             for (i = 0; i < numberOfElifs; i++) {
-                stmtSB.append("     ;;elif\n");
+                stmtSB.append("     ;;elif(label: ").append(label).append(")\n");
                 stmtSB.append(label).append(i).append(":\n\n");
                 stmtSB.append("     ;;elif condition\n");
                 stmtSB.append(generateExpression(nodeIf.getNthScopeElif(i).getStmt()));
@@ -94,17 +95,17 @@ public class Generator {
                 stmtSB.append("     jz ").append(label).append(i + 1).append("\n");
                 stmtSB.append("     ;;/elif condition\n");
                 stmtSB.append(generateStatement(nodeIf.getNthScopeElif(i).getScope()));
-                stmtSB.append("     ;;/elif\n");
+                stmtSB.append("     ;;/elif(label: ").append(label).append(")\n");
             }
             stmtSB.append(label).append(i).append(":\n\n");
             if (nodeIf.hasElse()) {
-                stmtSB.append("     ;;else\n");
+                stmtSB.append("     ;;else(label: ").append(label).append(")\n");
                 stmtSB.append(generateStatement(nodeIf.getScopeElse()));
                 stmtSB.append("     jmp ").append(finalLabel).append("\n\n");
-                stmtSB.append("     ;;/else\n");
+                stmtSB.append("     ;;/else(label: ").append(label).append(")\n");
             }
             stmtSB.append(finalLabel).append(":\n\n");
-            stmtSB.append("     ;;/if\n\n");
+            stmtSB.append("     ;;/if(label: ").append(label).append(")\n\n");
         }
         case NodeWhile nodeWhile -> {
             String labelStart = create_label();
@@ -220,6 +221,30 @@ public class Generator {
             bin_exprSB.append("     idiv rbx\n");
             bin_exprSB.append(push("rdx"));
             bin_exprSB.append("     ;;/modulus\n\n");
+        }
+        case NodeBinLogicEq nodeBinLogicEq -> {
+            bin_exprSB.append(generateExpression(nodeBinLogicEq.getLeft()));
+            bin_exprSB.append(generateExpression(nodeBinLogicEq.getRight()));
+            bin_exprSB.append("     ;;equal\n");
+            bin_exprSB.append(pop("rax"));
+            bin_exprSB.append(pop("rbx"));
+            bin_exprSB.append("     cmp rax, rbx\n");
+            bin_exprSB.append("     sete al\n");
+            bin_exprSB.append("     movzx rbx, al\n");
+            bin_exprSB.append(push("rbx"));
+            bin_exprSB.append("     ;;/equal\n\n");
+        }
+        case NodeBinLogicNotEq nodeBinLogicNotEq -> {
+            bin_exprSB.append(generateExpression(nodeBinLogicNotEq.getLeft()));
+            bin_exprSB.append(generateExpression(nodeBinLogicNotEq.getRight()));
+            bin_exprSB.append("     ;;not equal\n");
+            bin_exprSB.append(pop("rax"));
+            bin_exprSB.append(pop("rbx"));
+            bin_exprSB.append("     cmp rax, rbx\n");
+            bin_exprSB.append("     setne al\n");
+            bin_exprSB.append("     movzx rbx, al\n");
+            bin_exprSB.append(push("rbx"));
+            bin_exprSB.append("     ;;/not equal\n\n");
         }
         case null, default -> throw new IllegalArgumentException("Unknown binary expression type in generator");
         }

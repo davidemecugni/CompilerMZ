@@ -5,5 +5,5 @@ package org.compiler.token;
  */
 public enum TokenType {
     _exit, int_lit, semi, open_paren, close_paren, ident, let, eq, plus, star, minus, slash, comment, open_curly,
-    close_curly, _if, _else, elif, _while, percent
+    close_curly, _if, _else, elif, _while, percent, not, logic_not_eq, logic_eq
 }

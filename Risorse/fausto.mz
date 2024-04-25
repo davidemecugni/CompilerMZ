@@ -1,7 +1,7 @@
-let z = -11;
-if(z + 11) {
-    exit(0);
-} else {
+let x = 0;
+let y = 5;
+if(y != x){
     exit(1);
 }
+exit(33);
 

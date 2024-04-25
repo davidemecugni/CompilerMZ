@@ -117,6 +117,9 @@ public class Parser {
             case TokenType.star -> left = new NodeBinMulti(curr_token, left, right);
             case TokenType.slash -> left = new NodeBinDiv(curr_token, left, right);
             case TokenType.percent -> left = new NodeBinMod(curr_token, left, right);
+            case TokenType.logic_eq -> left = new NodeBinLogicEq(curr_token, left, right);
+            case TokenType.logic_not_eq -> left = new NodeBinLogicNotEq(curr_token, left, right);
+
             default -> GenerateErrorMessage("Invalid token in expression of type ");
             }
         }
