@@ -27,7 +27,7 @@ public class CompilerMZ {
         }
         if (cmd.hasOption("version")) {
             System.out.println(
-                    "0.4.0-Beta Dialects and Operations\nMZ Compiler by Davide Mecugni, Andrea Zanasi\n(C) 2024");
+                    "0.5.0-Alpha\nMZ Compiler by Davide Mecugni, Andrea Zanasi\n(C) 2024");
             return;
         }
         if (cmd.hasOption("h")) {
@@ -148,14 +148,6 @@ public class CompilerMZ {
     public static void callFullStack(String fileIn, String fileOut, String fileObj, String fileExe, String dialect)
             throws IOException, TokenError {
         makeAssembly(fileIn, fileOut, dialect);
-        callAssembler(fileOut, fileObj);
-        callLinker(fileObj, fileExe);
-        callExecutable(fileExe);
-    }
-
-    public static void callFullStack(String fileIn, String fileOut, String fileObj, String fileExe)
-            throws IOException, TokenError {
-        makeAssembly(fileIn, fileOut, "default_dialect");
         callAssembler(fileOut, fileObj);
         callLinker(fileObj, fileExe);
         callExecutable(fileExe);
