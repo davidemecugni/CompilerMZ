@@ -48,9 +48,7 @@ public class Parser {
     }
 
     private NodeStatement parseStmt() throws TokenError {
-        if(!it.hasNext()){
-            throw new RuntimeException("Invalid structure, expected token");
-        }
+        checkForNext();
         if (it.peek().getType() == TokenType._exit) {
             it.next();
             return parseExit();
@@ -74,12 +72,7 @@ public class Parser {
             }
             if (it.hasNext() && it.peek().getType() == TokenType._else) {
                 it.next();
-                if(!it.hasNext()){
-                    throw new RuntimeException("Invalid structure, expected open curly brace of else");
-                }
-                if (it.peek().getType() != TokenType.open_curly) {
-                    throw new TokenError("Invalid token in statement of type " + it.peek().getType() + ", curly braces required", it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
-                }
+                CheckForType(TokenType.open_curly);
                 it.next(); // consume curly braces
                 nodeIf.setScopeElse(parseScope());
             }
@@ -89,8 +82,9 @@ public class Parser {
             Conditional conditional = parseCondition();
             return new NodeWhile(conditional.getStmt(), conditional.getScope());
         } else {
-            throw new TokenError("Invalid token in statement of type " + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
+            GenerateErrorMessage("Invalid token in statement of type ");
         }
+        return null;
     }
 
     private NodeExpression parseExpr() throws TokenError {
@@ -99,7 +93,6 @@ public class Parser {
 
     private NodeExpression parseExpr(int minPrec) throws TokenError {
         // salva il primo termine
-
         NodeExpression left = parseTerm();
 
         // Precedence Climbing Algorithm
@@ -114,9 +107,7 @@ public class Parser {
             } else {
                 break;
             }
-            if(!it.hasNext()){
-                throw new RuntimeException("Invalid structure, expected operation token");
-            }
+            checkForNext();
             Token op = it.next();
             int nextMinPrec = prec + 1;
             NodeExpression right = parseExpr(nextMinPrec);
@@ -126,7 +117,7 @@ public class Parser {
             case TokenType.star -> left = new NodeBinMulti(curr_token, left, right);
             case TokenType.slash -> left = new NodeBinDiv(curr_token, left, right);
             case TokenType.percent -> left = new NodeBinMod(curr_token, left, right);
-            default -> throw new TokenError("Invalid token in expression of type " + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
+            default -> GenerateErrorMessage("Invalid token in expression of type ");
             }
         }
         return left;
@@ -136,133 +127,102 @@ public class Parser {
         TokenIdent ident = (TokenIdent) it.next();
         it.next();
         NodeExpression expr = parseExpr();
-        if (it.next().getType() != TokenType.semi) {
-            throw new TokenError("Invalid token in statement of type " + it.peek().getType() + ", semicolon required", it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
-        }
+        CheckForType(TokenType.semi);
+        it.next();
         return new NodeAssign(expr, ident);
     }
 
     private NodeScope parseScope() throws TokenError {
         ArrayList<NodeStatement> statements = new ArrayList<>();
         while (it.hasNext() && it.peek().getType() != TokenType.close_curly) {
-            if (!it.hasNext()) {
-                throw new TokenError("Curly braces not closed", it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
-            }
+            checkForNext();
             statements.add(parseStmt());
         }
-        if(!it.hasNext()) {
-            throw new RuntimeException("Invalid structure, expected close curly brace");
-        }
-        if (it.peek().getType() != TokenType.close_curly) {
-            throw new TokenError("Invalid token in statement of type " + it.peek().getType() + ", curly braces required", it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
-        }
+        CheckForType(TokenType.close_curly);
         it.next();
         return new NodeScope(null, statements);
     }
 
     private Conditional parseCondition() throws TokenError {
-        if (it.peek().getType() != TokenType.open_paren) {
-            throw new TokenError("Invalid token after if statement, expected parenthesis, found " + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
-        }
+        CheckForType(TokenType.open_paren);
         it.next();
         NodeExpression expr = parseExpr();
-        if (it.peek().getType() != TokenType.close_paren) {
-            throw new TokenError("Invalid token, expected close parenthesis, found " + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
-        }
+        CheckForType(TokenType.close_paren);
         it.next(); // consume close_paren
+        CheckForType(TokenType.open_curly);
         it.next(); // consume open_curly brace
         NodeScope scope = parseScope();
-
         return new Conditional(expr, scope);
     }
 
     private NodeExit parseExit() throws TokenError {
         NodeExpression expr;
-        if(!it.hasNext()){
-            throw new RuntimeException("Invalid structure, expected open parenthesis");
-        }
-        if (it.next().getType() != TokenType.open_paren) {
-            throw new TokenError("Invalid token after exit, expected open parenthesis, found " + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
-        }
+        CheckForType(TokenType.open_paren);
         expr = parseExpr();
         NodeExit exit = new NodeExit(expr);
-        if(!it.hasNext()){
-            throw new RuntimeException("Invalid structure, expected close parenthesis and semicolon");
-        }
-        if (it.peek().getType() != TokenType.close_paren) {
-            throw new TokenError("Invalid token after exit, expected close parenthesis, found " + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
-        }
-        it.next();
-        if(!it.hasNext()){
-            throw new RuntimeException("Invalid structure, expected semicolon");
-        }
-        if (it.peek().getType() != TokenType.semi) {
-            throw new TokenError("Invalid token, expected semicolon, found " + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
-        }
+        // CheckForType(TokenType.close_paren);
+        // it.next();
+        CheckForType(TokenType.semi);
         it.next();
         return exit;
     }
 
     private NodeLet parseLet() throws TokenError {
-
         NodeIdent ident;
-        if (!it.hasNext()) {
-            throw new RuntimeException("Invalid token, expected identity token(reserved keyword?)");
-        }
-        if(it.peek().getType() != TokenType.ident){
-            throw new TokenError("Invalid token, expected identity token(reserved keyword?), provided " + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
-        }
+        CheckForType(TokenType.ident);
         ident = new NodeIdent((TokenIdent) it.next());
-        if (!it.hasNext()) {
-            throw new RuntimeException("Invalid token, expected equal sign");
-        }
-        if(it.peek().getType() != TokenType.eq){
-            throw new TokenError("Invalid token, expected equal sign, provided " + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
-        }
+        CheckForType(TokenType.eq);
         it.next();
         NodeExpression expr = parseExpr();
-        if (!it.hasNext()) {
-            throw new RuntimeException("Invalid token, expected semicolon");
-        }
-        if(it.peek().getType() != TokenType.semi){
-            throw new TokenError("Invalid token, expected semicolon, provided " + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
-        }
+        CheckForType(TokenType.semi);
         it.next();
         return new NodeLet(expr, ident);
     }
 
     // controlla se c'è un termine e se è un int_lit o un ident
     private NodeTerm parseTerm() throws TokenError {
-        if(!it.hasNext()){
-            throw new RuntimeException("Invalid structure, expected open parenthesis or number or variable");
-        }
+        checkForNext();
         if (it.peek().getType() == TokenType.int_lit) {
             return new NodeIntLit((TokenIntLit) it.next());
-        }
-        else if (it.peek().getType() == TokenType.ident) {
+        } else if (it.peek().getType() == TokenType.ident) {
             TokenIdent ident = (TokenIdent) it.next();
             return new NodeIdent(ident);
-        }
-        else if (it.peek().getType() == TokenType.open_paren) {
+        } else if (it.peek().getType() == TokenType.open_paren) {
             it.next();
             NodeExpression expr = parseExpr();
             if (expr == null) {
-                throw new TokenError("Expected expression, found " + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
+                GenerateErrorMessage("Invalid structure, expected expression, found ");
             }
-            if(!it.hasNext()){
-                throw new RuntimeException("Invalid structure, expected close parenthesis");
-            }
-            if (it.peek().getType() != TokenType.close_paren) {
-                throw new TokenError("Invalid token, expected close parenthesis, found " + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
-            }
+            CheckForType(TokenType.close_paren);
             return new NodeTermParen(it.next(), expr);
         } else {
-            throw new TokenError("Invalid token, expected number, variable or expression, found " + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
+            throw new TokenError("Invalid token, expected number, variable or expression, found " + it.peek().getType(),
+                    it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
         }
     }
 
     public NodeProgram getTree() {
         return tree;
+    }
+
+    private void CheckForType(TokenType type) throws TokenError {
+        checkForNext();
+        if (it.peek().getType() != type) {
+            throw new TokenError("Invalid Token, expected " + type + ", found " + it.peek().getType(),
+                    it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
+        }
+    }
+
+    private void GenerateErrorMessage(String message) throws TokenError {
+        throw new TokenError(message + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(),
+                it.peek().getColumnEnd());
+    }
+
+    private void checkForNext() {
+        if (!it.hasNext()) {
+            throw new RuntimeException("Invalid structure, expected token at line: " + it.peekPrevious().getLine()
+                    + " and column: " + it.peekPrevious().getColumnEnd());
+        }
     }
 
     @Override

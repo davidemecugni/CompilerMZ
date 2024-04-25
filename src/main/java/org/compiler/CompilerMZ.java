@@ -72,7 +72,6 @@ public class CompilerMZ {
         Parser parser = new Parser(tokenizer.getTokens());
         NodeProgram tree = parser.getTree();
         System.out.println("2) Parsed!");
-
         // Generating
         Generator generator = new Generator(tree);
         String res = generator.getGenerated();
@@ -154,7 +153,8 @@ public class CompilerMZ {
         callExecutable(fileExe);
     }
 
-    public static void callFullStack(String fileIn, String fileOut, String fileObj, String fileExe) throws IOException, TokenError {
+    public static void callFullStack(String fileIn, String fileOut, String fileObj, String fileExe)
+            throws IOException, TokenError {
         makeAssembly(fileIn, fileOut, "default_dialect");
         callAssembler(fileOut, fileObj);
         callLinker(fileObj, fileExe);

@@ -196,7 +196,7 @@ public class Generator {
             bin_exprSB.append("     ;;multiplication\n");
             bin_exprSB.append(pop("rax"));
             bin_exprSB.append(pop("rbx"));
-            bin_exprSB.append("     mul rbx\n");
+            bin_exprSB.append("     imul rbx\n");
             bin_exprSB.append(push("rax"));
             bin_exprSB.append("     ;;/multiplication\n\n");
         }
@@ -206,7 +206,7 @@ public class Generator {
             bin_exprSB.append("     ;;division\n");
             bin_exprSB.append(pop("rax"));
             bin_exprSB.append(pop("rbx"));
-            bin_exprSB.append("     div rbx\n");
+            bin_exprSB.append("     idiv rbx\n");
             bin_exprSB.append(push("rax"));
             bin_exprSB.append("     ;;/division\n\n");
         }
@@ -217,7 +217,7 @@ public class Generator {
             bin_exprSB.append(pop("rax"));
             bin_exprSB.append(pop("rbx"));
             bin_exprSB.append("     xor rdx, rdx\n");
-            bin_exprSB.append("     div rbx\n");
+            bin_exprSB.append("     idiv rbx\n");
             bin_exprSB.append(push("rdx"));
             bin_exprSB.append("     ;;/modulus\n\n");
         }
