@@ -1,0 +1,20 @@
+{
+    let x = 10;
+    let y = 20;
+
+    if (x > y) {
+        if (x >= 15) {
+            exit(1);
+        } else {
+            exit(2);
+        }
+    } elif (x < y) {
+        if (x <= 5) {
+            exit(3);
+        } else {
+            exit(4);
+        }
+    } else {
+        exit(5);
+    }
+}
