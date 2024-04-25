@@ -94,7 +94,6 @@ public class Parser {
     private NodeExpression parseExpr(int minPrec) throws TokenError {
         // salva il primo termine
         NodeExpression left = parseTerm();
-
         // Precedence Climbing Algorithm
         while (it.hasNext()) {
             Token curr_token = it.peek();
@@ -119,7 +118,10 @@ public class Parser {
             case TokenType.percent -> left = new NodeBinMod(curr_token, left, right);
             case TokenType.logic_eq -> left = new NodeBinLogicEq(curr_token, left, right);
             case TokenType.logic_not_eq -> left = new NodeBinLogicNotEq(curr_token, left, right);
-
+            case TokenType.logic_gt -> left = new NodeBinLogicGT(curr_token, left, right);
+            case TokenType.logic_lt -> left = new NodeBinLogicLT(curr_token, left, right);
+            case TokenType.logic_ge -> left = new NodeBinLogicGE(curr_token, left, right);
+            case TokenType.logic_le -> left = new NodeBinLogicLE(curr_token, left, right);
             default -> GenerateErrorMessage("Invalid token in expression of type ");
             }
         }

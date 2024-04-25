@@ -246,6 +246,57 @@ public class Generator {
             bin_exprSB.append(push("rbx"));
             bin_exprSB.append("     ;;/not equal\n\n");
         }
+
+        case NodeBinLogicGT nodeBinLogicGT -> {
+            bin_exprSB.append(generateExpression(nodeBinLogicGT.getLeft()));
+            bin_exprSB.append(generateExpression(nodeBinLogicGT.getRight()));
+            bin_exprSB.append("     ;;greater than\n");
+            bin_exprSB.append(pop("rax"));
+            bin_exprSB.append(pop("rbx"));
+            bin_exprSB.append("     cmp rbx, rax\n");
+            bin_exprSB.append("     setg al\n");
+            bin_exprSB.append("     movzx rbx, al\n");
+            bin_exprSB.append(push("rbx"));
+            bin_exprSB.append("     ;;/greater than\n\n");
+        }
+
+        case NodeBinLogicLT nodeBinLogicLT -> {
+            bin_exprSB.append(generateExpression(nodeBinLogicLT.getLeft()));
+            bin_exprSB.append(generateExpression(nodeBinLogicLT.getRight()));
+            bin_exprSB.append("     ;;less than\n");
+            bin_exprSB.append(pop("rax"));
+            bin_exprSB.append(pop("rbx"));
+            bin_exprSB.append("     cmp rbx, rax\n");
+            bin_exprSB.append("     setl al\n");
+            bin_exprSB.append("     movzx rbx, al\n");
+            bin_exprSB.append(push("rbx"));
+            bin_exprSB.append("     ;;/less than\n\n");
+        }
+
+        case NodeBinLogicGE nodeBinLogicGE -> {
+            bin_exprSB.append(generateExpression(nodeBinLogicGE.getLeft()));
+            bin_exprSB.append(generateExpression(nodeBinLogicGE.getRight()));
+            bin_exprSB.append("     ;;greater than or equal\n");
+            bin_exprSB.append(pop("rax"));
+            bin_exprSB.append(pop("rbx"));
+            bin_exprSB.append("     cmp rbx, rax\n");
+            bin_exprSB.append("     setge al\n");
+            bin_exprSB.append("     movzx rbx, al\n");
+            bin_exprSB.append(push("rbx"));
+            bin_exprSB.append("     ;;/greater than or equal\n\n");
+        }
+        case NodeBinLogicLE nodeBinLogicLE -> {
+            bin_exprSB.append(generateExpression(nodeBinLogicLE.getLeft()));
+            bin_exprSB.append(generateExpression(nodeBinLogicLE.getRight()));
+            bin_exprSB.append("     ;;less than or equal\n");
+            bin_exprSB.append(pop("rax"));
+            bin_exprSB.append(pop("rbx"));
+            bin_exprSB.append("     cmp rbx, rax\n");
+            bin_exprSB.append("     setle al\n");
+            bin_exprSB.append("     movzx rbx, al\n");
+            bin_exprSB.append(push("rbx"));
+            bin_exprSB.append("     ;;/less than or equal\n\n");
+        }
         case null, default -> throw new IllegalArgumentException("Unknown binary expression type in generator");
         }
 

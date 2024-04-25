@@ -1,6 +1,6 @@
-let x = 0;
-let y = 5;
-if(y != x){
+let x = 10;
+let y = 10;
+if(x >= y){
     exit(1);
 }
 exit(33);

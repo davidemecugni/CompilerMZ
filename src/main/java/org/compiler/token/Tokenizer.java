@@ -111,6 +111,7 @@ public class Tokenizer {
         ArrayList<Token> tokenCopy = new ArrayList<>();
         for (int i = 0; i < tokens.size(); i++) {
             Token token = tokens.get(i);
+            //Negative number
             if (token.getType() == TokenType.minus && i + 1 < tokens.size() && i - 1 > 0) {
                 if (tokens.get(i + 1).getType() == TokenType.int_lit) {
                     TokenType prec = tokens.get(i - 1).getType();
@@ -124,13 +125,27 @@ public class Tokenizer {
                     }
                 }
             }
+            //!= -> logic_not_eq
             if(token.getType() == TokenType.not && i + 1 < tokens.size() && tokens.get(i + 1).getType() == TokenType.eq) {
                 tokenCopy.add(new Token(TokenType.logic_not_eq, token.getLine(), token.getColumnStart(), token.getColumnEnd() + 1));
                 ++i;
                 continue;
             }
+            //== -> logic_eq
             if(token.getType() == TokenType.eq && i + 1 < tokens.size() && tokens.get(i + 1).getType() == TokenType.eq) {
                 tokenCopy.add(new Token(TokenType.logic_eq, token.getLine(), token.getColumnStart(), token.getColumnEnd() + 1));
+                ++i;
+                continue;
+            }
+            //>= -> logic_ge
+            if(token.getType() == TokenType.logic_gt && i + 1 < tokens.size() && tokens.get(i + 1).getType() == TokenType.eq) {
+                tokenCopy.add(new Token(TokenType.logic_ge, token.getLine(), token.getColumnStart(), token.getColumnEnd() + 1));
+                ++i;
+                continue;
+            }
+            //<= -> logic_le
+            if(token.getType() == TokenType.logic_lt && i + 1 < tokens.size() && tokens.get(i + 1).getType() == TokenType.eq) {
+                tokenCopy.add(new Token(TokenType.logic_le, token.getLine(), token.getColumnStart(), token.getColumnEnd() + 1));
                 ++i;
                 continue;
             }
