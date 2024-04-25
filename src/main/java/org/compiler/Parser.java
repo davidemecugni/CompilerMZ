@@ -122,6 +122,8 @@ public class Parser {
             case TokenType.logic_lt -> left = new NodeBinLogicLT(curr_token, left, right);
             case TokenType.logic_ge -> left = new NodeBinLogicGE(curr_token, left, right);
             case TokenType.logic_le -> left = new NodeBinLogicLE(curr_token, left, right);
+            case TokenType.logic_and -> left = new NodeBinLogicAnd(curr_token, left, right);
+            case TokenType.logic_or -> left = new NodeBinLogicOr(curr_token, left, right);
             default -> GenerateErrorMessage("Invalid token in expression of type ");
             }
         }
@@ -201,8 +203,8 @@ public class Parser {
             CheckForType(TokenType.close_paren);
             return new NodeTermParen(it.next(), expr);
         } else {
-            throw new TokenError("Invalid token, expected number, variable or expression, found " + it.peek().getType(),
-                    it.peek().getLine(), it.peek().getColumnStart(), it.peek().getColumnEnd());
+            GenerateErrorMessage("Invalid token, expected number, variable or expression, found ");
+            return null;
         }
     }
 

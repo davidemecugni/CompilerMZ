@@ -14,6 +14,6 @@ public class TokenError extends Exception {
 
     @Override
     public String toString() {
-        return String.format("Parsing Error: %s at line %d, column %d-%d", getMessage(), line, columnStart, columnEnd);
+        return getMessage() + " {" + "line=" + line + ", columnStart=" + columnStart + ", columnEnd=" + columnEnd + '}';
     }
 }

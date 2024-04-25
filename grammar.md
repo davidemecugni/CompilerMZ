@@ -10,8 +10,8 @@
 - exit_stmt = exit, ws*, open_par, ws*, expr, ws*, close_par, semi
 - let_stmt = let, ws*, ident, ws*, eq, ws*, expr, semi
 - expr = int_lit | ident | expr, ws*, operator, ws*, expr | open_par, ws*, expr, ws*, close_par
-- operator = add | sub | mul | div | mod
-- int_lit = digit+
+- operator = add | sub | mul | div | mod | logic_gt | logic_ge | logic_lt | logic_ge | logic_and | logic_or
+- int_lit = digit+ | true | false
 - ident = (valid_char - digit), valid_char*
 - assignment = ident, ws*, eq, vws*, expr, ws*, semi
 - comment_stmt = comment_stmt_single | comment_stmt_multi
@@ -24,8 +24,6 @@
 - valid_char = (? UNICODE ?) - (? Single char comment ?) - ws - (? Single char terminal ?)
 
 (* Editable Terminals, might depend on dialect *)
-
-- terminal = comment_terminal | exit | open_par | close_par | let | eq | add | sub | mul | div | semi
 - comment = "@"
 - exit = "exit"
 - open_par = "("
@@ -41,6 +39,18 @@
 - open_curly = "{"
 - close_curly = "}"
 - if = "if"
+- elif = "elif"
+- else = "else"
+- while = "while"
+- not = "!"
+- logic_gt = ">"
+- logic_ge = ">="
+- logic_lt = "<"
+- logic_le = "<="
+- logic_and = "&"
+- logic_or = "|"
+- true = "true"
+- false = "false"
 
 ### Notes
 - * Zero or more 

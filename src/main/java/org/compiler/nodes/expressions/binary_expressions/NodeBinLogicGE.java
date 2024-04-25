@@ -13,4 +13,3 @@ public class NodeBinLogicGE extends NodeBin {
         return "NodeBinLogicGE{" + "left=" + getLeft() + ", right=" + getRight() + '}';
     }
 }
-

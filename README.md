@@ -2,44 +2,82 @@
 ![Compiler logo](READMESOURCES/logo.png) \
 A full custom compiler for the .mz(Mecugni Zanasi) language! \
 It generates an x86_64 assembly file. \
-The program can then by run by using nasm and ld or the assembler and linker of your choice.
+The program is then run by using nasm and ld(supports also the assembler and linker of your choice using only .asm compilation).
 
 To compile the file the steps made by the compiler are:
 - Tokenization  
   - transforms the chars present in the input file to tokens such as EXIT token
+  - checks for unclosed multiline comments
 - Parsing        
-  - transforms the token list into a tree with prog as root
+  - transforms the tokens list into a list of trees that represent the code
+  - checks for syntax errors
+  - checks for semantic errors
 - Generating ASM 
-  - part where the proper assembly is written into an output file
+  - part where the proper assembly is written into an output .asm file
+  - checks for already declared variables
   
-CompilerMZ by default compiles the file `input.mz` and generates the file `input.asm`. \
-The `input.asm` file is then assembled using NASM and linked using ld by default. \
-The following flags are available:
+CompilerMZ by default compiles the file `input.mz` and generates the assembly file `output.asm`. \
+If not specified it will also generate the object file `output.o` and the executable `output`. 
+Here is the full man page:
+```text
+MZ Compiler by Davide Mecugni, Andrea Zanasi
+(C) 2024
+
+usage: CompilerMZ
+ -c,--compile            compile only, no assembly and linking
+ -d,--dialect <arg>      dialect to be used
+ -e,--executable <arg>   final executable file
+ -h,--help               print this message
+ -i,--input <arg>        input .mz manz file
+ -o,--output <arg>       output .asm assembly file
+ -O,--object <arg>       .o object file(assembled .asm file)
+ -t,--time               print time for given procedure
+ -v,--verbose            verbose output
+ -V,--version            print version
+```
 
 
-Example:
+Standard dialect code example:
 ```manz
-@commento
-let x = 1;
-let y = 2;
-let z = 3;
-let u = z % 2;
-let a = (x + y * z) / (2 - 1);
-if (x - 1) {
-  x = 1;
-} elif (x - 2) {
-  exit(2);
-} else {
-  exit(3);
-}
-while (z) {
-    z = z - 1;
-    z = x + 1;
-}
+@@
+Finds the nth prime(considering 2 the first prime number)
+@@
+{
+    @Starts the count at 1
+    let count = 1;
+    let number = 2;
+    let nThPrime = 54; @Should be 251
 
-exit(x);
+    while(count < nThPrime + 1) {
+    let is_prime = true;
+    let divisor = 2;
+
+    @ Checks whether a number is prime
+    while (divisor * divisor <= number & is_prime) {
+        if (number % divisor == 0) {
+            is_prime = false;
+        }
+        divisor = divisor + 1;
+    }
+
+    if (is_prime) {
+        if (count == nThPrime) {
+            @@
+            If the nTh prime is found it exits with that number
+            Note that 251 is the last prime before 255(max exit number on UNIX systems
+            @@
+            exit(number);
+        }
+        count = count + 1;
+    }
+    number = number + 1;
+    }
+}
 ```
 # Features
+- [x] Multi dialect support
+  - [x] Create your custom dialect
+  - [x] Full support for UNICODE characters
 - [x] Comments
   - [x] Single line comments
   - [x] Multi line comments
@@ -55,7 +93,17 @@ exit(x);
   - [x] Subtraction
   - [x] Multiplication
   - [x] Division
+  - [x] Modulus
   - [x] Parenthesis operations
+- [x] Logical operations
+  - [x] Equal
+  - [x] Not equal
+  - [x] Greater than
+  - [x] Greater or equal
+  - [x] Less than
+  - [x] Less or equal
+  - [x] And
+  - [x] Or
 - [x] If statement
   - [x] Condition expression
   - [x] Scope
@@ -64,6 +112,7 @@ exit(x);
 - [x] While loop
   - [x] Condition expression
   - [x] Scope
+
 # Get the compiler working
 ```shell
 sudo apt-get install nasm

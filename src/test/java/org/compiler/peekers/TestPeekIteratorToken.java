@@ -1,7 +1,8 @@
 package org.compiler.peekers;
 
-import org.compiler.token.*;
-import org.compiler.token.tokens.*;
+import org.compiler.token.TokenType;
+import org.compiler.token.tokens.Token;
+import org.compiler.token.tokens.TokenIntLit;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

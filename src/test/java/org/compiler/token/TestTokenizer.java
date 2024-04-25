@@ -161,7 +161,7 @@ public class TestTokenizer {
     }
 
     @Test
-    public void testTokenizerLoginNotEq() throws TokenError{
+    public void testTokenizerLoginNotEq() throws TokenError {
         Tokenizer validLogicNotEq = new Tokenizer("let a = 10 != 20;");
         assertEquals(validLogicNotEq.getTokens(),
                 List.of(new Token(TokenType.let), new TokenIdent("a"), new Token(TokenType.eq), new TokenIntLit("10"),

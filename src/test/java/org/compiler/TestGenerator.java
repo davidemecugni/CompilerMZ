@@ -3,7 +3,9 @@ package org.compiler;
 import org.compiler.errors.TokenError;
 import org.compiler.token.Tokenizer;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TestGenerator {
     @Test

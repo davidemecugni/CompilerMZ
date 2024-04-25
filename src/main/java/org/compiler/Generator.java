@@ -15,7 +15,10 @@ import org.compiler.nodes.statements.NodeScope;
 import org.compiler.nodes.statements.conditionals.NodeIf;
 import org.compiler.nodes.statements.conditionals.NodeWhile;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Generates a string representation of the assembly code
@@ -296,6 +299,26 @@ public class Generator {
             bin_exprSB.append("     movzx rbx, al\n");
             bin_exprSB.append(push("rbx"));
             bin_exprSB.append("     ;;/less than or equal\n\n");
+        }
+        case NodeBinLogicAnd nodeBinLogicAnd -> {
+            bin_exprSB.append(generateExpression(nodeBinLogicAnd.getLeft()));
+            bin_exprSB.append(generateExpression(nodeBinLogicAnd.getRight()));
+            bin_exprSB.append("     ;;and\n");
+            bin_exprSB.append(pop("rax"));
+            bin_exprSB.append(pop("rbx"));
+            bin_exprSB.append("     and rax, rbx\n");
+            bin_exprSB.append(push("rax"));
+            bin_exprSB.append("     ;;/and\n\n");
+        }
+        case NodeBinLogicOr nodeBinLogicOr -> {
+            bin_exprSB.append(generateExpression(nodeBinLogicOr.getLeft()));
+            bin_exprSB.append(generateExpression(nodeBinLogicOr.getRight()));
+            bin_exprSB.append("     ;;or\n");
+            bin_exprSB.append(pop("rax"));
+            bin_exprSB.append(pop("rbx"));
+            bin_exprSB.append("     or rax, rbx\n");
+            bin_exprSB.append(push("rax"));
+            bin_exprSB.append("     ;;/or\n\n");
         }
         case null, default -> throw new IllegalArgumentException("Unknown binary expression type in generator");
         }

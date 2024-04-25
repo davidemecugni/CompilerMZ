@@ -15,9 +15,19 @@ import org.compiler.token.tokens.TokenIdent;
 import org.compiler.token.tokens.TokenIntLit;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TestParser {
+    @Test
+    public void testParserError() throws TokenError {
+        Tokenizer invalidStructure1 = new Tokenizer("<= x = 10;");
+        assertThrows(TokenError.class, () -> new Parser(invalidStructure1.getTokens()));
+        Tokenizer invalidStructure2 = new Tokenizer("let x = 10 exit 4;");
+        assertThrows(TokenError.class, () -> new Parser(invalidStructure2.getTokens()));
+        Tokenizer invalidStructure3 = new Tokenizer("lex x = exit;");
+        assertThrows(TokenError.class, () -> new Parser(invalidStructure3.getTokens()));
+    }
 
     @Test
     public void testParserExit() throws TokenError {

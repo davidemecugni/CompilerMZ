@@ -15,19 +15,11 @@ public class Token {
     private final int line;
     private final int column_start;
     private final int column_end;
-    private static final Map<TokenType, Integer> PRECEDENCE_MAP = Map.ofEntries(
-            Map.entry(TokenType.plus, 0),
-            Map.entry(TokenType.minus, 0),
-            Map.entry(TokenType.star, 1),
-            Map.entry(TokenType.slash, 1),
-            Map.entry(TokenType.percent, 1),
-            Map.entry(TokenType.logic_not_eq, 1),
-            Map.entry(TokenType.logic_eq, 1),
-            Map.entry(TokenType.logic_gt, 1),
-            Map.entry(TokenType.logic_ge, 1),
-            Map.entry(TokenType.logic_lt, 1),
-            Map.entry(TokenType.logic_le, 1)
-    );
+    private static final Map<TokenType, Integer> PRECEDENCE_MAP = Map.ofEntries(Map.entry(TokenType.plus, 0),
+            Map.entry(TokenType.minus, 0), Map.entry(TokenType.star, 1), Map.entry(TokenType.slash, 1),
+            Map.entry(TokenType.percent, 1), Map.entry(TokenType.logic_not_eq, 1), Map.entry(TokenType.logic_eq, 1),
+            Map.entry(TokenType.logic_gt, 1), Map.entry(TokenType.logic_ge, 1), Map.entry(TokenType.logic_lt, 1),
+            Map.entry(TokenType.logic_le, 1), Map.entry(TokenType.logic_and, 1), Map.entry(TokenType.logic_or, 1));
 
     public Token(TokenType type, int line, int column_start, int column_end) {
         this.type = type;

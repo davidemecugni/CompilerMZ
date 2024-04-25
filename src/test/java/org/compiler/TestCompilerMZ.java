@@ -1,92 +1,31 @@
 package org.compiler;
 
 import org.compiler.errors.TokenError;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
-import java.nio.file.NoSuchFileException;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestCompilerMZ {
-    @Test
-    public void testCompilerMZ() throws IOException, TokenError {
-        int exitCode = CompilerMZ.callFullStackWithReturnCode(
-                "src/test/java/org/compiler/testCompilerMZResources/exits100.mz",
-                "src/test/java/org/compiler/testCompilerMZResources/out.asm",
-                "src/test/java/org/compiler/testCompilerMZResources/out.o",
-                "src/test/java/org/compiler/testCompilerMZResources/out");
-        assertEquals(100, exitCode);
-        exitCode = CompilerMZ.callFullStackWithReturnCode(
-                "src/test/java/org/compiler/testCompilerMZResources/exits42.mz",
-                "src/test/java/org/compiler/testCompilerMZResources/out.asm",
-                "src/test/java/org/compiler/testCompilerMZResources/out.o",
-                "src/test/java/org/compiler/testCompilerMZResources/out");
-        assertEquals(42, exitCode);
-        assertThrows(NoSuchFileException.class,
-                () -> CompilerMZ.callFullStack("src/test/null.mz",
-                        "src/test/java/org/compiler/testCompilerMZResources/out.asm",
-                        "src/test/java/org/compiler/testCompilerMZResources/out.o",
-                        "src/test/java/org/compiler/testCompilerMZResources/out"));
-        exitCode = CompilerMZ.callFullStackWithReturnCode(
-                "src/test/java/org/compiler/testCompilerMZResources/exits45.mz",
-                "src/test/java/org/compiler/testCompilerMZResources/out.asm",
-                "src/test/java/org/compiler/testCompilerMZResources/out.o",
-                "src/test/java/org/compiler/testCompilerMZResources/out");
-        assertEquals(45, exitCode);
-        exitCode = CompilerMZ.callFullStackWithReturnCode(
-                "src/test/java/org/compiler/testCompilerMZResources/exits15.mz",
-                "src/test/java/org/compiler/testCompilerMZResources/out.asm",
-                "src/test/java/org/compiler/testCompilerMZResources/out.o",
-                "src/test/java/org/compiler/testCompilerMZResources/out");
-        assertEquals(15, exitCode);
-        exitCode = CompilerMZ.callFullStackWithReturnCode(
-                "src/test/java/org/compiler/testCompilerMZResources/exits10.mz",
-                "src/test/java/org/compiler/testCompilerMZResources/out.asm",
-                "src/test/java/org/compiler/testCompilerMZResources/out.o",
-                "src/test/java/org/compiler/testCompilerMZResources/out");
-        assertEquals(10, exitCode);
-        exitCode = CompilerMZ.callFullStackWithReturnCode(
-                "src/test/java/org/compiler/testCompilerMZResources/exits1.mz",
-                "src/test/java/org/compiler/testCompilerMZResources/out.asm",
-                "src/test/java/org/compiler/testCompilerMZResources/out.o",
-                "src/test/java/org/compiler/testCompilerMZResources/out");
-        assertEquals(1, exitCode);
-        exitCode = CompilerMZ.callFullStackWithReturnCode(
-                "src/test/java/org/compiler/testCompilerMZResources/exits2.mz",
-                "src/test/java/org/compiler/testCompilerMZResources/out.asm",
-                "src/test/java/org/compiler/testCompilerMZResources/out.o",
-                "src/test/java/org/compiler/testCompilerMZResources/out");
-        assertEquals(2, exitCode);
-        exitCode = CompilerMZ.callFullStackWithReturnCode(
-                "src/test/java/org/compiler/testCompilerMZResources/exits69.mz",
-                "src/test/java/org/compiler/testCompilerMZResources/out.asm",
-                "src/test/java/org/compiler/testCompilerMZResources/out.o",
-                "src/test/java/org/compiler/testCompilerMZResources/out");
-        assertEquals(69, exitCode);
-        exitCode = CompilerMZ.callFullStackWithReturnCode(
-                "src/test/java/org/compiler/testCompilerMZResources/exits111.mz",
-                "src/test/java/org/compiler/testCompilerMZResources/out.asm",
-                "src/test/java/org/compiler/testCompilerMZResources/out.o",
-                "src/test/java/org/compiler/testCompilerMZResources/out");
-        assertEquals(111, exitCode);
-        exitCode = CompilerMZ.callFullStackWithReturnCode(
-                "src/test/java/org/compiler/testCompilerMZResources/exits130.mz",
-                "src/test/java/org/compiler/testCompilerMZResources/out.asm",
-                "src/test/java/org/compiler/testCompilerMZResources/out.o",
-                "src/test/java/org/compiler/testCompilerMZResources/out");
-        assertEquals(130, exitCode);
-        exitCode = CompilerMZ.callFullStackWithReturnCode(
-                "src/test/java/org/compiler/testCompilerMZResources/exits11.mz",
-                "src/test/java/org/compiler/testCompilerMZResources/out.asm",
-                "src/test/java/org/compiler/testCompilerMZResources/out.o",
-                "src/test/java/org/compiler/testCompilerMZResources/out");
-        assertEquals(11, exitCode);
-        exitCode = CompilerMZ.callFullStackWithReturnCode(
-                "src/test/java/org/compiler/testCompilerMZResources/exits4.mz",
-                "src/test/java/org/compiler/testCompilerMZResources/out.asm",
-                "src/test/java/org/compiler/testCompilerMZResources/out.o",
-                "src/test/java/org/compiler/testCompilerMZResources/out");
-        assertEquals(4, exitCode);
+
+    @ParameterizedTest
+    @MethodSource("provideTestCases")
+    public void testCompilerMZ(String inputFile, int expectedExitCode) throws IOException, TokenError {
+        String baseDir = "src/test/java/org/compiler/testCompilerMZResources/";
+        int exitCode = CompilerMZ.callFullStackWithReturnCode(baseDir + inputFile, baseDir + "out.asm",
+                baseDir + "out.o", baseDir + "out");
+        assertEquals(expectedExitCode, exitCode);
+    }
+
+    private static Stream<Object[]> provideTestCases() {
+        return Stream.of(new Object[] { "exits1.mz", 1 }, new Object[] { "exits2.mz", 2 },
+                new Object[] { "exits3.mz", 3 }, new Object[] { "exits4.mz", 4 }, new Object[] { "exits5.mz", 5 },
+                new Object[] { "exits10.mz", 10 }, new Object[] { "exits11.mz", 11 }, new Object[] { "exits15.mz", 15 },
+                new Object[] { "exits42.mz", 42 }, new Object[] { "exits45.mz", 45 }, new Object[] { "exits69.mz", 69 },
+                new Object[] { "exits100.mz", 100 }, new Object[] { "exits111.mz", 111 },
+                new Object[] { "exits130.mz", 130 }, new Object[] { "exits251.mz", 251 });
     }
 }

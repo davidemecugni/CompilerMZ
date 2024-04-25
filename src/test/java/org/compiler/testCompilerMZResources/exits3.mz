@@ -1,0 +1,12 @@
+let x = 10;
+let y = 10;
+
+if(x != y){
+    exit(1);
+}elif(x > y){
+    exit(2);
+}
+
+if(x == y){
+    exit(3);
+}
