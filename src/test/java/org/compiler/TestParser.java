@@ -27,6 +27,8 @@ public class TestParser {
         assertThrows(TokenError.class, () -> new Parser(invalidStructure2.getTokens()));
         Tokenizer invalidStructure3 = new Tokenizer("lex x = exit;");
         assertThrows(TokenError.class, () -> new Parser(invalidStructure3.getTokens()));
+        Tokenizer invalidStructure4 = new Tokenizer("let x = (10 { 5);");
+        assertThrows(TokenError.class, () -> new Parser(invalidStructure4.getTokens()));
     }
 
     @Test

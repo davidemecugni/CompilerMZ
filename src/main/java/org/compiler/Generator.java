@@ -21,7 +21,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Generates a string representation of the assembly code
+ * Generates the assembly code from the AST
+ * Checks for undeclared identifiers
+ * Checks for redeclaration of identifiers
  */
 public class Generator {
     private String generated = "";
@@ -36,6 +38,30 @@ public class Generator {
         generateProgram();
     }
 
+    /**
+     * Generates the assembly code for the program
+     * Exit code is 0 by default if no exit statement is present
+     */
+    public void generateProgram() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("global _start\n_start:\n\n");
+        for (NodeStatement statement : m_program.getStmts()) {
+            sb.append(generateStatement(statement));
+        }
+        // Exits 0 by default
+        sb.append("     ;;final exit\n");
+        sb.append("     mov rax, 60\n");
+        sb.append("     mov rdi, 0\n");
+        sb.append("     syscall\n");
+        generated = sb.toString();
+    }
+    /**
+     * Generates the assembly code for a statement
+     *
+     * @param stmt
+     *            the statement to generate code for
+     * @return the generated assembly code
+     */
     public String generateStatement(NodeStatement stmt) {
 
         StringBuilder stmtSB = new StringBuilder();
@@ -131,6 +157,13 @@ public class Generator {
         return stmtSB.toString();
     }
 
+    /**
+     * Generates the assembly code for a term
+     *
+     * @param expr
+     *            the term to generate code for
+     * @return the generated assembly code
+     */
     public String generateTerm(NodeTerm expr) {
         StringBuilder termSB = new StringBuilder();
         // Generate the term based on the type
@@ -169,6 +202,13 @@ public class Generator {
         return exprSB.toString();
     }
 
+    /**
+     * Generates the assembly code for a binary expression
+     *
+     * @param bin_expr
+     *            the binary expression to generate code for
+     * @return the generated assembly code
+     */
     public String generateBinaryExpression(NodeBin bin_expr) {
         StringBuilder bin_exprSB = new StringBuilder();
 
@@ -326,22 +366,10 @@ public class Generator {
         return bin_exprSB.toString();
     }
 
-    public void generateProgram() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("global _start\n_start:\n\n");
-        for (NodeStatement statement : m_program.getStmts()) {
-            sb.append(generateStatement(statement));
-        }
-        // Exits 0 by default
-        sb.append("     ;;final exit\n");
-        sb.append("     mov rax, 60\n");
-        sb.append("     mov rdi, 0\n");
-        sb.append("     syscall\n");
-        generated = sb.toString();
-    }
-
+    /**
+     * Prints the type of each statement, used for debugging
+     */
     public void printStmt() {
-
         for (NodeStatement statement : m_program.getStmts()) {
             System.out.println(statement.getStmt().getExpr().getType().toString());
         }
@@ -373,10 +401,18 @@ public class Generator {
         return "     pop " + reg + "\n";
     }
 
+    /**
+     * Begins a new scope, pushes the current stack size to the scopes stack
+     */
     public void beginScope() {
         scopes.add(variables.size());
     }
 
+    /**
+     * Ends the current scope, pops all variables from the stack(used for garbage collection)
+     *
+     * @return a string
+     */
     public String endScope() {
         int pop_count = variables.size() - scopes.getLast();
         String out = "";
@@ -391,6 +427,11 @@ public class Generator {
         return out;
     }
 
+    /**
+     * Creates a progressive label for the .asm
+     *
+     * @return a string
+     */
     public String create_label() {
         return "label" + label_counter++;
     }
@@ -399,6 +440,14 @@ public class Generator {
         return generated;
     }
 
+    /**
+     * Returns the key with the highest value in a map, used by the endScope method
+     * for garbage collection
+     *
+     * @param map
+     *            the map to search
+     * @return the key with the highest value
+     */
     public static String getKeyWithHighestValue(Map<String, Integer> map) {
         List<Map.Entry<String, Integer>> list = new ArrayList<>(map.entrySet());
         list.sort(Map.Entry.comparingByValue());

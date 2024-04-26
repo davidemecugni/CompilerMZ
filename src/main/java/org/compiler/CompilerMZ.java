@@ -14,10 +14,20 @@ import java.nio.file.Paths;
  */
 public class CompilerMZ {
     /**
-     * The main method of the compiler
+     * Main function of the compiler
      *
      * @param args
-     *            eventual input and output files, default fausto.mz and output.asm
+     *            Command line arguments, see -h for help
+     *
+     * @throws IOException
+     *             On any IO error(on files)
+     * @throws ParseException
+     *             On any error parsing the command line
+     * @throws TokenError
+     *             Can be thrown by the tokenizer and parser if the code is not correct
+     *
+     * @throws IllegalArgumentException
+     *             If the -t flag is not used correctly with 2 dialects provided
      */
     public static void main(String[] args) throws IOException, ParseException, TokenError {
         CommandLine cmd = getCmd(args);
@@ -417,19 +427,24 @@ public class CompilerMZ {
      */
     private static Options getOptions() {
         Options options = new Options();
+
+        OptionGroup group = new OptionGroup();
+        group.addOption(new Option("t", "translate", true,
+                "cross-compiles a dialect to another one, requires \"dialectIn,dialectOut\""));
+        group.addOption(new Option("f", "format", false, "format the code, specify the dialect with -d flag"));
+        group.addOption(new Option("c", "compile", false, "compile only, no assembly and linking"));
+        group.addOption(new Option("V", "version", false, "print version"));
+        group.addOption(new Option("h", "help", false, "print this message"));
+
+        options.addOptionGroup(group);
+
         options.addOption("i", "input", true, "input .mz manz file");
         options.addOption("o", "output", true, "output .asm assembly file");
         options.addOption("O", "object", true, ".o object file(assembled .asm file)");
         options.addOption("e", "executable", true, "final executable file");
         options.addOption("d", "dialect", true, "dialect to be used");
         options.addOption("v", "verbose", false, "verbose output");
-        options.addOption("c", "compile", false, "compile only, no assembly and linking");
-        options.addOption("t", "translate", true,
-                "cross-compiles a dialect to another one, requires \"dialectIn,dialectOut\"");
-        options.addOption("f", "format", false, "format the code, specify the dialect with -d flag");
-        options.addOption("V", "version", false, "print version");
-        options.addOption("h", "help", false, "print this message");
-        // Conflict handling could be implemented
+
         return options;
     }
 }
