@@ -1,0 +1,22 @@
+⬇️
+    🔰 count ⏸ 1 📝
+    🔰 number ⏸ 2 📝
+    🔰 nThPrime ⏸ 54 📝
+    🔄 ➡️ count ⏪ nThPrime ➕ 1 ⬅️ ⬇️
+        🔰 is_prime ⏸ 1 📝
+        🔰 divisor ⏸ 2 📝
+        🔄 ➡️ divisor ✖️ divisor ⏪⏸ number 🔛 is_prime ⬅️ ⬇️
+            ❓ ➡️ number 🔢 divisor ⏸⏸ 0 ⬅️ ⬇️
+                is_prime ⏸ 0 📝
+            ⬆️
+            divisor ⏸ divisor ➕ 1 📝
+        ⬆️
+        ❓ ➡️ is_prime ⬅️ ⬇️
+            ❓ ➡️ count ⏸⏸ nThPrime ⬅️ ⬇️
+                👿 ➡️ number ⬅️ 📝
+            ⬆️
+            count ⏸ count ➕ 1 📝
+        ⬆️
+        number ⏸ number ➕ 1 📝
+    ⬆️
+⬆️

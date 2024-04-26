@@ -151,4 +151,53 @@ public class TestTokenizer {
                         new Token(TokenType.star), new TokenIntLit("20"), new Token(TokenType.open_paren),
                         new Token(TokenType.open_paren)));
     }
+
+    @Test
+    public void testTokenizerLogicEq() throws TokenError {
+        Tokenizer validLogicEq = new Tokenizer("let a = 10 == 20;");
+        assertEquals(validLogicEq.getTokens(),
+                List.of(new Token(TokenType.let), new TokenIdent("a"), new Token(TokenType.eq), new TokenIntLit("10"),
+                        new Token(TokenType.logic_eq), new TokenIntLit("20"), new Token(TokenType.semi)));
+    }
+
+    @Test
+    public void testTokenizerLoginNotEq() throws TokenError {
+        Tokenizer validLogicNotEq = new Tokenizer("let a = 10 != 20;");
+        assertEquals(validLogicNotEq.getTokens(),
+                List.of(new Token(TokenType.let), new TokenIdent("a"), new Token(TokenType.eq), new TokenIntLit("10"),
+                        new Token(TokenType.logic_not_eq), new TokenIntLit("20"), new Token(TokenType.semi)));
+
+    }
+
+    @Test
+    public void testTokenizerLogicGt() throws TokenError {
+        Tokenizer validLogicGt = new Tokenizer("let a = 10 > 20;");
+        assertEquals(validLogicGt.getTokens(),
+                List.of(new Token(TokenType.let), new TokenIdent("a"), new Token(TokenType.eq), new TokenIntLit("10"),
+                        new Token(TokenType.logic_gt), new TokenIntLit("20"), new Token(TokenType.semi)));
+    }
+
+    @Test
+    public void testTokenizerLogicGe() throws TokenError {
+        Tokenizer validLogicGe = new Tokenizer("let a = 10 >= 20;");
+        assertEquals(validLogicGe.getTokens(),
+                List.of(new Token(TokenType.let), new TokenIdent("a"), new Token(TokenType.eq), new TokenIntLit("10"),
+                        new Token(TokenType.logic_ge), new TokenIntLit("20"), new Token(TokenType.semi)));
+    }
+
+    @Test
+    public void testTokenizerLogicLt() throws TokenError {
+        Tokenizer validLogicLt = new Tokenizer("let a = 10 < 20;");
+        assertEquals(validLogicLt.getTokens(),
+                List.of(new Token(TokenType.let), new TokenIdent("a"), new Token(TokenType.eq), new TokenIntLit("10"),
+                        new Token(TokenType.logic_lt), new TokenIntLit("20"), new Token(TokenType.semi)));
+    }
+
+    @Test
+    public void testTokenizerLogicLe() throws TokenError {
+        Tokenizer validLogicLe = new Tokenizer("let a = 10 <= 20;");
+        assertEquals(validLogicLe.getTokens(),
+                List.of(new Token(TokenType.let), new TokenIdent("a"), new Token(TokenType.eq), new TokenIntLit("10"),
+                        new Token(TokenType.logic_le), new TokenIntLit("20"), new Token(TokenType.semi)));
+    }
 }

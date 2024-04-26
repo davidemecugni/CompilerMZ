@@ -16,5 +16,12 @@
   "if": "_if",
   "else": "_else",
   "elif": "elif",
-  "while": "_while"
+  "while": "_while",
+  "!": "not",
+  ">": "logic_gt",
+  "<": "logic_lt",
+  "&": "logic_and",
+  "|": "logic_or",
+  "true": "_true",
+  "false": "_false"
 }

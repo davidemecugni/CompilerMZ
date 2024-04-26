@@ -1,0 +1,47 @@
+@@
+Turing machine that writes 1 to each slot of the tape
+@@
+{
+    @ 5 memory slots to simulate infinite tape
+    let slot1 = 0;
+    let slot2 = 0;
+    let slot3 = 0;
+    let slot4 = 0;
+    let slot5 = 0;
+    @@
+    State 0: Normal state
+    State 1: Halt state
+    @@
+
+    @ Starting from normal state
+    let state = 0;
+    @ Starting from the first slot
+    let head_position = 0;
+
+    @ While it is not in the halt state
+    while (state != 1) {
+        if (state == 0) {
+            if (head_position == 0) {
+                slot1 = 1;
+                head_position = head_position + 1;
+            } elif (head_position == 1) {
+                slot2 = 1;
+                head_position = head_position + 1;
+            } elif (head_position == 2) {
+                slot3 = 1;
+                head_position = head_position + 1;
+            } elif (head_position == 3) {
+                slot4 = 1;
+                head_position = head_position + 1;
+            } elif (head_position == 4) {
+                slot5 = 1;
+                @ It the tape is full, go to the halt state
+                state = 1;
+            }
+        }
+    }
+
+    @ Halt the program
+    let EXIT_SUCCESS = 1;
+    exit(EXIT_SUCCESS);
+}

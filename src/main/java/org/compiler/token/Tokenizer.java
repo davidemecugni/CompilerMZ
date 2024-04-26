@@ -102,7 +102,7 @@ public class Tokenizer {
         } else if (word.matches("^[^\\d].*")) {
             return new TokenIdent(word, line, column_start, column_end);
         } else {
-            throw new TokenError("Unrecognised token type", line, column_start, column_end);
+            throw new TokenError("Unrecognised token type: \"" + word + "\"", line, column_start, column_end);
         }
     }
 
@@ -110,6 +110,7 @@ public class Tokenizer {
         ArrayList<Token> tokenCopy = new ArrayList<>();
         for (int i = 0; i < tokens.size(); i++) {
             Token token = tokens.get(i);
+            // Negative number
             if (token.getType() == TokenType.minus && i + 1 < tokens.size() && i - 1 > 0) {
                 if (tokens.get(i + 1).getType() == TokenType.int_lit) {
                     TokenType prec = tokens.get(i - 1).getType();
@@ -117,11 +118,49 @@ public class Tokenizer {
                             || prec == TokenType.minus || prec == TokenType.star || prec == TokenType.slash) {
                         TokenIntLit number = (TokenIntLit) tokens.get(i + 1);
                         tokenCopy.add(new TokenIntLit(Integer.toString(-number.getValue()), token.getLine(),
-                                token.getColumnStart(), token.getColumnEnd()));
+                                token.getColumnStart(), number.getColumnEnd()));
                         ++i;
                         continue;
                     }
                 }
+            }
+            // != -> logic_not_eq
+            if (token.getType() == TokenType.not && i + 1 < tokens.size()
+                    && tokens.get(i + 1).getType() == TokenType.eq) {
+                tokenCopy.add(new Token(TokenType.logic_not_eq, token.getLine(), token.getColumnStart(),
+                        token.getColumnEnd() + 1));
+                ++i;
+                continue;
+            }
+            // == -> logic_eq
+            if (token.getType() == TokenType.eq && i + 1 < tokens.size()
+                    && tokens.get(i + 1).getType() == TokenType.eq) {
+                tokenCopy.add(new Token(TokenType.logic_eq, token.getLine(), token.getColumnStart(),
+                        token.getColumnEnd() + 1));
+                ++i;
+                continue;
+            }
+            // >= -> logic_ge
+            if (token.getType() == TokenType.logic_gt && i + 1 < tokens.size()
+                    && tokens.get(i + 1).getType() == TokenType.eq) {
+                tokenCopy.add(new Token(TokenType.logic_ge, token.getLine(), token.getColumnStart(),
+                        token.getColumnEnd() + 1));
+                ++i;
+                continue;
+            }
+            // <= -> logic_le
+            if (token.getType() == TokenType.logic_lt && i + 1 < tokens.size()
+                    && tokens.get(i + 1).getType() == TokenType.eq) {
+                tokenCopy.add(new Token(TokenType.logic_le, token.getLine(), token.getColumnStart(),
+                        token.getColumnEnd() + 1));
+                ++i;
+                continue;
+            }
+            if (token.getType() == TokenType._true) {
+                token = new TokenIntLit("1", token.getLine(), token.getColumnStart(), token.getColumnEnd());
+            }
+            if (token.getType() == TokenType._false) {
+                token = new TokenIntLit("0", token.getLine(), token.getColumnStart(), token.getColumnEnd());
             }
             tokenCopy.add(token);
         }

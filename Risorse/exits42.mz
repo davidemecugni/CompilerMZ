@@ -2,6 +2,9 @@
 Full if elif else
 @@
 
+let true = 10;
+let false = 0;
+
 if(true){
     if(true){
         if(false){

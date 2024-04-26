@@ -15,7 +15,10 @@ import org.compiler.nodes.statements.NodeScope;
 import org.compiler.nodes.statements.conditionals.NodeIf;
 import org.compiler.nodes.statements.conditionals.NodeWhile;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Generates a string representation of the assembly code
@@ -74,18 +77,19 @@ public class Generator {
             String label = create_label();
             int numberOfElifs = nodeIf.countElif();
             String finalLabel = label + "final";
-            stmtSB.append("     ;;if\n\n");
+            stmtSB.append("     ;;if(label: ").append(label).append(")\n\n");
             stmtSB.append(generateExpression(nodeIf.getStmt()));
             stmtSB.append(pop("rax"));
             stmtSB.append("     test rax, rax\n");
             if (numberOfElifs != 0) {
                 stmtSB.append("     jz ").append(label).append(0).append("\n\n");
             }
+            stmtSB.append("     jz ").append(label).append(numberOfElifs).append("\n");
             stmtSB.append(generateStatement(nodeIf.getIfScope()));
             stmtSB.append("     jmp ").append(finalLabel).append("\n\n");
             int i;
             for (i = 0; i < numberOfElifs; i++) {
-                stmtSB.append("     ;;elif\n");
+                stmtSB.append("     ;;elif(label: ").append(label).append(")\n");
                 stmtSB.append(label).append(i).append(":\n\n");
                 stmtSB.append("     ;;elif condition\n");
                 stmtSB.append(generateExpression(nodeIf.getNthScopeElif(i).getStmt()));
@@ -94,17 +98,17 @@ public class Generator {
                 stmtSB.append("     jz ").append(label).append(i + 1).append("\n");
                 stmtSB.append("     ;;/elif condition\n");
                 stmtSB.append(generateStatement(nodeIf.getNthScopeElif(i).getScope()));
-                stmtSB.append("     ;;/elif\n");
+                stmtSB.append("     ;;/elif(label: ").append(label).append(")\n");
             }
             stmtSB.append(label).append(i).append(":\n\n");
             if (nodeIf.hasElse()) {
-                stmtSB.append("     ;;else\n");
+                stmtSB.append("     ;;else(label: ").append(label).append(")\n");
                 stmtSB.append(generateStatement(nodeIf.getScopeElse()));
                 stmtSB.append("     jmp ").append(finalLabel).append("\n\n");
-                stmtSB.append("     ;;/else\n");
+                stmtSB.append("     ;;/else(label: ").append(label).append(")\n");
             }
             stmtSB.append(finalLabel).append(":\n\n");
-            stmtSB.append("     ;;/if\n\n");
+            stmtSB.append("     ;;/if(label: ").append(label).append(")\n\n");
         }
         case NodeWhile nodeWhile -> {
             String labelStart = create_label();
@@ -220,6 +224,101 @@ public class Generator {
             bin_exprSB.append("     idiv rbx\n");
             bin_exprSB.append(push("rdx"));
             bin_exprSB.append("     ;;/modulus\n\n");
+        }
+        case NodeBinLogicEq nodeBinLogicEq -> {
+            bin_exprSB.append(generateExpression(nodeBinLogicEq.getLeft()));
+            bin_exprSB.append(generateExpression(nodeBinLogicEq.getRight()));
+            bin_exprSB.append("     ;;equal\n");
+            bin_exprSB.append(pop("rax"));
+            bin_exprSB.append(pop("rbx"));
+            bin_exprSB.append("     cmp rax, rbx\n");
+            bin_exprSB.append("     sete al\n");
+            bin_exprSB.append("     movzx rbx, al\n");
+            bin_exprSB.append(push("rbx"));
+            bin_exprSB.append("     ;;/equal\n\n");
+        }
+        case NodeBinLogicNotEq nodeBinLogicNotEq -> {
+            bin_exprSB.append(generateExpression(nodeBinLogicNotEq.getLeft()));
+            bin_exprSB.append(generateExpression(nodeBinLogicNotEq.getRight()));
+            bin_exprSB.append("     ;;not equal\n");
+            bin_exprSB.append(pop("rax"));
+            bin_exprSB.append(pop("rbx"));
+            bin_exprSB.append("     cmp rax, rbx\n");
+            bin_exprSB.append("     setne al\n");
+            bin_exprSB.append("     movzx rbx, al\n");
+            bin_exprSB.append(push("rbx"));
+            bin_exprSB.append("     ;;/not equal\n\n");
+        }
+
+        case NodeBinLogicGT nodeBinLogicGT -> {
+            bin_exprSB.append(generateExpression(nodeBinLogicGT.getLeft()));
+            bin_exprSB.append(generateExpression(nodeBinLogicGT.getRight()));
+            bin_exprSB.append("     ;;greater than\n");
+            bin_exprSB.append(pop("rax"));
+            bin_exprSB.append(pop("rbx"));
+            bin_exprSB.append("     cmp rbx, rax\n");
+            bin_exprSB.append("     setg al\n");
+            bin_exprSB.append("     movzx rbx, al\n");
+            bin_exprSB.append(push("rbx"));
+            bin_exprSB.append("     ;;/greater than\n\n");
+        }
+
+        case NodeBinLogicLT nodeBinLogicLT -> {
+            bin_exprSB.append(generateExpression(nodeBinLogicLT.getLeft()));
+            bin_exprSB.append(generateExpression(nodeBinLogicLT.getRight()));
+            bin_exprSB.append("     ;;less than\n");
+            bin_exprSB.append(pop("rax"));
+            bin_exprSB.append(pop("rbx"));
+            bin_exprSB.append("     cmp rbx, rax\n");
+            bin_exprSB.append("     setl al\n");
+            bin_exprSB.append("     movzx rbx, al\n");
+            bin_exprSB.append(push("rbx"));
+            bin_exprSB.append("     ;;/less than\n\n");
+        }
+
+        case NodeBinLogicGE nodeBinLogicGE -> {
+            bin_exprSB.append(generateExpression(nodeBinLogicGE.getLeft()));
+            bin_exprSB.append(generateExpression(nodeBinLogicGE.getRight()));
+            bin_exprSB.append("     ;;greater than or equal\n");
+            bin_exprSB.append(pop("rax"));
+            bin_exprSB.append(pop("rbx"));
+            bin_exprSB.append("     cmp rbx, rax\n");
+            bin_exprSB.append("     setge al\n");
+            bin_exprSB.append("     movzx rbx, al\n");
+            bin_exprSB.append(push("rbx"));
+            bin_exprSB.append("     ;;/greater than or equal\n\n");
+        }
+        case NodeBinLogicLE nodeBinLogicLE -> {
+            bin_exprSB.append(generateExpression(nodeBinLogicLE.getLeft()));
+            bin_exprSB.append(generateExpression(nodeBinLogicLE.getRight()));
+            bin_exprSB.append("     ;;less than or equal\n");
+            bin_exprSB.append(pop("rax"));
+            bin_exprSB.append(pop("rbx"));
+            bin_exprSB.append("     cmp rbx, rax\n");
+            bin_exprSB.append("     setle al\n");
+            bin_exprSB.append("     movzx rbx, al\n");
+            bin_exprSB.append(push("rbx"));
+            bin_exprSB.append("     ;;/less than or equal\n\n");
+        }
+        case NodeBinLogicAnd nodeBinLogicAnd -> {
+            bin_exprSB.append(generateExpression(nodeBinLogicAnd.getLeft()));
+            bin_exprSB.append(generateExpression(nodeBinLogicAnd.getRight()));
+            bin_exprSB.append("     ;;and\n");
+            bin_exprSB.append(pop("rax"));
+            bin_exprSB.append(pop("rbx"));
+            bin_exprSB.append("     and rax, rbx\n");
+            bin_exprSB.append(push("rax"));
+            bin_exprSB.append("     ;;/and\n\n");
+        }
+        case NodeBinLogicOr nodeBinLogicOr -> {
+            bin_exprSB.append(generateExpression(nodeBinLogicOr.getLeft()));
+            bin_exprSB.append(generateExpression(nodeBinLogicOr.getRight()));
+            bin_exprSB.append("     ;;or\n");
+            bin_exprSB.append(pop("rax"));
+            bin_exprSB.append(pop("rbx"));
+            bin_exprSB.append("     or rax, rbx\n");
+            bin_exprSB.append(push("rax"));
+            bin_exprSB.append("     ;;/or\n\n");
         }
         case null, default -> throw new IllegalArgumentException("Unknown binary expression type in generator");
         }

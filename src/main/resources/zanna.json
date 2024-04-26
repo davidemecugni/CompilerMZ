@@ -9,11 +9,19 @@
   "per": "star",
   "meno": "minus",
   "fratto": "slash",
+  "modulo": "percent",
   "comunque": "comment",
   "inizio": "open_curly",
   "finisco": "close_curly",
   "se": "_if",
   "altrimenti": "_else",
   "oppure": "elif",
-  "finche": "_while"
+  "finche": "_while",
+  "non": "not",
+  "maggiore" : "logic_gt",
+  "minore": "logic_lt",
+  "e_anche": "logic_and",
+  "o_anche": "logic_or",
+  "vero": "_true",
+  "falso": "_false"
 }

@@ -1,0 +1,15 @@
+let x = 1;
+let y = 2;
+let z = 3;
+
+if( x > y & x > z){
+    exit(1);
+}elif( y > x & y > z){
+    exit(2);
+}elif( x > y | x > z){
+    exit(3);
+}elif( y > x | y > z){
+    exit(4);
+}else{
+    exit(5);
+}
