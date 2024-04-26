@@ -26,7 +26,7 @@ import org.compiler.token.tokens.TokenIntLit;
 import java.util.ArrayList;
 
 /**
- * Represents a parser
+ * Represents a parser used to parse a list of tokens into a list of statements(nodes)
  *
  * @see PeekIteratorToken
  */
@@ -40,6 +40,10 @@ public class Parser {
         parseProgram();
     }
 
+    /**
+     * Parses the program
+     * @throws TokenError if the program is invalid
+     */
     private void parseProgram() throws TokenError {
         while (it.hasNext()) {
             stmts.add(parseStmt());
@@ -47,6 +51,11 @@ public class Parser {
         tree = new NodeProgram(stmts);
     }
 
+    /**
+     * Parses a statement of any type(eg. let x = 5; OR exit(x); OR { let x = 5; exit(x); })
+     * @return the statement parsed
+     * @throws TokenError if the statement is invalid
+     */
     private NodeStatement parseStmt() throws TokenError {
         checkForNext();
         if (it.peek().getType() == TokenType._exit) {
@@ -83,16 +92,27 @@ public class Parser {
             return new NodeWhile(conditional.getStmt(), conditional.getScope());
         } else {
             GenerateErrorMessage("Invalid token in statement of type ");
+            return null;
         }
-        return null;
     }
 
+    /**
+     * Parses an expression(the initial precedence is 0)
+     * @return the expression parsed
+     * @throws TokenError if the expression is invalid
+     */
     private NodeExpression parseExpr() throws TokenError {
         return parseExpr(0);
     }
 
+    /**
+     * Parses an expression using the Precedence Climbing Algorithm
+     * @param minPrec the minimum precedence of the expression
+     * @return the expression parsed
+     * @throws TokenError if the expression is invalid
+     */
     private NodeExpression parseExpr(int minPrec) throws TokenError {
-        // salva il primo termine
+        // Saves the left term
         NodeExpression left = parseTerm();
         // Precedence Climbing Algorithm
         while (it.hasNext()) {
@@ -130,6 +150,11 @@ public class Parser {
         return left;
     }
 
+    /**
+     * Parses an assign statement(eg. x = 5;)
+     * @return the assign statement parsed
+     * @throws TokenError if the assign statement is invalid
+     */
     private NodeAssign parseAssign() throws TokenError {
         TokenIdent ident = (TokenIdent) it.next();
         it.next();
@@ -139,6 +164,11 @@ public class Parser {
         return new NodeAssign(expr, ident);
     }
 
+    /**
+     * Parses a scope of statements(eg. { let x = 5; exit(x); })
+     * @return the scope parsed
+     * @throws TokenError if the scope is invalid
+     */
     private NodeScope parseScope() throws TokenError {
         ArrayList<NodeStatement> statements = new ArrayList<>();
         while (it.hasNext() && it.peek().getType() != TokenType.close_curly) {
@@ -150,6 +180,11 @@ public class Parser {
         return new NodeScope(null, statements);
     }
 
+    /**
+     * Parses a conditional statement(eg. if, elif, while)
+     * @return the conditional statement parsed
+     * @throws TokenError if the conditional statement is invalid
+     */
     private Conditional parseCondition() throws TokenError {
         CheckForType(TokenType.open_paren);
         it.next();
@@ -162,18 +197,26 @@ public class Parser {
         return new Conditional(expr, scope);
     }
 
+    /**
+     * Parses an exit statement
+     * @return the exit statement parsed
+     * @throws TokenError if the exit statement is invalid
+     */
     private NodeExit parseExit() throws TokenError {
         NodeExpression expr;
         CheckForType(TokenType.open_paren);
         expr = parseExpr();
         NodeExit exit = new NodeExit(expr);
-        // CheckForType(TokenType.close_paren);
-        // it.next();
         CheckForType(TokenType.semi);
         it.next();
         return exit;
     }
 
+    /**
+     * Parses a let statement
+     * @return the let statement parsed
+     * @throws TokenError if the let statement is invalid
+     */
     private NodeLet parseLet() throws TokenError {
         NodeIdent ident;
         CheckForType(TokenType.ident);
@@ -186,7 +229,11 @@ public class Parser {
         return new NodeLet(expr, ident);
     }
 
-    // controlla se c'è un termine e se è un int_lit o un ident
+    /**
+     * Parses a term of an expression(eg. 5, x, (5+5))
+     * @return the term parsed
+     * @throws TokenError if the term is invalid
+     */
     private NodeTerm parseTerm() throws TokenError {
         checkForNext();
         if (it.peek().getType() == TokenType.int_lit) {
@@ -212,6 +259,12 @@ public class Parser {
         return tree;
     }
 
+    /**
+     * Checks if the next token is of the type specified, if not throws an error
+     *
+     * @param type the type of the token to check
+     * @throws TokenError if the next token is not of the type specified
+     */
     private void CheckForType(TokenType type) throws TokenError {
         checkForNext();
         if (it.peek().getType() != type) {
@@ -220,11 +273,19 @@ public class Parser {
         }
     }
 
+    /**
+     * Generates an error message with the message specified
+     * @param message the message to display
+     * @throws TokenError the error message generated
+     */
     private void GenerateErrorMessage(String message) throws TokenError {
         throw new TokenError(message + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(),
                 it.peek().getColumnEnd());
     }
 
+    /**
+     * Checks if there is a next token, if not throws an error
+     */
     private void checkForNext() {
         if (!it.hasNext()) {
             throw new RuntimeException("Invalid structure, expected token at line: " + it.peekPrevious().getLine()

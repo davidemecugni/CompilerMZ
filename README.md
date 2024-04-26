@@ -1,25 +1,92 @@
-# CompilerMZ
-![Compiler logo](READMESOURCES/logo.png) \
-A full custom compiler for the .mz(Mecugni Zanasi) language! \
-It generates an x86_64 assembly file. \
-The program is then run by using nasm and ld(supports also the assembler and linker of your choice using only .asm compilation).
+# CompilerMZ :computer:
 
-To compile the file the steps made by the compiler are:
-- Tokenization  
+![Compiler logo](READMESOURCES/logo.png)
+
+CompilerMZ is a custom compiler and cross-compiler for multiple languages! \
+It generates an x86_64 assembly file. The program is then executed by using nasm \
+and ld.
+
+## Table of Contents
+- [Features](#features)
+- [Inner workings](#inner-workings)
+- [Getting Started](#getting-started)
+- [Usage](#usage)
+- [The Idea](#the-idea)
+
+## Features :sparkles:
+
+- Multi dialect support :earth_africa:
+  - Create your custom dialect
+  - Current dialects supported:
+    - default_dialect : a C vibe dialect
+    - zanna : an italian dialect
+    - emilian : a dialect from Emilia-Romagna
+    - emoji : an emoji dialect, for the brave ones
+  - Full support for UNICODE characters, feel free to add yours!
+- Comments :speech_balloon:
+  - Single line comments
+  - Multi line comments
+- Variables :abacus:
+  - Initialization
+  - Declaration
+  - Automatic check for already declared variables
+- Exit :door:
+  - Exit with variable
+  - Exit by default(0)
+- Arithmetic operations :heavy_plus_sign:
+  - Addition
+  - Subtraction
+  - Multiplication
+  - Division
+  - Modulus
+  - Parenthesis operations
+- Logical operations :mag:
+  - Equal
+  - Not equal
+  - Greater than
+  - Greater or equal
+  - Less than
+  - Less or equal
+  - And
+  - Or
+- If statement :triangular_flag_on_post:
+  - Condition expression
+  - Scope
+  - Elif and Else
+- Variable Reassignment
+- While loop :repeat:
+  - Condition expression
+  - Scope
+
+## Inner workings :gear:
+To compile the .mz file, the steps made by the compiler are:
+- Tokenization :scissors:
+  - reads the input file and creates a list of tokens according to the dialect chosen 
   - transforms the chars present in the input file to tokens such as EXIT token
   - checks for unclosed multiline comments
-- Parsing        
+- Parsing :deciduous_tree:
   - transforms the tokens list into a list of trees that represent the code
   - checks for syntax errors
   - checks for semantic errors
-- Generating ASM 
+- Generating ASM :hammer:
   - part where the proper assembly is written into an output .asm file
   - checks for already declared variables
-  
-CompilerMZ by default compiles the file `input.mz` and generates the assembly file `output.asm`. \
-If not specified it will also generate the object file `output.o` and the executable `output`. 
+  - garbage collector for variables(removes variables out of scope)
+
+CompilerMZ by default compiles the .asm file provided(-i) and generates the executable file. \
+If not specified it will also generate the intermediate .asm assembly file(with comments!) and the object .o file.
+## Getting Started :rocket:
+
+To get the compiler working, you need to install `nasm` and `ld`:
+
+```shell
+sudo apt-get install nasm
+sudo apt-get install ld
+```
+
+## Usage :hammer_and_wrench:
 Here is the full man page:
-```text
+```shell
 MZ Compiler by Davide Mecugni, Andrea Zanasi
 (C) 2024
 
@@ -27,108 +94,17 @@ usage: CompilerMZ
  -c,--compile            compile only, no assembly and linking
  -d,--dialect <arg>      dialect to be used
  -e,--executable <arg>   final executable file
+ -f,--format             format the code, specify the dialect with -d flag
  -h,--help               print this message
  -i,--input <arg>        input .mz manz file
  -o,--output <arg>       output .asm assembly file
  -O,--object <arg>       .o object file(assembled .asm file)
- -t,--time               print time for given procedure
- -v,--verbose            verbose output
+ -t,--translate <arg>    cross-compiles a dialect to another one, requires
+                         "dialectIn,dialectOut"
  -V,--version            print version
+ -v,--verbose            verbose output
 ```
 
-
-Standard dialect code example:
-```manz
-@@
-Finds the nth prime(considering 2 the first prime number)
-@@
-{
-    @Starts the count at 1
-    let count = 1;
-    let number = 2;
-    let nThPrime = 54; @Should be 251
-
-    while(count < nThPrime + 1) {
-    let is_prime = true;
-    let divisor = 2;
-
-    @ Checks whether a number is prime
-    while (divisor * divisor <= number & is_prime) {
-        if (number % divisor == 0) {
-            is_prime = false;
-        }
-        divisor = divisor + 1;
-    }
-
-    if (is_prime) {
-        if (count == nThPrime) {
-            @@
-            If the nTh prime is found it exits with that number
-            Note that 251 is the last prime before 255(max exit number on UNIX systems
-            @@
-            exit(number);
-        }
-        count = count + 1;
-    }
-    number = number + 1;
-    }
-}
-```
-# Features
-- [x] Multi dialect support
-  - [x] Create your custom dialect
-  - [x] Full support for UNICODE characters
-- [x] Comments
-  - [x] Single line comments
-  - [x] Multi line comments
-- [x] Variables
-  - [x] Initialization
-  - [x] Declaration
-  - [x] Automatic check for already declared variables
-- [x] Exit
-  - [x] Exit with variable
-  - [x] Exit by default(0)
-- [x] Arithmetic operations
-  - [x] Addition
-  - [x] Subtraction
-  - [x] Multiplication
-  - [x] Division
-  - [x] Modulus
-  - [x] Parenthesis operations
-- [x] Logical operations
-  - [x] Equal
-  - [x] Not equal
-  - [x] Greater than
-  - [x] Greater or equal
-  - [x] Less than
-  - [x] Less or equal
-  - [x] And
-  - [x] Or
-- [x] If statement
-  - [x] Condition expression
-  - [x] Scope
-  - [x] Elif and Else
-- [x] Variable Reassignment
-- [x] While loop
-  - [x] Condition expression
-  - [x] Scope
-
-# Get the compiler working
-```shell
-sudo apt-get install nasm
-sudo apt-get install ld
-```
-To add compilerMZ to your path(if the project is under IdeaProjects and the commons-cli is installed):
-```shell
-echo "alias compilerMZ='java -classpath ~/IdeaProjects/CompilerMZ/target/classes:~/.m2/repository/commons-cli/commons-cli/1.6.0/commons-cli-1.6.0.jar org.compiler.CompilerMZ'" >> ~/.bashrc
-```
-
-To run the compiler from .jar file:
-```shell
-java -jar CompilerMZ-VERSION-jar-with-dependencies.jar -V
-```
-
-# The idea
-![CompilerMZ](READMESOURCES/warning.png) \
-The project was born during a OOP course at the University of Modena and Reggio Emilia. \
-The idea was to create a compiler for a custom language, the .mz language. 
+## The Idea :bulb:
+The project was born during a OOP course at the University of Modena and Reggio Emilia. The idea was to create a compiler for a custom language, the .mz language.  
+<img src="READMESOURCES/warning.png" alt="CompilerMZ"></img>

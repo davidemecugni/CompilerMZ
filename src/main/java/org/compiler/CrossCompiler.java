@@ -21,6 +21,9 @@ public class CrossCompiler {
         generateCrossCompiledCode();
     }
 
+    /**
+     * Generates the cross-compiled code from the tokens(used as an intermediate language).
+     */
     private void generateCrossCompiledCode() {
         int indent = 0;
         Map<String, TokenType> wordToTokenMap = dialect.getWordToTokenMap();
@@ -63,6 +66,12 @@ public class CrossCompiler {
         crossCompiledCode = crossCompiledCodeSB.toString();
     }
 
+    /**
+     * Adds multi-token tokens to the tokenToWordMap.
+     * They are not specified in the dialects, so they need to be added manually.
+     *
+     * @param tokenToWordMap the map of tokens to words
+     */
     private void addMultiTokenTokens(Map<TokenType, String> tokenToWordMap) {
         tokenToWordMap.put(TokenType.logic_not_eq,
                 tokenToWordMap.get(TokenType.not) + tokenToWordMap.get(TokenType.eq));
