@@ -1,4 +1,5 @@
 package org.compiler;
+
 import org.compiler.token.TokenType;
 import org.compiler.token.dialects.Dialect;
 import org.compiler.token.tokens.Token;
@@ -31,8 +32,8 @@ public class CrossCompiler {
         StringBuilder crossCompiledCodeSB = new StringBuilder();
         for (Token token : tokens) {
             TokenType type = token.getType();
-            if(type == TokenType.open_curly || type == TokenType.close_curly) {
-                if(type == TokenType.close_curly){
+            if (type == TokenType.open_curly || type == TokenType.close_curly) {
+                if (type == TokenType.close_curly) {
                     crossCompiledCodeSB.delete(crossCompiledCodeSB.length() - 4, crossCompiledCodeSB.length());
                 }
                 crossCompiledCodeSB.append(tokenToWordMap.get(type)).append("\n");
@@ -40,19 +41,19 @@ public class CrossCompiler {
                 crossCompiledCodeSB.append("    ".repeat(Math.max(0, indent)));
                 continue;
             }
-            if(tokenToWordMap.containsKey(type)) {
+            if (tokenToWordMap.containsKey(type)) {
                 crossCompiledCodeSB.append(tokenToWordMap.get(type));
-                if(type == TokenType.semi) {
+                if (type == TokenType.semi) {
                     crossCompiledCodeSB.append("\n");
                     crossCompiledCodeSB.append("    ".repeat(Math.max(0, indent)));
                     continue;
                 }
                 crossCompiledCodeSB.append(" ");
-            }else{
-                if(type == TokenType.int_lit) {
+            } else {
+                if (type == TokenType.int_lit) {
                     crossCompiledCodeSB.append(((TokenIntLit) token).getValue());
                 }
-                if(type == TokenType.ident) {
+                if (type == TokenType.ident) {
                     crossCompiledCodeSB.append(((TokenIdent) token).getName());
                 }
                 crossCompiledCodeSB.append(" ");
@@ -61,11 +62,15 @@ public class CrossCompiler {
         }
         crossCompiledCode = crossCompiledCodeSB.toString();
     }
+
     private void addMultiTokenTokens(Map<TokenType, String> tokenToWordMap) {
-        tokenToWordMap.put(TokenType.logic_not_eq, tokenToWordMap.get(TokenType.not) + tokenToWordMap.get(TokenType.eq));
+        tokenToWordMap.put(TokenType.logic_not_eq,
+                tokenToWordMap.get(TokenType.not) + tokenToWordMap.get(TokenType.eq));
         tokenToWordMap.put(TokenType.logic_eq, tokenToWordMap.get(TokenType.eq) + tokenToWordMap.get(TokenType.eq));
-        tokenToWordMap.put(TokenType.logic_ge, tokenToWordMap.get(TokenType.logic_gt) + tokenToWordMap.get(TokenType.eq));
-        tokenToWordMap.put(TokenType.logic_le, tokenToWordMap.get(TokenType.logic_lt) + tokenToWordMap.get(TokenType.eq));
+        tokenToWordMap.put(TokenType.logic_ge,
+                tokenToWordMap.get(TokenType.logic_gt) + tokenToWordMap.get(TokenType.eq));
+        tokenToWordMap.put(TokenType.logic_le,
+                tokenToWordMap.get(TokenType.logic_lt) + tokenToWordMap.get(TokenType.eq));
     }
 
     public String getCrossCompiledCode() {

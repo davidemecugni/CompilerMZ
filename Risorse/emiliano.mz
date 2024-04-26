@@ -1,5 +1,22 @@
-frega_al_giustQuest che le un commento
-
-frega_al_giustvezxle_uguela5;frega_al_giustvezyle_uguela3;frega_al_giustvezzle_uguela2;
-frega_al_giustvez al_cod_ed_turner_a_ca le_uguela (x a_ghe_da_agiunger y) a_ghe_da_multiplicher z ;
-vag_a_ca( 10 );
+{
+    métter count cumpàagn 1 ;
+    métter number cumpàagn 2 ;
+    métter nThPrime cumpàagn 54 ;
+    fintàant ( count lé_più_cicch nThPrime più 1 ) {
+        métter is_prime cumpàagn 1 ;
+        métter divisor cumpàagn 2 ;
+        fintàant ( divisor pèr divisor lé_più_cicchcumpàagn number aanch is_prime ) {
+            sé_Dio_al_vóol ( number rèest divisor cumpàagncumpàagn 0 ) {
+                is_prime cumpàagn 0 ;
+            }
+            divisor cumpàagn divisor più 1 ;
+        }
+        sé_Dio_al_vóol ( is_prime ) {
+            sé_Dio_al_vóol ( count cumpàagncumpàagn nThPrime ) {
+                desmàtter ( number ) ;
+            }
+            count cumpàagn count più 1 ;
+        }
+        number cumpàagn number più 1 ;
+    }
+}

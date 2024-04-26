@@ -30,7 +30,7 @@ public class Dialect {
         if (uniqueValues.size() < data.size()) {
             throw new IllegalArgumentException("Duplicate values for tokens found in JSON");
         }
-        for(String key : data.keySet()) {
+        for (String key : data.keySet()) {
             if (key.matches(".*\\s.*")) {
                 throw new IllegalArgumentException("Key " + key + " contains whitespace");
             }
@@ -42,7 +42,7 @@ public class Dialect {
             }
             trie.insert(key);
         }
-        if(data.size() != 25){
+        if (data.size() != 25) {
             throw new IllegalArgumentException("Dialect must contain 25 tokens");
         }
         wordToTokenMap = new HashMap<>(data);
@@ -53,8 +53,9 @@ public class Dialect {
         Gson gson = new Gson();
         JsonReader reader;
         try {
-            reader = new JsonReader(new InputStreamReader(
-                    Objects.requireNonNull(getClass().getResourceAsStream("/" + name + ".json")), StandardCharsets.UTF_8));
+            reader = new JsonReader(
+                    new InputStreamReader(Objects.requireNonNull(getClass().getResourceAsStream("/" + name + ".json")),
+                            StandardCharsets.UTF_8));
         } catch (NullPointerException e) {
             throw new IllegalArgumentException("Dialect not found: " + name);
         }
@@ -72,6 +73,7 @@ public class Dialect {
             }
         }
     }
+
     public Map<String, TokenType> getWordToTokenMap() {
         return wordToTokenMap;
     }
