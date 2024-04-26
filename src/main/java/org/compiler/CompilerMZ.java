@@ -89,7 +89,7 @@ public class CompilerMZ {
         Tokenizer tokenizer = new Tokenizer(content, dialect);
         System.out.println("1) Tokenized!");
         // for debugging
-        //System.out.println(tokenizer.getTokens());
+        System.out.println(tokenizer.getTokens());
 
         // Parsing
         Parser parser = new Parser(tokenizer.getTokens());

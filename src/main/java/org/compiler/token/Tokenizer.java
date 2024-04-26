@@ -33,6 +33,7 @@ public class Tokenizer {
         Dialect dialect = new Dialect(dialectName);
         wordToTokenMap = dialect.getWordToTokenMap();
         tokenize();
+        System.out.println(tokens);
         substituteMultiTokenTokens();
     }
 
@@ -57,10 +58,11 @@ public class Tokenizer {
                 continue;
             }
             int column_end = 0;
-            while (it.hasNext() && !Character.isWhitespace(it.peek().getChar())
-                    && !wordToTokenMap.containsKey(String.valueOf(it.peek().getChar()))
-                    && !(wordToTokenMap.containsKey(buffer.toString())
-                            && wordToTokenMap.get(buffer.toString()) == TokenType.comment)) {
+            while (it.hasNext() &&
+                    !Character.isWhitespace(it.peek().getChar()) &&
+                    !wordToTokenMap.containsKey(String.valueOf(it.peek().getChar())) &&
+                    !(wordToTokenMap.get(buffer.toString()) == TokenType.comment) &&
+                    !wordToTokenMap.containsKey(buffer.toString())) {
                 column_end = it.peek().getColumn();
                 buffer.append(it.next().getChar());
             }
