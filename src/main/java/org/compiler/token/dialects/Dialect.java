@@ -7,9 +7,7 @@ import org.compiler.token.TokenType;
 
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class Dialect {
     private final String name;
@@ -33,6 +31,22 @@ public class Dialect {
         Type type = new TypeToken<Map<String, TokenType>>() {
         }.getType();
         Map<String, TokenType> data = gson.fromJson(reader, type);
+        Set<String> uniqueKeys = new HashSet<>(data.keySet());
+        if (uniqueKeys.size() < data.size()) {
+            throw new IllegalArgumentException("Duplicate keys for tokens found in JSON");
+        }
+        for(String key : data.keySet()) {
+            if (key.matches(".*\\s.*")) {
+                throw new IllegalArgumentException("Key " + key + " contains whitespace");
+            }
+        }
+        Trie trie = new Trie();
+        for (String key : data.keySet()) {
+            if (trie.containsPrefix(key)) {
+                throw new IllegalArgumentException("Key " + key + " is a substring of another key");
+            }
+            trie.insert(key);
+        }
         wordToTokenMap = new HashMap<>(data);
     }
 
