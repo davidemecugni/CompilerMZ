@@ -10,6 +10,7 @@ import org.compiler.token.tokens.TokenIntLit;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Generates a list of tokens from a string input
@@ -19,6 +20,8 @@ public class Tokenizer {
     private ArrayList<Token> tokens = new ArrayList<>();
     private final PeekIteratorChar it;
     private final Map<String, TokenType> wordToTokenMap;
+    private final Set<TokenType> multiTokenTokens = Set.of(TokenType.not, TokenType.eq, TokenType.logic_gt,
+            TokenType.logic_lt);
 
     public Tokenizer(String input) throws TokenError {
         this.it = new PeekIteratorChar(input);
@@ -33,7 +36,6 @@ public class Tokenizer {
         Dialect dialect = new Dialect(dialectName);
         wordToTokenMap = dialect.getWordToTokenMap();
         tokenize();
-        System.out.println(tokens);
         substituteMultiTokenTokens();
     }
 
@@ -58,11 +60,11 @@ public class Tokenizer {
                 continue;
             }
             int column_end = 0;
-            while (it.hasNext() &&
-                    !Character.isWhitespace(it.peek().getChar()) &&
-                    !wordToTokenMap.containsKey(String.valueOf(it.peek().getChar())) &&
-                    !(wordToTokenMap.get(buffer.toString()) == TokenType.comment) &&
-                    !wordToTokenMap.containsKey(buffer.toString())) {
+            while (it.hasNext() && !Character.isWhitespace(it.peek().getChar())
+                    && !wordToTokenMap.containsKey(String.valueOf(it.peek().getChar()))
+                    && !(wordToTokenMap.containsKey(buffer.toString())
+                            && (wordToTokenMap.get(buffer.toString()) == TokenType.comment
+                                    || multiTokenTokens.contains(wordToTokenMap.get(buffer.toString()))))) {
                 column_end = it.peek().getColumn();
                 buffer.append(it.next().getChar());
             }

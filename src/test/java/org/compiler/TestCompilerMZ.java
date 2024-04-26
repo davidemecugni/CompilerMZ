@@ -15,6 +15,7 @@ public class TestCompilerMZ {
     @MethodSource("provideTestCases")
     public void testCompilerMZ(String inputFile, int expectedExitCode) throws IOException, TokenError {
         String baseDir = "src/test/java/org/compiler/testCompilerMZResources/";
+        System.out.println(inputFile);
         int exitCode = CompilerMZ.callFullStackWithReturnCode(baseDir + inputFile, baseDir + "out.asm",
                 baseDir + "out.o", baseDir + "out");
         assertEquals(expectedExitCode, exitCode);
