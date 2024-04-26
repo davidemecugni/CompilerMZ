@@ -102,7 +102,7 @@ public class Tokenizer {
         } else if (word.matches("^[^\\d].*")) {
             return new TokenIdent(word, line, column_start, column_end);
         } else {
-            throw new TokenError("Unrecognised token type", line, column_start, column_end);
+            throw new TokenError("Unrecognised token type: \"" + word + "\"", line, column_start, column_end);
         }
     }
 

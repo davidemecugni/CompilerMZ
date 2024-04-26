@@ -21,10 +21,6 @@ public class CompilerMZ {
      */
     public static void main(String[] args) throws IOException, ParseException, TokenError {
         CommandLine cmd = getCmd(args);
-        long start = 0;
-        if (cmd.hasOption("t")) {
-            start = System.currentTimeMillis();
-        }
         if (cmd.hasOption("version")) {
             System.out.println(
                     "0.5.0-Alpha\nMZ Compiler by Davide Mecugni, Andrea Zanasi\n(C) 2024");
@@ -36,6 +32,41 @@ public class CompilerMZ {
             formatter.printHelp("CompilerMZ", getOptions());
             return;
         }
+        if(cmd.hasOption("f")) {
+            String fileIn = getCmdFileOption(cmd, "i", "", ".mz");
+            String dialect = cmd.getOptionValue("d", "default_dialect");
+            String content = readFile(fileIn);
+            Tokenizer tokenizer = new Tokenizer(content, dialect);
+            CrossCompiler crossCompiler = new CrossCompiler(tokenizer.getTokens(), dialect);
+            writeFile(fileIn, crossCompiler.getCrossCompiledCode());
+            if(cmd.hasOption("v")) {
+                System.out.println("Formatted file: " + fileIn);
+            }
+            return;
+        }
+        if (cmd.hasOption("t")) {
+            String fileIn = getCmdFileOption(cmd, "i", "", ".mz");
+            String fileOut = getCmdFileOption(cmd, "o", removeExtension(fileIn, ".mz"), ".mz");
+            String[] dialects = cmd.getOptionValue("t").split(",");
+            if (dialects.length != 2) {
+                throw new IllegalArgumentException("Invalid argument for -t flag. Expected format: dialectIn,dialectOut");
+            }
+            String dialectIn = dialects[0];
+            String dialectOut = dialects[1];
+            if(cmd.hasOption("v")) {
+                System.out.println("Translating from " + dialectIn + " to " + dialectOut);
+            }
+            String content = readFile(fileIn);
+            Tokenizer tokenizer = new Tokenizer(content, dialectIn);
+            System.out.println(tokenizer.getTokens());
+            CrossCompiler crossCompiler = new CrossCompiler(tokenizer.getTokens(), dialectOut);
+            writeFile(fileOut, crossCompiler.getCrossCompiledCode());
+            if(cmd.hasOption("v")) {
+                System.out.println("Translation completed!\n In: " + fileIn + " \n-->> " + fileOut);
+            }
+            return;
+        }
+
         String dialect = cmd.getOptionValue("d", "default_dialect");
         String fileIn = getCmdFileOption(cmd, "i", "", ".mz");
         String fileOut = getCmdFileOption(cmd, "o", removeExtension(fileIn, ".mz"), ".asm");
@@ -43,18 +74,10 @@ public class CompilerMZ {
         String fileExe = getCmdFileOption(cmd, "e", removeExtension(fileObj, ".o"), "");
         if (!cmd.hasOption("v") && !cmd.hasOption("c")) {
             callFullStack(fileIn, fileOut, fileObj, fileExe, dialect);
-            if (cmd.hasOption("t")) {
-                long end = System.currentTimeMillis();
-                System.out.println("Time: " + (end - start) + "ms");
-            }
             return;
         }
         if (!cmd.hasOption("v") && cmd.hasOption("c")) {
             makeAssembly(fileIn, fileOut, dialect);
-            if (cmd.hasOption("t")) {
-                long end = System.currentTimeMillis();
-                System.out.println("Time: " + (end - start) + "ms");
-            }
             return;
         }
 
@@ -66,7 +89,7 @@ public class CompilerMZ {
         Tokenizer tokenizer = new Tokenizer(content, dialect);
         System.out.println("1) Tokenized!");
         // for debugging
-        System.out.println(tokenizer.getTokens());
+        //System.out.println(tokenizer.getTokens());
 
         // Parsing
         Parser parser = new Parser(tokenizer.getTokens());
@@ -84,10 +107,6 @@ public class CompilerMZ {
         writeFile(fileOut, res);
         System.out.println("4) Generated file!");
         if (cmd.hasOption("c")) {
-            if (cmd.hasOption("t")) {
-                long end = System.currentTimeMillis();
-                System.out.println("Time: " + (end - start) + "ms");
-            }
             return;
         }
         // Assembling
@@ -103,11 +122,6 @@ public class CompilerMZ {
         System.out.println("7) Executed file!");
         System.out.println("In:  " + fileIn + " \n-->> " + fileOut + "\n-->> " + fileObj + "\n-->> " + fileExe);
         System.out.println("Return code of exe: " + returnCode);
-
-        if (cmd.hasOption("t")) {
-            long end = System.currentTimeMillis();
-            System.out.println("Time: " + (end - start) + "ms");
-        }
     }
 
     /**
@@ -410,7 +424,8 @@ public class CompilerMZ {
         options.addOption("d", "dialect", true, "dialect to be used");
         options.addOption("v", "verbose", false, "verbose output");
         options.addOption("c", "compile", false, "compile only, no assembly and linking");
-        options.addOption("t", "time", false, "print time for given procedure");
+        options.addOption("t", "translate", true, "cross-compiles a dialect to another one, requires \"dialectIn,dialectOut\"");
+        options.addOption("f", "format", false, "format the code, specify the dialect with -d flag");
         options.addOption("V", "version", false, "print version");
         options.addOption("h", "help", false, "print this message");
         // Conflict handling could be implemented
