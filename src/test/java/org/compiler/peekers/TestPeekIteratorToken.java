@@ -19,6 +19,9 @@ public class TestPeekIteratorToken {
         tokens.add(new Token(TokenType.semi));
 
         PeekIteratorToken peek = new PeekIteratorToken(tokens);
+        assertNull(peek.peekPrevious());
+        assertNull(peek.peekPrevious(1));
+        assertNull(peek.peek(100));
         assertTrue(peek.hasNext());
         assertEquals(new Token(TokenType._exit), peek.peek());
         assertEquals(new Token(TokenType._exit), peek.next());

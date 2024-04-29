@@ -1,6 +1,7 @@
 package org.compiler.peekers;
 
 import org.compiler.token.tokens.CharLineColumn;
+import org.compiler.token.tokens.TokenComment;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -36,37 +37,32 @@ public class PeekIteratorChar implements PeekIterator<CharLineColumn> {
      * @throws NoSuchElementException
      *             if the comment is not closed
      */
-    public void ignoreComment(char comment_terminal) {
+    public TokenComment ignoreComment(String comment_terminal) {
+        StringBuilder comment = new StringBuilder();
+        boolean multiline = false;
         if (cursor >= list.size()) {
-            return;
+            return null;
         }
-        if (list.get(cursor) != comment_terminal) {
-            for (; cursor < list.size(); cursor++) {
-                if (Character.isWhitespace(list.get(cursor))) {
-                    spaces--;
-                }
-                if (list.get(cursor) == '\n') {
-                    updateLineAndColumnCount(cursor);
-                    cursor++;
-                    break;
-                }
-            }
-        } else {
+        while (cursor < list.size() && list.get(cursor) != '\n') {
+            comment.append(list.get(cursor));
+            checkForWhitespace();
             cursor++;
-            while (cursor < list.size() && list.get(cursor) != comment_terminal) {
-                if (Character.isWhitespace(list.get(cursor))) {
-                    spaces--;
-                    if (list.get(cursor) == '\n') {
-                        updateLineAndColumnCount(cursor);
-                    }
-                }
+        }
+        cursor++;
+        spaces--;
+        updateLineAndColumnCount(cursor);
+        if (comment.toString().contains(comment_terminal)) {
+            multiline = true;
+            while (cursor < list.size() && !comment.toString().contains(comment_terminal + comment_terminal)) {
+                comment.append(list.get(cursor));
+                checkForWhitespace();
                 cursor++;
             }
-            if ((cursor + 2) >= list.size() || list.get(cursor + 1) != comment_terminal) {
+            if (cursor >= list.size()) {
                 throw new NoSuchElementException("Multiline comment has not been closed at line " + line);
             }
-            cursor += 2;
         }
+        return new TokenComment(comment.toString().replace(comment_terminal, ""), multiline);
     }
 
     /**
@@ -141,5 +137,14 @@ public class PeekIteratorChar implements PeekIterator<CharLineColumn> {
 
     private CharLineColumn generateCharLineColumn(char c) {
         return new CharLineColumn(c, getLine(), getCurrentColumn());
+    }
+
+    private void checkForWhitespace() {
+        if (Character.isWhitespace(list.get(cursor))) {
+            spaces--;
+            if (list.get(cursor) == '\n') {
+                updateLineAndColumnCount(cursor);
+            }
+        }
     }
 }

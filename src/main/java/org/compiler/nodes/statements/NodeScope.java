@@ -6,7 +6,7 @@ import org.compiler.nodes.NodeStatement;
 import java.util.ArrayList;
 
 public class NodeScope extends NodeStatement {
-    ArrayList<NodeStatement> stmts;
+    final ArrayList<NodeStatement> stmts;
 
     public NodeScope(NodeExpression stmt, ArrayList<NodeStatement> stmts) {
         super(stmt);

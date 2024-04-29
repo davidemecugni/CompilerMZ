@@ -37,4 +37,22 @@ public class TestCrossCompiler {
                 }
                 """, crossCompiledCode);
     }
+
+    @Test
+    public void testCrossCompilerFromDefaultToEmilianWithComments() throws TokenError {
+        Tokenizer tokenizer = new Tokenizer("""
+                @ this is a comment
+                let x = 5 ;
+                @ this is another comment
+                exit(x);
+                """, "default_dialect", false);
+        CrossCompiler crossCompiler = new CrossCompiler(tokenizer.getTokens(), "emilian");
+        String crossCompiledCode = crossCompiler.getCrossCompiledCode();
+        assertEquals("""
+                comèint this is a comment
+                métter x cumpàagn 5 ;
+                comèint this is another comment
+                desmàtter ( x ) ;
+                """, crossCompiledCode);
+    }
 }

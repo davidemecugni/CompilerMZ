@@ -6,7 +6,7 @@ package org.compiler.nodes;
  */
 
 public class NodeStatement {
-    NodeExpression stmt;
+    final NodeExpression stmt;
 
     public NodeStatement(NodeExpression stmt) {
         this.stmt = stmt;
