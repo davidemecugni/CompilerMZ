@@ -5,7 +5,7 @@ import org.compiler.nodes.NodeStatement;
 import org.compiler.token.tokens.TokenIdent;
 
 public class NodeAssign extends NodeStatement {
-    TokenIdent tokenIdent;
+    final TokenIdent tokenIdent;
 
     public NodeAssign(NodeExpression stmt, TokenIdent tokenIdent) {
         super(stmt);

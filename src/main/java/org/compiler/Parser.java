@@ -200,7 +200,7 @@ public class Parser {
     }
 
     /**
-     * Parses a conditional statement(eg. if, elif, while)
+     * Parses a conditional statement(ex. if, elif, while)
      *
      * @return the conditional statement parsed
      *
@@ -258,7 +258,7 @@ public class Parser {
     }
 
     /**
-     * Parses a term of an expression(eg. 5, x, (5+5))
+     * Parses a term of an expression(ex. 5, x, (5+5))
      *
      * @return the term parsed
      *

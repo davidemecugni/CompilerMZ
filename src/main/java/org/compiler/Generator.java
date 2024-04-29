@@ -65,7 +65,7 @@ public class Generator {
 
         StringBuilder stmtSB = new StringBuilder();
         switch (stmt) {
-        case NodeExit nodeExit -> {
+        case NodeExit ignored -> {
             stmtSB.append(generateExpression(stmt.getStmt()));
             stmtSB.append("     ;;exit\n");
             stmtSB.append("     mov rax, 60\n");
@@ -73,6 +73,7 @@ public class Generator {
             stmtSB.append("     syscall\n");
             stmtSB.append("     ;;/exit\n\n");
         }
+
         case NodeLet nodeLet -> {
             if (variables.containsKey(nodeLet.getIdentifier().getIdent().getName())) {
                 throw new IllegalArgumentException("Identifier already used");
@@ -365,15 +366,6 @@ public class Generator {
         }
 
         return bin_exprSB.toString();
-    }
-
-    /**
-     * Prints the type of each statement, used for debugging
-     */
-    public void printStmt() {
-        for (NodeStatement statement : m_program.getStmts()) {
-            System.out.println(statement.getStmt().getExpr().getType().toString());
-        }
     }
 
     /**
