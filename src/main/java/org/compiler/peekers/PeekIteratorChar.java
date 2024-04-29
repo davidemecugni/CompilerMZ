@@ -63,17 +63,6 @@ public class PeekIteratorChar implements PeekIterator<CharLineColumn> {
             }
         }
         return new TokenComment(comment.toString().replace(comment_terminal, ""), multiline);
-        /*
-         * if (list.get(cursor) != comment_terminal.) { for (; cursor < list.size(); cursor++) { if
-         * (Character.isWhitespace(list.get(cursor))) { spaces--; } if (list.get(cursor) == '\n') {
-         * updateLineAndColumnCount(cursor); cursor++; break; } comment.append(list.get(cursor)); } } else { multiline =
-         * true; cursor++; while (cursor < list.size() && list.get(cursor) != comment_terminal) { if
-         * (Character.isWhitespace(list.get(cursor))) { spaces--; if (list.get(cursor) == '\n') {
-         * updateLineAndColumnCount(cursor); } } comment.append(list.get(cursor)); cursor++; } if ((cursor + 2) >=
-         * list.size() || list.get(cursor + 1) != comment_terminal) { throw new
-         * NoSuchElementException("Multiline comment has not been closed at line " + line); } cursor += 2; } return new
-         * TokenComment(comment.toString(), multiline);
-         */
     }
 
     /**

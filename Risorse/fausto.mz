@@ -3,33 +3,30 @@ Finds the nth prime(considering 2 the first prime number)
 @@
 {
     @Starts the count at 1
-    let count = 1;
+    let count = 1 ;
     let number = 2;
     @Should be 251
-    let nThPrime = 54; 
-
-    while(count < nThPrime + 1) {
-        let is_prime = true;
-        let divisor = 2;
-    
+    let nThPrime = 54 ;
+    while ( count < nThPrime + 1 ) {
+        let is_prime = true ;
+        let divisor = 2 ;
         @ Checks whether a number is prime
-        while (divisor * divisor <= number & is_prime) {
-            if (number % divisor == 0) {
-                is_prime = false;
+        while ( divisor * divisor <= number & is_prime ) {
+            if ( number % divisor == 0 ) {
+                is_prime = false ;
             }
-            divisor = divisor + 1;
+            divisor = divisor + 1 ;
         }
-    
-        if (is_prime) {
-            if (count == nThPrime) {
+        if ( is_prime ) {
+            if ( count == nThPrime ) {
                 @@
                 If the nTh prime is found it exits with that number
                 Note that 251 is the last prime before 255(max exit number on UNIX systems
                 @@
-                exit(number);
+                exit ( number ) ;
             }
-            count = count + 1;
+            count = count + 1 ;
         }
-        number = number + 1;
+        number = number + 1 ;
     }
 }
