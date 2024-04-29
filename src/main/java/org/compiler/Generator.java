@@ -21,9 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Generates the assembly code from the AST
- * Checks for undeclared identifiers
- * Checks for redeclaration of identifiers
+ * Generates the assembly code from the AST Checks for undeclared identifiers Checks for redeclaration of identifiers
  */
 public class Generator {
     private String generated = "";
@@ -39,8 +37,7 @@ public class Generator {
     }
 
     /**
-     * Generates the assembly code for the program
-     * Exit code is 0 by default if no exit statement is present
+     * Generates the assembly code for the program Exit code is 0 by default if no exit statement is present
      */
     public void generateProgram() {
         StringBuilder sb = new StringBuilder();
@@ -55,11 +52,13 @@ public class Generator {
         sb.append("     syscall\n");
         generated = sb.toString();
     }
+
     /**
      * Generates the assembly code for a statement
      *
      * @param stmt
      *            the statement to generate code for
+     *
      * @return the generated assembly code
      */
     public String generateStatement(NodeStatement stmt) {
@@ -162,6 +161,7 @@ public class Generator {
      *
      * @param expr
      *            the term to generate code for
+     *
      * @return the generated assembly code
      */
     public String generateTerm(NodeTerm expr) {
@@ -207,6 +207,7 @@ public class Generator {
      *
      * @param bin_expr
      *            the binary expression to generate code for
+     *
      * @return the generated assembly code
      */
     public String generateBinaryExpression(NodeBin bin_expr) {
@@ -441,11 +442,11 @@ public class Generator {
     }
 
     /**
-     * Returns the key with the highest value in a map, used by the endScope method
-     * for garbage collection
+     * Returns the key with the highest value in a map, used by the endScope method for garbage collection
      *
      * @param map
      *            the map to search
+     *
      * @return the key with the highest value
      */
     public static String getKeyWithHighestValue(Map<String, Integer> map) {

@@ -44,10 +44,10 @@ public class CompilerMZ {
         if (cmd.hasOption("f")) {
             String fileIn = getCmdFileOption(cmd, "i", "", ".mz");
             String dialect = cmd.getOptionValue("d", "default_dialect");
-            String content = readFile(fileIn);
-            Tokenizer tokenizer = new Tokenizer(content, dialect);
-            CrossCompiler crossCompiler = new CrossCompiler(tokenizer.getTokens(), dialect);
-            writeFile(fileIn, crossCompiler.getCrossCompiledCode());
+            if (cmd.hasOption("v")) {
+                System.out.println("Formatting file: " + fileIn);
+            }
+            format(fileIn, dialect);
             if (cmd.hasOption("v")) {
                 System.out.println("Formatted file: " + fileIn);
             }
@@ -66,11 +66,7 @@ public class CompilerMZ {
             if (cmd.hasOption("v")) {
                 System.out.println("Translating from " + dialectIn + " to " + dialectOut);
             }
-            String content = readFile(fileIn);
-            Tokenizer tokenizer = new Tokenizer(content, dialectIn);
-            System.out.println(tokenizer.getTokens());
-            CrossCompiler crossCompiler = new CrossCompiler(tokenizer.getTokens(), dialectOut);
-            writeFile(fileOut, crossCompiler.getCrossCompiledCode());
+            translate(fileIn, fileOut, dialectIn, dialectOut);
             if (cmd.hasOption("v")) {
                 System.out.println("Translation completed!\n In: " + fileIn + " \n-->> " + fileOut);
             }
@@ -200,6 +196,48 @@ public class CompilerMZ {
         callAssembler(fileOut, fileObj);
         callLinker(fileObj, fileExe);
         return callExecutable(fileExe);
+    }
+
+    /**
+     * Formats a file in place(translating it to its own dialect to format it)
+     *
+     * @param fileIn
+     *            file to be formatted
+     * @param dialect
+     *            dialect of the file
+     *
+     * @throws IOException
+     *             on any problem related to IO on files
+     * @throws TokenError
+     *             on any problem related to tokenizing
+     */
+    public static void format(String fileIn, String dialect) throws IOException, TokenError {
+        translate(fileIn, fileIn, dialect, dialect);
+    }
+
+    /**
+     * Translates a file from one dialect to another
+     *
+     * @param fileIn
+     *            file to be translated
+     * @param fileOut
+     *            file to be written
+     * @param dialectIn
+     *            dialect of the input file
+     * @param dialectOut
+     *            dialect of the output file
+     *
+     * @throws IOException
+     *             on any problem related to IO on files
+     * @throws TokenError
+     *             on any problem related to tokenizing
+     */
+    public static void translate(String fileIn, String fileOut, String dialectIn, String dialectOut)
+            throws IOException, TokenError {
+        String content = readFile(fileIn);
+        Tokenizer tokenizer = new Tokenizer(content, dialectIn, false);
+        CrossCompiler crossCompiler = new CrossCompiler(tokenizer.getTokens(), dialectOut);
+        writeFile(fileOut, crossCompiler.getCrossCompiledCode());
     }
 
     /**
