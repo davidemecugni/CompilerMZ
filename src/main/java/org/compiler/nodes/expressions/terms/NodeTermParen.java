@@ -9,7 +9,7 @@ import org.compiler.token.tokens.Token;
  */
 
 public class NodeTermParen extends NodeTerm {
-    NodeExpression expr;
+    final NodeExpression expr;
 
     public NodeTermParen(Token token, NodeExpression expr) {
         super(token);

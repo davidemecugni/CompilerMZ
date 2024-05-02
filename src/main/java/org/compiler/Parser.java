@@ -200,7 +200,7 @@ public class Parser {
     }
 
     /**
-     * Parses a conditional statement(eg. if, elif, while)
+     * Parses a conditional statement(ex. if, elif, while)
      *
      * @return the conditional statement parsed
      *

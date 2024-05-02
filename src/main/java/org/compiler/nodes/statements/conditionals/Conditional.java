@@ -5,7 +5,7 @@ import org.compiler.nodes.NodeStatement;
 import org.compiler.nodes.statements.NodeScope;
 
 public class Conditional extends NodeStatement {
-    private NodeScope scope;
+    final private NodeScope scope;
 
     public Conditional(NodeExpression stmt, NodeScope node) {
         super(stmt);
@@ -14,9 +14,5 @@ public class Conditional extends NodeStatement {
 
     public NodeScope getScope() {
         return scope;
-    }
-
-    public void setScope(NodeScope scope) {
-        this.scope = scope;
     }
 }

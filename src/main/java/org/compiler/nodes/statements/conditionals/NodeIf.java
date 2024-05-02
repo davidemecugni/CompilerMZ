@@ -6,7 +6,7 @@ import org.compiler.nodes.statements.NodeScope;
 import java.util.ArrayList;
 
 public class NodeIf extends Conditional {
-    ArrayList<NodeElif> elifs;
+    final ArrayList<NodeElif> elifs;
     NodeScope nodeScopeElse;
 
     public NodeIf(NodeExpression stmt, NodeScope node) {
@@ -18,16 +18,8 @@ public class NodeIf extends Conditional {
         return getScope();
     }
 
-    public void setIfScope(NodeScope ifScope) {
-        setScope(ifScope);
-    }
-
     public NodeElif getNthScopeElif(int index) {
         return elifs.get(index);
-    }
-
-    public ArrayList<NodeElif> getElifs() {
-        return elifs;
     }
 
     public void addScopeElif(NodeElif elif) {

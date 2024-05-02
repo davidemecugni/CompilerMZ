@@ -3,6 +3,7 @@ package org.compiler;
 import org.compiler.token.TokenType;
 import org.compiler.token.dialects.Dialect;
 import org.compiler.token.tokens.Token;
+import org.compiler.token.tokens.TokenComment;
 import org.compiler.token.tokens.TokenIdent;
 import org.compiler.token.tokens.TokenIntLit;
 
@@ -41,14 +42,28 @@ public class CrossCompiler {
                 }
                 crossCompiledCodeSB.append(tokenToWordMap.get(type)).append("\n");
                 indent = (type == TokenType.open_curly) ? indent + 1 : indent - 1;
-                crossCompiledCodeSB.append("    ".repeat(Math.max(0, indent)));
+                crossCompiledCodeSB.append(getIndentation(indent));
                 continue;
             }
             if (tokenToWordMap.containsKey(type)) {
+                if (type == TokenType.comment) {
+                    String commentSymbol = tokenToWordMap.get(TokenType.comment);
+                    String commentText = ((TokenComment) token).getComment();
+                    if (!((TokenComment) token).isMultiline()) {
+                        crossCompiledCodeSB.append(commentSymbol).append(commentText);
+                    } else {
+                        crossCompiledCodeSB.append(commentSymbol).append(commentSymbol).append("\n");
+                        crossCompiledCodeSB.append(correctIndentation(commentText, indent));
+                        crossCompiledCodeSB.append(commentSymbol).append(commentSymbol);
+                    }
+                    crossCompiledCodeSB.append("\n");
+                    crossCompiledCodeSB.append(getIndentation(indent));
+                    continue;
+                }
                 crossCompiledCodeSB.append(tokenToWordMap.get(type));
                 if (type == TokenType.semi) {
                     crossCompiledCodeSB.append("\n");
-                    crossCompiledCodeSB.append("    ".repeat(Math.max(0, indent)));
+                    crossCompiledCodeSB.append(getIndentation(indent));
                     continue;
                 }
                 crossCompiledCodeSB.append(" ");
@@ -61,7 +76,6 @@ public class CrossCompiler {
                 }
                 crossCompiledCodeSB.append(" ");
             }
-
         }
         crossCompiledCode = crossCompiledCodeSB.toString();
     }
@@ -85,5 +99,13 @@ public class CrossCompiler {
 
     public String getCrossCompiledCode() {
         return crossCompiledCode;
+    }
+
+    private String getIndentation(int indentation) {
+        return "    ".repeat(Math.max(0, indentation));
+    }
+
+    private String correctIndentation(String code, int identation) {
+        return code.replaceAll("(?m)^ +", getIndentation(identation));
     }
 }

@@ -20,26 +20,34 @@ public class Tokenizer {
     private ArrayList<Token> tokens = new ArrayList<>();
     private final PeekIteratorChar it;
     private final Map<String, TokenType> wordToTokenMap;
-    private final Set<TokenType> multiTokenTokens = Set.of(TokenType.not, TokenType.eq, TokenType.logic_gt,
-            TokenType.logic_lt);
+    private static final Set<TokenType> multiTokenTokens = Set.of(TokenType.not, TokenType.eq, TokenType.logic_gt,
+            TokenType.logic_lt, TokenType.comment);
 
     public Tokenizer(String input) throws TokenError {
         this.it = new PeekIteratorChar(input);
         Dialect defaultDialect = new Dialect("default_dialect");
         wordToTokenMap = defaultDialect.getWordToTokenMap();
-        tokenize();
-        substituteMultiTokenTokens();
+        tokenize(true);
+        substituteMultiTokenTokens(true);
     }
 
     public Tokenizer(String input, String dialectName) throws TokenError {
         this.it = new PeekIteratorChar(input);
         Dialect dialect = new Dialect(dialectName);
         wordToTokenMap = dialect.getWordToTokenMap();
-        tokenize();
-        substituteMultiTokenTokens();
+        tokenize(true);
+        substituteMultiTokenTokens(true);
     }
 
-    private void tokenize() throws TokenError {
+    public Tokenizer(String input, String dialectName, boolean forParsing) throws TokenError {
+        this.it = new PeekIteratorChar(input);
+        Dialect dialect = new Dialect(dialectName);
+        wordToTokenMap = dialect.getWordToTokenMap();
+        tokenize(forParsing);
+        substituteMultiTokenTokens(forParsing);
+    }
+
+    private void tokenize(boolean forParsing) throws TokenError {
         StringBuilder buffer = new StringBuilder();
         while (it.hasNext()) {
             CharLineColumn clc = it.next();
@@ -52,7 +60,11 @@ public class Tokenizer {
             // If mono char literal
             if (wordToTokenMap.containsKey(buffer.toString())) {
                 if (wordToTokenMap.get(word) == TokenType.comment) {
-                    it.ignoreComment(word.charAt(0));
+                    if (forParsing) {
+                        it.ignoreComment(word);
+                    } else {
+                        AddToken(it.ignoreComment(word));
+                    }
                 } else {
                     AddToken(of(buffer.toString(), line, column_start, column_start));
                 }
@@ -72,7 +84,11 @@ public class Tokenizer {
             // Support for multi-char comment literals
             if (wordToTokenMap.containsKey(buffer.toString())) {
                 if (wordToTokenMap.get(word) == TokenType.comment) {
-                    it.ignoreComment(word.charAt(0));
+                    if (forParsing) {
+                        it.ignoreComment(word);
+                    } else {
+                        AddToken(it.ignoreComment(word));
+                    }
                     buffer.setLength(0);
                     continue;
                 }
@@ -110,7 +126,7 @@ public class Tokenizer {
         }
     }
 
-    private void substituteMultiTokenTokens() {
+    private void substituteMultiTokenTokens(boolean forParsing) {
         ArrayList<Token> tokenCopy = new ArrayList<>();
         for (int i = 0; i < tokens.size(); i++) {
             Token token = tokens.get(i);
@@ -160,11 +176,14 @@ public class Tokenizer {
                 ++i;
                 continue;
             }
-            if (token.getType() == TokenType._true) {
-                token = new TokenIntLit("1", token.getLine(), token.getColumnStart(), token.getColumnEnd());
-            }
-            if (token.getType() == TokenType._false) {
-                token = new TokenIntLit("0", token.getLine(), token.getColumnStart(), token.getColumnEnd());
+            // Convert true to 1 and false to 0
+            if (forParsing) {
+                if (token.getType() == TokenType._true) {
+                    token = new TokenIntLit("1", token.getLine(), token.getColumnStart(), token.getColumnEnd());
+                }
+                if (token.getType() == TokenType._false) {
+                    token = new TokenIntLit("0", token.getLine(), token.getColumnStart(), token.getColumnEnd());
+                }
             }
             tokenCopy.add(token);
         }
