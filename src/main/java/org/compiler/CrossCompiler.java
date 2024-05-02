@@ -67,10 +67,11 @@ public class CrossCompiler {
     }
 
     /**
-     * Adds multi-token tokens to the tokenToWordMap.
-     * They are not specified in the dialects, so they need to be added manually.
+     * Adds multi-token tokens to the tokenToWordMap. They are not specified in the dialects, so they need to be added
+     * manually.
      *
-     * @param tokenToWordMap the map of tokens to words
+     * @param tokenToWordMap
+     *            the map of tokens to words
      */
     private void addMultiTokenTokens(Map<TokenType, String> tokenToWordMap) {
         tokenToWordMap.put(TokenType.logic_not_eq,

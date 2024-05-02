@@ -1,22 +1,2 @@
-{
-    let count = 1 ;
-    let number = 2 ;
-    let nThPrime = 54 ;
-    while ( count < nThPrime + 1 ) {
-        let is_prime = 1 ;
-        let divisor = 2 ;
-        while ( divisor * divisor <= number & is_prime ) {
-            if ( number % divisor == 0 ) {
-                is_prime = 0 ;
-            }
-            divisor = divisor + 1 ;
-        }
-        if ( is_prime ) {
-            if ( count == nThPrime ) {
-                exit ( number ) ;
-            }
-            count = count + 1 ;
-        }
-        number = number + 1 ;
-    }
-}
+let x = 5 / 2;
+exit(4 / 3);

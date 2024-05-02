@@ -42,7 +42,9 @@ public class Parser {
 
     /**
      * Parses the program
-     * @throws TokenError if the program is invalid
+     *
+     * @throws TokenError
+     *             if the program is invalid
      */
     private void parseProgram() throws TokenError {
         while (it.hasNext()) {
@@ -53,8 +55,11 @@ public class Parser {
 
     /**
      * Parses a statement of any type(eg. let x = 5; OR exit(x); OR { let x = 5; exit(x); })
+     *
      * @return the statement parsed
-     * @throws TokenError if the statement is invalid
+     *
+     * @throws TokenError
+     *             if the statement is invalid
      */
     private NodeStatement parseStmt() throws TokenError {
         checkForNext();
@@ -98,8 +103,11 @@ public class Parser {
 
     /**
      * Parses an expression(the initial precedence is 0)
+     *
      * @return the expression parsed
-     * @throws TokenError if the expression is invalid
+     *
+     * @throws TokenError
+     *             if the expression is invalid
      */
     private NodeExpression parseExpr() throws TokenError {
         return parseExpr(0);
@@ -107,9 +115,14 @@ public class Parser {
 
     /**
      * Parses an expression using the Precedence Climbing Algorithm
-     * @param minPrec the minimum precedence of the expression
+     *
+     * @param minPrec
+     *            the minimum precedence of the expression
+     *
      * @return the expression parsed
-     * @throws TokenError if the expression is invalid
+     *
+     * @throws TokenError
+     *             if the expression is invalid
      */
     private NodeExpression parseExpr(int minPrec) throws TokenError {
         // Saves the left term
@@ -131,19 +144,19 @@ public class Parser {
             int nextMinPrec = prec + 1;
             NodeExpression right = parseExpr(nextMinPrec);
             switch (op.getType()) {
-            case TokenType.plus -> left = new NodeBinAdd(curr_token, left, right);
-            case TokenType.minus -> left = new NodeBinSub(curr_token, left, right);
-            case TokenType.star -> left = new NodeBinMulti(curr_token, left, right);
-            case TokenType.slash -> left = new NodeBinDiv(curr_token, left, right);
-            case TokenType.percent -> left = new NodeBinMod(curr_token, left, right);
-            case TokenType.logic_eq -> left = new NodeBinLogicEq(curr_token, left, right);
-            case TokenType.logic_not_eq -> left = new NodeBinLogicNotEq(curr_token, left, right);
-            case TokenType.logic_gt -> left = new NodeBinLogicGT(curr_token, left, right);
-            case TokenType.logic_lt -> left = new NodeBinLogicLT(curr_token, left, right);
-            case TokenType.logic_ge -> left = new NodeBinLogicGE(curr_token, left, right);
-            case TokenType.logic_le -> left = new NodeBinLogicLE(curr_token, left, right);
-            case TokenType.logic_and -> left = new NodeBinLogicAnd(curr_token, left, right);
-            case TokenType.logic_or -> left = new NodeBinLogicOr(curr_token, left, right);
+            case TokenType.plus -> left = new NodeBin(curr_token, left, right, BinType.Add);
+            case TokenType.minus -> left = new NodeBin(curr_token, left, right, BinType.Sub);
+            case TokenType.star -> left = new NodeBin(curr_token, left, right, BinType.Multi);
+            case TokenType.slash -> left = new NodeBin(curr_token, left, right, BinType.Div);
+            case TokenType.percent -> left = new NodeBin(curr_token, left, right, BinType.Mod);
+            case TokenType.logic_eq -> left = new NodeBin(curr_token, left, right, BinType.Eq);
+            case TokenType.logic_not_eq -> left = new NodeBin(curr_token, left, right, BinType.NotEq);
+            case TokenType.logic_gt -> left = new NodeBin(curr_token, left, right, BinType.GT);
+            case TokenType.logic_lt -> left = new NodeBin(curr_token, left, right, BinType.LT);
+            case TokenType.logic_ge -> left = new NodeBin(curr_token, left, right, BinType.GE);
+            case TokenType.logic_le -> left = new NodeBin(curr_token, left, right, BinType.LE);
+            case TokenType.logic_and -> left = new NodeBin(curr_token, left, right, BinType.And);
+            case TokenType.logic_or -> left = new NodeBin(curr_token, left, right, BinType.Or);
             default -> GenerateErrorMessage("Invalid token in expression of type ");
             }
         }
@@ -152,8 +165,11 @@ public class Parser {
 
     /**
      * Parses an assign statement(eg. x = 5;)
+     *
      * @return the assign statement parsed
-     * @throws TokenError if the assign statement is invalid
+     *
+     * @throws TokenError
+     *             if the assign statement is invalid
      */
     private NodeAssign parseAssign() throws TokenError {
         TokenIdent ident = (TokenIdent) it.next();
@@ -166,8 +182,11 @@ public class Parser {
 
     /**
      * Parses a scope of statements(eg. { let x = 5; exit(x); })
+     *
      * @return the scope parsed
-     * @throws TokenError if the scope is invalid
+     *
+     * @throws TokenError
+     *             if the scope is invalid
      */
     private NodeScope parseScope() throws TokenError {
         ArrayList<NodeStatement> statements = new ArrayList<>();
@@ -182,8 +201,11 @@ public class Parser {
 
     /**
      * Parses a conditional statement(eg. if, elif, while)
+     *
      * @return the conditional statement parsed
-     * @throws TokenError if the conditional statement is invalid
+     *
+     * @throws TokenError
+     *             if the conditional statement is invalid
      */
     private Conditional parseCondition() throws TokenError {
         CheckForType(TokenType.open_paren);
@@ -199,8 +221,11 @@ public class Parser {
 
     /**
      * Parses an exit statement
+     *
      * @return the exit statement parsed
-     * @throws TokenError if the exit statement is invalid
+     *
+     * @throws TokenError
+     *             if the exit statement is invalid
      */
     private NodeExit parseExit() throws TokenError {
         NodeExpression expr;
@@ -214,8 +239,11 @@ public class Parser {
 
     /**
      * Parses a let statement
+     *
      * @return the let statement parsed
-     * @throws TokenError if the let statement is invalid
+     *
+     * @throws TokenError
+     *             if the let statement is invalid
      */
     private NodeLet parseLet() throws TokenError {
         NodeIdent ident;
@@ -231,8 +259,11 @@ public class Parser {
 
     /**
      * Parses a term of an expression(eg. 5, x, (5+5))
+     *
      * @return the term parsed
-     * @throws TokenError if the term is invalid
+     *
+     * @throws TokenError
+     *             if the term is invalid
      */
     private NodeTerm parseTerm() throws TokenError {
         checkForNext();
@@ -262,8 +293,11 @@ public class Parser {
     /**
      * Checks if the next token is of the type specified, if not throws an error
      *
-     * @param type the type of the token to check
-     * @throws TokenError if the next token is not of the type specified
+     * @param type
+     *            the type of the token to check
+     *
+     * @throws TokenError
+     *             if the next token is not of the type specified
      */
     private void CheckForType(TokenType type) throws TokenError {
         checkForNext();
@@ -275,8 +309,12 @@ public class Parser {
 
     /**
      * Generates an error message with the message specified
-     * @param message the message to display
-     * @throws TokenError the error message generated
+     *
+     * @param message
+     *            the message to display
+     *
+     * @throws TokenError
+     *             the error message generated
      */
     private void GenerateErrorMessage(String message) throws TokenError {
         throw new TokenError(message + it.peek().getType(), it.peek().getLine(), it.peek().getColumnStart(),

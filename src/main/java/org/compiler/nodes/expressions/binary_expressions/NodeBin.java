@@ -12,11 +12,13 @@ import org.compiler.token.tokens.Token;
 public class NodeBin extends NodeExpression {
     private final NodeExpression left;
     private final NodeExpression right;
+    private final BinType type;
 
-    public NodeBin(Token expr, NodeExpression left, NodeExpression right) {
+    public NodeBin(Token expr, NodeExpression left, NodeExpression right, BinType type) {
         super(expr);
         this.left = left;
         this.right = right;
+        this.type = type;
     }
 
     public NodeExpression getLeft() {
@@ -27,8 +29,12 @@ public class NodeBin extends NodeExpression {
         return right;
     }
 
+    public BinType getType() {
+        return type;
+    }
+
     @Override
     public String toString() {
-        return "NodeBinary{" + "left=" + left + ", right=" + right + '}';
+        return "NodeBin{" + "left=" + left + ", right=" + right + ", type=" + type + '}';
     }
 }

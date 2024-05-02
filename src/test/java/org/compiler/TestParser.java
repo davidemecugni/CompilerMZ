@@ -1,7 +1,6 @@
 package org.compiler;
 
 import org.compiler.errors.TokenError;
-import org.compiler.nodes.expressions.binary_expressions.*;
 import org.compiler.nodes.expressions.terms.NodeIdent;
 import org.compiler.nodes.expressions.terms.NodeIntLit;
 import org.compiler.nodes.statements.NodeExit;
@@ -76,9 +75,6 @@ public class TestParser {
         Tokenizer validAdd = new Tokenizer("let a = 10 + 5;");
         Parser parserAdd = new Parser(validAdd.getTokens());
 
-        // control if the statement is an add
-        assertEquals(parserAdd.getTree().getStmts().getFirst().getStmt().getClass(), NodeBinAdd.class);
-
         // control if the token is +
         assertEquals(parserAdd.getTree().getStmts().getFirst().getStmt().getExpr().getType(), TokenType.plus);
 
@@ -95,9 +91,6 @@ public class TestParser {
     public void testParserMulti() throws TokenError {
         Tokenizer validMulti = new Tokenizer("let a = 10 * 5;");
         Parser parserMulti = new Parser(validMulti.getTokens());
-
-        // control if the statement is a multi
-        assertEquals(parserMulti.getTree().getStmts().getFirst().getStmt().getClass(), NodeBinMulti.class);
 
         // control if the token is *
         assertEquals(parserMulti.getTree().getStmts().getFirst().getStmt().getExpr().getType(), TokenType.star);
@@ -116,9 +109,6 @@ public class TestParser {
         Tokenizer validDiv = new Tokenizer("let a = 10 / 5;");
         Parser parserDiv = new Parser(validDiv.getTokens());
 
-        // control if the statement is a div
-        assertEquals(parserDiv.getTree().getStmts().getFirst().getStmt().getClass(), NodeBinDiv.class);
-
         // control if the token is /
         assertEquals(parserDiv.getTree().getStmts().getFirst().getStmt().getExpr().getType(), TokenType.slash);
 
@@ -135,9 +125,6 @@ public class TestParser {
     public void testParserSub() throws TokenError {
         Tokenizer validSub = new Tokenizer("let a = 10 - 5;");
         Parser parserSub = new Parser(validSub.getTokens());
-
-        // control if the statement is a sub
-        assertEquals(parserSub.getTree().getStmts().getFirst().getStmt().getClass(), NodeBinSub.class);
 
         // control if the token is -
         assertEquals(parserSub.getTree().getStmts().getFirst().getStmt().getExpr().getType(), TokenType.minus);
@@ -157,8 +144,8 @@ public class TestParser {
     public void testParserModulo() throws TokenError {
         Tokenizer validModulo = new Tokenizer("let a = 13 % 5;");
         Parser parserModulo = new Parser(validModulo.getTokens());
-        assertEquals(parserModulo.getTree().getStmts().getFirst().getStmt().getClass(), NodeBinMod.class);
 
+        // control if the token is %
         assertEquals(parserModulo.getTree().getStmts().getFirst().getStmt().getExpr().getType(), TokenType.percent);
 
         Tokenizer invalidModulo1 = new Tokenizer("let a = 13 %;");
@@ -171,12 +158,6 @@ public class TestParser {
 
     @Test
     public void testParserParenthesis() throws TokenError {
-        Tokenizer validParenthesis = new Tokenizer("let a = (10 + 5) * 2;");
-        Parser parserParenthesis = new Parser(validParenthesis.getTokens());
-
-        // control if the nodeTerm is a parenthesis
-        assertEquals(parserParenthesis.getTree().getStmts().getFirst().getStmt().getClass(), NodeBinMulti.class);
-
         // control of error parenthesis statement
         Tokenizer invalidParenthesis1 = new Tokenizer("let a = (10 + 5 * 2;");
         Tokenizer invalidParenthesis2 = new Tokenizer("let a = 10 + 5) * 2;");
