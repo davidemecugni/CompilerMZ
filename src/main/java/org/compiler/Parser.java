@@ -144,19 +144,19 @@ public class Parser {
             int nextMinPrec = prec + 1;
             NodeExpression right = parseExpr(nextMinPrec);
             switch (op.getType()) {
-            case TokenType.plus -> left = new NodeBinAdd(curr_token, left, right);
-            case TokenType.minus -> left = new NodeBinSub(curr_token, left, right);
-            case TokenType.star -> left = new NodeBinMulti(curr_token, left, right);
-            case TokenType.slash -> left = new NodeBinDiv(curr_token, left, right);
-            case TokenType.percent -> left = new NodeBinMod(curr_token, left, right);
-            case TokenType.logic_eq -> left = new NodeBinLogicEq(curr_token, left, right);
-            case TokenType.logic_not_eq -> left = new NodeBinLogicNotEq(curr_token, left, right);
-            case TokenType.logic_gt -> left = new NodeBinLogicGT(curr_token, left, right);
-            case TokenType.logic_lt -> left = new NodeBinLogicLT(curr_token, left, right);
-            case TokenType.logic_ge -> left = new NodeBinLogicGE(curr_token, left, right);
-            case TokenType.logic_le -> left = new NodeBinLogicLE(curr_token, left, right);
-            case TokenType.logic_and -> left = new NodeBinLogicAnd(curr_token, left, right);
-            case TokenType.logic_or -> left = new NodeBinLogicOr(curr_token, left, right);
+            case TokenType.plus -> left = new NodeBin(curr_token, left, right, BinType.Add);
+            case TokenType.minus -> left = new NodeBin(curr_token, left, right, BinType.Sub);
+            case TokenType.star -> left = new NodeBin(curr_token, left, right, BinType.Multi);
+            case TokenType.slash -> left = new NodeBin(curr_token, left, right, BinType.Div);
+            case TokenType.percent -> left = new NodeBin(curr_token, left, right, BinType.Mod);
+            case TokenType.logic_eq -> left = new NodeBin(curr_token, left, right, BinType.Eq);
+            case TokenType.logic_not_eq -> left = new NodeBin(curr_token, left, right, BinType.NotEq);
+            case TokenType.logic_gt -> left = new NodeBin(curr_token, left, right, BinType.GT);
+            case TokenType.logic_lt -> left = new NodeBin(curr_token, left, right, BinType.LT);
+            case TokenType.logic_ge -> left = new NodeBin(curr_token, left, right, BinType.GE);
+            case TokenType.logic_le -> left = new NodeBin(curr_token, left, right, BinType.LE);
+            case TokenType.logic_and -> left = new NodeBin(curr_token, left, right, BinType.And);
+            case TokenType.logic_or -> left = new NodeBin(curr_token, left, right, BinType.Or);
             default -> GenerateErrorMessage("Invalid token in expression of type ");
             }
         }
@@ -258,7 +258,7 @@ public class Parser {
     }
 
     /**
-     * Parses a term of an expression(ex. 5, x, (5+5))
+     * Parses a term of an expression(eg. 5, x, (5+5))
      *
      * @return the term parsed
      *

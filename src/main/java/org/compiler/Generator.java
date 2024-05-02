@@ -191,6 +191,14 @@ public class Generator {
         return termSB.toString();
     }
 
+    /**
+     * Generates the assembly code for an expression
+     *
+     * @param expr
+     *            the expression to generate code for
+     *
+     * @return the generated assembly code
+     */
     public String generateExpression(NodeExpression expr) {
         StringBuilder exprSB = new StringBuilder();
 
@@ -214,10 +222,10 @@ public class Generator {
     public String generateBinaryExpression(NodeBin bin_expr) {
         StringBuilder bin_exprSB = new StringBuilder();
 
-        switch (bin_expr) {
-        case NodeBinAdd nodeBinAdd -> {
-            bin_exprSB.append(generateExpression(nodeBinAdd.getLeft()));
-            bin_exprSB.append(generateExpression(nodeBinAdd.getRight()));
+        switch (bin_expr.getType()) {
+        case BinType.Add -> {
+            bin_exprSB.append(generateExpression(bin_expr.getLeft()));
+            bin_exprSB.append(generateExpression(bin_expr.getRight()));
             bin_exprSB.append("     ;;addition\n");
             bin_exprSB.append(pop("rax"));
             bin_exprSB.append(pop("rbx"));
@@ -226,9 +234,9 @@ public class Generator {
             bin_exprSB.append("     ;;/addition\n\n");
         }
         // Exit code is 8 bit, so no negative numbers
-        case NodeBinSub nodeBinSub -> {
-            bin_exprSB.append(generateExpression(nodeBinSub.getRight()));
-            bin_exprSB.append(generateExpression(nodeBinSub.getLeft()));
+        case BinType.Sub -> {
+            bin_exprSB.append(generateExpression(bin_expr.getRight()));
+            bin_exprSB.append(generateExpression(bin_expr.getLeft()));
             bin_exprSB.append("     ;;subtraction\n");
             bin_exprSB.append(pop("rax"));
             bin_exprSB.append(pop("rbx"));
@@ -236,9 +244,9 @@ public class Generator {
             bin_exprSB.append(push("rax"));
             bin_exprSB.append("     ;;/subtraction\n\n");
         }
-        case NodeBinMulti nodeBinMulti -> {
-            bin_exprSB.append(generateExpression(nodeBinMulti.getLeft()));
-            bin_exprSB.append(generateExpression(nodeBinMulti.getRight()));
+        case BinType.Multi -> {
+            bin_exprSB.append(generateExpression(bin_expr.getLeft()));
+            bin_exprSB.append(generateExpression(bin_expr.getRight()));
             bin_exprSB.append("     ;;multiplication\n");
             bin_exprSB.append(pop("rax"));
             bin_exprSB.append(pop("rbx"));
@@ -246,19 +254,20 @@ public class Generator {
             bin_exprSB.append(push("rax"));
             bin_exprSB.append("     ;;/multiplication\n\n");
         }
-        case NodeBinDiv nodeBinDiv -> {
-            bin_exprSB.append(generateExpression(nodeBinDiv.getRight()));
-            bin_exprSB.append(generateExpression(nodeBinDiv.getLeft()));
+        case BinType.Div -> {
+            bin_exprSB.append(generateExpression(bin_expr.getRight()));
+            bin_exprSB.append(generateExpression(bin_expr.getLeft()));
             bin_exprSB.append("     ;;division\n");
             bin_exprSB.append(pop("rax"));
             bin_exprSB.append(pop("rbx"));
+            bin_exprSB.append("     xor rdx, rdx\n");
             bin_exprSB.append("     idiv rbx\n");
             bin_exprSB.append(push("rax"));
             bin_exprSB.append("     ;;/division\n\n");
         }
-        case NodeBinMod nodeBinMod -> {
-            bin_exprSB.append(generateExpression(nodeBinMod.getRight()));
-            bin_exprSB.append(generateExpression(nodeBinMod.getLeft()));
+        case BinType.Mod -> {
+            bin_exprSB.append(generateExpression(bin_expr.getRight()));
+            bin_exprSB.append(generateExpression(bin_expr.getLeft()));
             bin_exprSB.append("     ;;modulus\n");
             bin_exprSB.append(pop("rax"));
             bin_exprSB.append(pop("rbx"));
@@ -267,9 +276,9 @@ public class Generator {
             bin_exprSB.append(push("rdx"));
             bin_exprSB.append("     ;;/modulus\n\n");
         }
-        case NodeBinLogicEq nodeBinLogicEq -> {
-            bin_exprSB.append(generateExpression(nodeBinLogicEq.getLeft()));
-            bin_exprSB.append(generateExpression(nodeBinLogicEq.getRight()));
+        case BinType.Eq -> {
+            bin_exprSB.append(generateExpression(bin_expr.getLeft()));
+            bin_exprSB.append(generateExpression(bin_expr.getRight()));
             bin_exprSB.append("     ;;equal\n");
             bin_exprSB.append(pop("rax"));
             bin_exprSB.append(pop("rbx"));
@@ -279,9 +288,9 @@ public class Generator {
             bin_exprSB.append(push("rbx"));
             bin_exprSB.append("     ;;/equal\n\n");
         }
-        case NodeBinLogicNotEq nodeBinLogicNotEq -> {
-            bin_exprSB.append(generateExpression(nodeBinLogicNotEq.getLeft()));
-            bin_exprSB.append(generateExpression(nodeBinLogicNotEq.getRight()));
+        case BinType.NotEq -> {
+            bin_exprSB.append(generateExpression(bin_expr.getLeft()));
+            bin_exprSB.append(generateExpression(bin_expr.getRight()));
             bin_exprSB.append("     ;;not equal\n");
             bin_exprSB.append(pop("rax"));
             bin_exprSB.append(pop("rbx"));
@@ -292,9 +301,9 @@ public class Generator {
             bin_exprSB.append("     ;;/not equal\n\n");
         }
 
-        case NodeBinLogicGT nodeBinLogicGT -> {
-            bin_exprSB.append(generateExpression(nodeBinLogicGT.getLeft()));
-            bin_exprSB.append(generateExpression(nodeBinLogicGT.getRight()));
+        case BinType.GT -> {
+            bin_exprSB.append(generateExpression(bin_expr.getLeft()));
+            bin_exprSB.append(generateExpression(bin_expr.getRight()));
             bin_exprSB.append("     ;;greater than\n");
             bin_exprSB.append(pop("rax"));
             bin_exprSB.append(pop("rbx"));
@@ -305,9 +314,9 @@ public class Generator {
             bin_exprSB.append("     ;;/greater than\n\n");
         }
 
-        case NodeBinLogicLT nodeBinLogicLT -> {
-            bin_exprSB.append(generateExpression(nodeBinLogicLT.getLeft()));
-            bin_exprSB.append(generateExpression(nodeBinLogicLT.getRight()));
+        case BinType.LT -> {
+            bin_exprSB.append(generateExpression(bin_expr.getLeft()));
+            bin_exprSB.append(generateExpression(bin_expr.getRight()));
             bin_exprSB.append("     ;;less than\n");
             bin_exprSB.append(pop("rax"));
             bin_exprSB.append(pop("rbx"));
@@ -318,9 +327,9 @@ public class Generator {
             bin_exprSB.append("     ;;/less than\n\n");
         }
 
-        case NodeBinLogicGE nodeBinLogicGE -> {
-            bin_exprSB.append(generateExpression(nodeBinLogicGE.getLeft()));
-            bin_exprSB.append(generateExpression(nodeBinLogicGE.getRight()));
+        case BinType.GE -> {
+            bin_exprSB.append(generateExpression(bin_expr.getLeft()));
+            bin_exprSB.append(generateExpression(bin_expr.getRight()));
             bin_exprSB.append("     ;;greater than or equal\n");
             bin_exprSB.append(pop("rax"));
             bin_exprSB.append(pop("rbx"));
@@ -330,9 +339,9 @@ public class Generator {
             bin_exprSB.append(push("rbx"));
             bin_exprSB.append("     ;;/greater than or equal\n\n");
         }
-        case NodeBinLogicLE nodeBinLogicLE -> {
-            bin_exprSB.append(generateExpression(nodeBinLogicLE.getLeft()));
-            bin_exprSB.append(generateExpression(nodeBinLogicLE.getRight()));
+        case BinType.LE -> {
+            bin_exprSB.append(generateExpression(bin_expr.getLeft()));
+            bin_exprSB.append(generateExpression(bin_expr.getRight()));
             bin_exprSB.append("     ;;less than or equal\n");
             bin_exprSB.append(pop("rax"));
             bin_exprSB.append(pop("rbx"));
@@ -342,9 +351,9 @@ public class Generator {
             bin_exprSB.append(push("rbx"));
             bin_exprSB.append("     ;;/less than or equal\n\n");
         }
-        case NodeBinLogicAnd nodeBinLogicAnd -> {
-            bin_exprSB.append(generateExpression(nodeBinLogicAnd.getLeft()));
-            bin_exprSB.append(generateExpression(nodeBinLogicAnd.getRight()));
+        case BinType.And -> {
+            bin_exprSB.append(generateExpression(bin_expr.getLeft()));
+            bin_exprSB.append(generateExpression(bin_expr.getRight()));
             bin_exprSB.append("     ;;and\n");
             bin_exprSB.append(pop("rax"));
             bin_exprSB.append(pop("rbx"));
@@ -352,9 +361,9 @@ public class Generator {
             bin_exprSB.append(push("rax"));
             bin_exprSB.append("     ;;/and\n\n");
         }
-        case NodeBinLogicOr nodeBinLogicOr -> {
-            bin_exprSB.append(generateExpression(nodeBinLogicOr.getLeft()));
-            bin_exprSB.append(generateExpression(nodeBinLogicOr.getRight()));
+        case BinType.Or -> {
+            bin_exprSB.append(generateExpression(bin_expr.getLeft()));
+            bin_exprSB.append(generateExpression(bin_expr.getRight()));
             bin_exprSB.append("     ;;or\n");
             bin_exprSB.append(pop("rax"));
             bin_exprSB.append(pop("rbx"));
