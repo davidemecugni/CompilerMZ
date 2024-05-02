@@ -17,13 +17,13 @@
 - comment_stmt = comment_stmt_single | comment_stmt_multi
 - comment_stmt_single = comment, ((? UNICODE ?) - comment)*,  (? UNICODE ?)*, new_line
 - comment_stmt_multi = comment, comment, ((? UNICODE ?) - comment)*, comment, comment
-# Terminals
+### Terminals
 - digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 - new_line = (? ISO 6429 character Line Feed ?)
-- ws = (? ISO 6429 character Whitespace ?)
+- ws = (? HORIZONTAL TABULATION ?) | (? NEW LINE ?) | (? FORM FEED ?) | (? CARRIAGE RETURN ?) | (? SPACE ?)
 - valid_char = (? UNICODE ?) - (? Single char comment ?) - ws - (? Single char terminal ?)
 
-(* Editable Terminals, might depend on dialect *)
+### (* Editable Terminals, might depend on dialect *)
 - comment = "@"
 - exit = "exit"
 - open_par = "("
@@ -53,9 +53,9 @@
 - false = "false"
 
 ### Notes
-- * Zero or more 
-- + One or more 
-- - Removed
+- \* Zero or more 
+- \+ One or more 
+- \- Removed
 - [] Optional(Zero or one)
 - | Either one or the other 
 - "CHAR" The character CHAR or string CHAR
