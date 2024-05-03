@@ -105,7 +105,7 @@ public class CrossCompiler {
         return "    ".repeat(Math.max(0, indentation));
     }
 
-    private String correctIndentation(String code, int identation) {
-        return code.replaceAll("(?m)^ +", getIndentation(identation));
+    private String correctIndentation(String code, int indentation) {
+        return code.replaceAll("(?m)^ +", getIndentation(indentation));
     }
 }

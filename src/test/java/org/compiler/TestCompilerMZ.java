@@ -23,9 +23,10 @@ public class TestCompilerMZ {
     private static Stream<Object[]> provideTestCases() {
         return Stream.of(new Object[] { "exits1.mz", 1 }, new Object[] { "exits2.mz", 2 },
                 new Object[] { "exits3.mz", 3 }, new Object[] { "exits4.mz", 4 }, new Object[] { "exits5.mz", 5 },
-                new Object[] { "exits10.mz", 10 }, new Object[] { "exits11.mz", 11 }, new Object[] { "exits15.mz", 15 },
-                new Object[] { "exits42.mz", 42 }, new Object[] { "exits45.mz", 45 }, new Object[] { "exits69.mz", 69 },
-                new Object[] { "exits100.mz", 100 }, new Object[] { "exits111.mz", 111 },
-                new Object[] { "exits130.mz", 130 }, new Object[] { "exits251.mz", 251 });
+                new Object[] { "exits6.mz", 6 }, new Object[] { "exits10.mz", 10 }, new Object[] { "exits11.mz", 11 },
+                new Object[] { "exits15.mz", 15 }, new Object[] { "exits42.mz", 42 }, new Object[] { "exits45.mz", 45 },
+                new Object[] { "exits69.mz", 69 }, new Object[] { "exits100.mz", 100 },
+                new Object[] { "exits111.mz", 111 }, new Object[] { "exits130.mz", 130 },
+                new Object[] { "exits251.mz", 251 });
     }
 }

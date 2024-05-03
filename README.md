@@ -7,21 +7,22 @@ It generates an x86_64 assembly file. The program is then executed by using nasm
 and ld.
 
 ## Table of Contents
-- [Features](#features)
-- [Inner workings](#inner-workings)
-- [Getting Started](#getting-started)
-- [Usage](#usage)
-- [The Idea](#the-idea)
+- [Features](#features-sparkles)
+- [Inner workings](#inner-workings-gear)
+- [Getting Started](#getting-started-rocket)
+- [Usage](#usage-hammer_and_wrench)
+- [Grammar](#grammar-book)
+- [The Idea](#the-idea-bulb)
 
 ## Features :sparkles:
 
 - Multi dialect support :earth_africa:
   - Create your custom dialect
   - Current dialects supported:
-    - default_dialect : a C vibe dialect
-    - zanna : an italian dialect
-    - emilian : a dialect from Emilia-Romagna
-    - emoji : an emoji dialect, for the brave ones
+    - default_dialect : a C vibe dialect :keyboard:
+    - zanna : an italian dialect :it:
+    - emilian : a dialect from Emilia-Romagna :spaghetti:
+    - emoji : an emoji dialect, for the brave ones :smiley:
   - Full support for UNICODE characters, feel free to add yours!
 - Comments :speech_balloon:
   - Single line comments
@@ -53,7 +54,8 @@ and ld.
   - Condition expression
   - Scope
   - Elif and Else
-- Variable Reassignment
+- Variable Reassignment :arrows_counterclockwise:
+  - Reassign a variable
 - While loop :repeat:
   - Condition expression
   - Scope
@@ -104,6 +106,10 @@ usage: CompilerMZ
  -V,--version            print version
  -v,--verbose            verbose output
 ```
+
+## Grammar :book:
+
+For more details about the [EBNF](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form) grammar of the language, please refer to the [grammar.md](grammar.md) file.
 
 ## The Idea :bulb:
 The project was born during a OOP course at the University of Modena and Reggio Emilia. The idea was to create a compiler for a custom language, the .mz language.  
