@@ -7,12 +7,12 @@ It generates an x86_64 assembly file. The program is then executed by using nasm
 and ld.
 
 ## Table of Contents
-- [Features](#features)
-- [Inner workings](#inner-workings)
-- [Getting Started](#getting-started)
-- [Usage](#usage)
-- [Grammar](#grammar)
-- [The Idea](#the-idea)
+- [Features](#features-sparkles)
+- [Inner workings](#inner-workings-gear)
+- [Getting Started](#getting-started-rocket)
+- [Usage](#usage-hammer_and_wrench)
+- [Grammar](#grammar-book)
+- [The Idea](#the-idea-bulb)
 
 ## Features :sparkles:
 
