@@ -1,7 +1,7 @@
-package org.compiler.token;
+package org.compiler;
 
-import org.compiler.CrossCompiler;
 import org.compiler.errors.TokenError;
+import org.compiler.token.Tokenizer;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -45,6 +45,12 @@ public class TestCrossCompiler {
                 @ this is a comment
                 let x = 5 ;
                 @ this is another comment
+                while(x<10){
+                    x=x+1;
+                    @@
+                    Adding
+                    @@
+                }
                 exit(x);
                 """, "default_dialect", false);
         CrossCompiler crossCompiler = new CrossCompiler(tokenizer.getTokens(), "emilian");
@@ -53,6 +59,12 @@ public class TestCrossCompiler {
                 comèint this is a comment
                 métter x cumpàagn 5 ;
                 comèint this is another comment
+                fintàant ( x lé_più_cicch 10 ) {
+                    x cumpàagn x più 1 ;
+                    comèintcomèint
+                    Adding
+                    comèintcomèint
+                }
                 desmàtter ( x ) ;
                 """, crossCompiledCode);
     }
