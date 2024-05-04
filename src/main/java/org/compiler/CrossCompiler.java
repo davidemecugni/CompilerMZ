@@ -2,10 +2,7 @@ package org.compiler;
 
 import org.compiler.token.TokenType;
 import org.compiler.token.dialects.Dialect;
-import org.compiler.token.tokens.Token;
-import org.compiler.token.tokens.TokenComment;
-import org.compiler.token.tokens.TokenIdent;
-import org.compiler.token.tokens.TokenIntLit;
+import org.compiler.token.tokens.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +26,7 @@ public class CrossCompiler {
         int indent = 0;
         Map<String, TokenType> wordToTokenMap = dialect.getWordToTokenMap();
         Map<TokenType, String> tokenToWordMap = new HashMap<>();
+        boolean openingQuotes = true;
         for (String word : wordToTokenMap.keySet()) {
             tokenToWordMap.put(wordToTokenMap.get(word), word);
         }
@@ -66,14 +64,28 @@ public class CrossCompiler {
                     crossCompiledCodeSB.append(getIndentation(indent));
                     continue;
                 }
+                if(type == TokenType.quotes){
+                    if(openingQuotes){
+                        openingQuotes = false;
+                    }else{
+                        crossCompiledCodeSB.append(" ");
+                        openingQuotes = true;
+                    }
+                    continue;
+                }
                 crossCompiledCodeSB.append(" ");
             } else {
                 if (type == TokenType.int_lit) {
                     crossCompiledCodeSB.append(((TokenIntLit) token).getValue());
                 }
+                if (type == TokenType.string_lit){
+                    crossCompiledCodeSB.append(((TokenString) token).getContent());
+                    continue;
+                }
                 if (type == TokenType.ident) {
                     crossCompiledCodeSB.append(((TokenIdent) token).getName());
                 }
+
                 crossCompiledCodeSB.append(" ");
             }
         }

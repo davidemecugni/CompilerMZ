@@ -23,5 +23,7 @@
   "e_anche": "logic_and",
   "o_anche": "logic_or",
   "vero": "_true",
-  "falso": "_false"
+  "falso": "_false",
+  "stampa": "print",
+  "\"": "quotes"
 }

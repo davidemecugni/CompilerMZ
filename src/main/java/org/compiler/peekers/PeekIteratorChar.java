@@ -6,7 +6,6 @@ import org.compiler.token.tokens.TokenString;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-
 /**
  * The implementation of PeekIterator for characters
  *
@@ -49,9 +48,9 @@ public class PeekIteratorChar implements PeekIterator<CharLineColumn> {
             checkForWhitespace();
             cursor++;
         }
+        updateLineAndColumnCount(cursor);
         cursor++;
         spaces--;
-        updateLineAndColumnCount(cursor);
         if (comment.toString().contains(comment_terminal)) {
             multiline = true;
             while (cursor < list.size() && !comment.toString().contains(comment_terminal + comment_terminal)) {
@@ -68,17 +67,22 @@ public class PeekIteratorChar implements PeekIterator<CharLineColumn> {
 
     public TokenString ignoreContent(String string_terminal) {
         StringBuilder content = new StringBuilder();
+        int column_start = getCurrentColumn() + 1;
         if (cursor >= list.size()) {
             return null;
         }
-        while (cursor < list.size() && list.get(cursor) != '"') {
+        while (cursor < list.size() && !content.toString().contains(string_terminal)) {
             content.append(list.get(cursor));
+            if (list.get(cursor) == '\n') {
+                throw new IllegalArgumentException("Multiline string not supported at line " + line);
+            }
             checkForWhitespace();
             cursor++;
         }
-        cursor++;
-        updateLineAndColumnCount(cursor);
-        return new TokenString(content.toString().replace(string_terminal, ""));
+        String res = content.toString().replace(string_terminal, "");
+
+        return new TokenString(res, line, column_start,
+                getCurrentColumn() - 1);
     }
 
     /**

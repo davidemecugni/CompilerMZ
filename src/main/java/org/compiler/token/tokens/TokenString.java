@@ -6,8 +6,8 @@ public class TokenString extends Token {
 
     private final String content;
 
-    public TokenString(String content) {
-        super(TokenType.quotes);
+    public TokenString(String content, int line, int column_start, int column_end) {
+        super(TokenType.string_lit, line, column_start, column_end);
         this.content = content;
     }
 
@@ -17,6 +17,7 @@ public class TokenString extends Token {
 
     @Override
     public String toString() {
-        return "TokenString{" + "content='" + content + '\'' + '}';
+        return "TokenString{" + "value='" + content + '\'' + ", l=" + getLine() + ", col_s=" + getColumnStart()
+                + ", col_e=" + getColumnEnd() + '}';
     }
 }
