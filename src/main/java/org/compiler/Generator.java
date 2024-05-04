@@ -3,7 +3,8 @@ package org.compiler;
 import org.compiler.nodes.NodeExpression;
 import org.compiler.nodes.NodeProgram;
 import org.compiler.nodes.NodeStatement;
-import org.compiler.nodes.expressions.binary_expressions.*;
+import org.compiler.nodes.expressions.binary_expressions.BinType;
+import org.compiler.nodes.expressions.binary_expressions.NodeBin;
 import org.compiler.nodes.expressions.terms.NodeIdent;
 import org.compiler.nodes.expressions.terms.NodeIntLit;
 import org.compiler.nodes.expressions.terms.NodeTerm;
@@ -14,6 +15,9 @@ import org.compiler.nodes.statements.NodeLet;
 import org.compiler.nodes.statements.NodeScope;
 import org.compiler.nodes.statements.conditionals.NodeIf;
 import org.compiler.nodes.statements.conditionals.NodeWhile;
+import org.compiler.nodes.statements.functions.BuiltInFunc;
+import org.compiler.nodes.statements.functions.NodeBuiltInFunc;
+import org.compiler.token.tokens.TokenString;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +34,9 @@ public class Generator {
     private final Map<String, Integer> variables = new HashMap<>();
     private final ArrayList<Integer> scopes = new ArrayList<>();
     private int label_counter = 0;
+    private final StringBuilder sbData = new StringBuilder();
+    private int msgCounter = 1;
+    private boolean isFirstMsg = true;
 
     public Generator(NodeProgram program) {
         this.m_program = program;
@@ -41,7 +48,10 @@ public class Generator {
      */
     public void generateProgram() {
         StringBuilder sb = new StringBuilder();
-        sb.append("global _start\n_start:\n\n");
+        sbData.append("section .data\n");
+        sbData.append("     newline db 0x0a\n");
+        sb.append("section .text\n");
+        sb.append("\tglobal _start\n\n_start:\n\n");
         for (NodeStatement statement : m_program.getStmts()) {
             sb.append(generateStatement(statement));
         }
@@ -50,7 +60,10 @@ public class Generator {
         sb.append("     mov rax, 60\n");
         sb.append("     mov rdi, 0\n");
         sb.append("     syscall\n");
-        generated = sb.toString();
+
+        sbData.append("\n");
+        sbData.append(sb);
+        generated = sbData.toString();
     }
 
     /**
@@ -73,7 +86,6 @@ public class Generator {
             stmtSB.append("     syscall\n");
             stmtSB.append("     ;;/exit\n\n");
         }
-
         case NodeLet nodeLet -> {
             if (variables.containsKey(nodeLet.getIdentifier().getIdent().getName())) {
                 throw new IllegalArgumentException("Identifier already used");
@@ -151,6 +163,34 @@ public class Generator {
             stmtSB.append(labelEnd).append(":\n");
             stmtSB.append("     ;;/while\n");
 
+        }
+        case NodeBuiltInFunc nodeBuiltInFunc -> {
+            switch (nodeBuiltInFunc.getFunc()) {
+            case BuiltInFunc.print -> {
+                if (!isFirstMsg) {
+                    stmtSB.append("     ;;print newline\n");
+                    stmtSB.append("     mov rax, 1\n");
+                    stmtSB.append("     mov rdi, 1\n");
+                    stmtSB.append("     mov rsi, newline\n");
+                    stmtSB.append("     mov rdx, 1\n");
+                    stmtSB.append("     syscall\n");
+                    stmtSB.append("     ;;/print newline\n\n");
+                }
+                isFirstMsg = false;
+                TokenString content = (TokenString) nodeBuiltInFunc.getStmt().getExpr();
+
+                sbData.append("     msg").append(msgCounter).append(" db ").append("'").append(content.getContent())
+                        .append("'").append(", 0x0a\n");
+                stmtSB.append("     ;;print\n");
+                stmtSB.append("     mov rax, 1\n");
+                stmtSB.append("     mov rdi, 1\n");
+                stmtSB.append("     mov rsi, msg").append(msgCounter).append("\n");
+                msgCounter++;
+                stmtSB.append("     mov rdx, ").append(content.getContent().length()).append("\n");
+                stmtSB.append("     syscall\n");
+                stmtSB.append("     ;;/print\n\n");
+            }
+            }
         }
         case null, default -> throw new IllegalArgumentException("Unknown statement type in generator");
         }

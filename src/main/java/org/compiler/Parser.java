@@ -4,11 +4,9 @@ import org.compiler.errors.TokenError;
 import org.compiler.nodes.NodeExpression;
 import org.compiler.nodes.NodeProgram;
 import org.compiler.nodes.NodeStatement;
-import org.compiler.nodes.expressions.binary_expressions.*;
-import org.compiler.nodes.expressions.terms.NodeIdent;
-import org.compiler.nodes.expressions.terms.NodeIntLit;
-import org.compiler.nodes.expressions.terms.NodeTerm;
-import org.compiler.nodes.expressions.terms.NodeTermParen;
+import org.compiler.nodes.expressions.binary_expressions.BinType;
+import org.compiler.nodes.expressions.binary_expressions.NodeBin;
+import org.compiler.nodes.expressions.terms.*;
 import org.compiler.nodes.statements.NodeAssign;
 import org.compiler.nodes.statements.NodeExit;
 import org.compiler.nodes.statements.NodeLet;
@@ -17,6 +15,8 @@ import org.compiler.nodes.statements.conditionals.Conditional;
 import org.compiler.nodes.statements.conditionals.NodeElif;
 import org.compiler.nodes.statements.conditionals.NodeIf;
 import org.compiler.nodes.statements.conditionals.NodeWhile;
+import org.compiler.nodes.statements.functions.BuiltInFunc;
+import org.compiler.nodes.statements.functions.NodeBuiltInFunc;
 import org.compiler.peekers.PeekIteratorToken;
 import org.compiler.token.TokenType;
 import org.compiler.token.tokens.Token;
@@ -95,6 +95,9 @@ public class Parser {
             it.next();
             Conditional conditional = parseCondition();
             return new NodeWhile(conditional.getStmt(), conditional.getScope());
+        } else if (it.peek().getType() == TokenType.print) {
+            it.next();
+            return parseBuiltInFunc(BuiltInFunc.print);
         } else {
             GenerateErrorMessage("Invalid token in statement of type ");
             return null;
@@ -217,6 +220,32 @@ public class Parser {
         it.next(); // consume open_curly brace
         NodeScope scope = parseScope();
         return new Conditional(expr, scope);
+    }
+
+    private NodeBuiltInFunc parseBuiltInFunc(BuiltInFunc func) throws TokenError {
+        CheckForType(TokenType.open_paren);
+        it.next();
+
+        // lascio lo switch nel caso volessimo aggiungere altre funzioni built-in
+
+        switch (func) {
+        case BuiltInFunc.print -> {
+            CheckForType(TokenType.quotes);
+            it.next();
+            NodeString string = new NodeString(it.next());
+            NodeBuiltInFunc nodeBuiltInFunc = new NodeBuiltInFunc(string, BuiltInFunc.print);
+            CheckForType(TokenType.quotes);
+            it.next();
+            CheckForType(TokenType.close_paren);
+            it.next();
+            CheckForType(TokenType.semi);
+            it.next();
+            return nodeBuiltInFunc;
+        }
+        default -> GenerateErrorMessage("Invalid token, expected string, found");
+        }
+        // unreachable
+        return null;
     }
 
     /**

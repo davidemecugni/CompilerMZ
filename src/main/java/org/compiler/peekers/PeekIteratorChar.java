@@ -2,6 +2,7 @@ package org.compiler.peekers;
 
 import org.compiler.token.tokens.CharLineColumn;
 import org.compiler.token.tokens.TokenComment;
+import org.compiler.token.tokens.TokenString;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -63,6 +64,21 @@ public class PeekIteratorChar implements PeekIterator<CharLineColumn> {
             }
         }
         return new TokenComment(comment.toString().replace(comment_terminal, ""), multiline);
+    }
+
+    public TokenString ignoreContent(String string_terminal) {
+        StringBuilder content = new StringBuilder();
+        if (cursor >= list.size()) {
+            return null;
+        }
+        while (cursor < list.size() && list.get(cursor) != '"') {
+            content.append(list.get(cursor));
+            checkForWhitespace();
+            cursor++;
+        }
+        cursor++;
+        updateLineAndColumnCount(cursor);
+        return new TokenString(content.toString().replace(string_terminal, ""));
     }
 
     /**

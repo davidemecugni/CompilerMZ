@@ -65,6 +65,11 @@ public class Tokenizer {
                     } else {
                         AddToken(it.ignoreComment(word));
                     }
+                } else if (wordToTokenMap.get(word) == TokenType.quotes) {
+                    Token quotes = new Token(TokenType.quotes);
+                    AddToken(quotes);
+                    AddToken(it.ignoreContent(word));
+                    AddToken(quotes);
                 } else {
                     AddToken(of(buffer.toString(), line, column_start, column_start));
                 }
