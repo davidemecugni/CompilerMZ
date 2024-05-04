@@ -32,6 +32,7 @@ public class CrossCompiler {
         }
         addMultiTokenTokens(tokenToWordMap);
         StringBuilder crossCompiledCodeSB = new StringBuilder();
+        System.out.println(tokens);
         for (Token token : tokens) {
             TokenType type = token.getType();
             if (type == TokenType.open_curly || type == TokenType.close_curly) {
@@ -64,10 +65,10 @@ public class CrossCompiler {
                     crossCompiledCodeSB.append(getIndentation(indent));
                     continue;
                 }
-                if(type == TokenType.quotes){
-                    if(openingQuotes){
+                if (type == TokenType.quotes) {
+                    if (openingQuotes) {
                         openingQuotes = false;
-                    }else{
+                    } else {
                         crossCompiledCodeSB.append(" ");
                         openingQuotes = true;
                     }
@@ -78,7 +79,7 @@ public class CrossCompiler {
                 if (type == TokenType.int_lit) {
                     crossCompiledCodeSB.append(((TokenIntLit) token).getValue());
                 }
-                if (type == TokenType.string_lit){
+                if (type == TokenType.string_lit) {
                     crossCompiledCodeSB.append(((TokenString) token).getContent());
                     continue;
                 }

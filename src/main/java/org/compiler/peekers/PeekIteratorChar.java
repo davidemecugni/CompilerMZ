@@ -6,6 +6,7 @@ import org.compiler.token.tokens.TokenString;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+
 /**
  * The implementation of PeekIterator for characters
  *
@@ -81,8 +82,7 @@ public class PeekIteratorChar implements PeekIterator<CharLineColumn> {
         }
         String res = content.toString().replace(string_terminal, "");
 
-        return new TokenString(res, line, column_start,
-                getCurrentColumn() - 1);
+        return new TokenString(res, line, column_start, getCurrentColumn() - 1);
     }
 
     /**
