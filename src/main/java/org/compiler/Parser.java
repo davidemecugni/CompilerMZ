@@ -230,17 +230,25 @@ public class Parser {
 
         switch (func) {
         case BuiltInFunc.print -> {
-            CheckForType(TokenType.quotes);
-            it.next();
-            NodeString string = new NodeString(it.next());
-            NodeBuiltInFunc nodeBuiltInFunc = new NodeBuiltInFunc(string, BuiltInFunc.print);
-            CheckForType(TokenType.quotes);
-            it.next();
-            CheckForType(TokenType.close_paren);
-            it.next();
-            CheckForType(TokenType.semi);
-            it.next();
-            return nodeBuiltInFunc;
+            if (it.peek().getType() == TokenType.quotes) {
+                it.next();
+                NodeString string = new NodeString(it.next());
+                NodeBuiltInFunc nodeBuiltInFunc = new NodeBuiltInFunc(string, BuiltInFunc.print);
+                CheckForType(TokenType.quotes);
+                it.next();
+                CheckForType(TokenType.close_paren);
+                it.next();
+                CheckForType(TokenType.semi);
+                it.next();
+                return nodeBuiltInFunc;
+            } else if (it.peek().getType() == TokenType.int_lit){
+                NodeBuiltInFunc nodeBuiltInFunc = new NodeBuiltInFunc(parseTerm(), BuiltInFunc.print);
+                CheckForType(TokenType.close_paren);
+                it.next();
+                CheckForType(TokenType.semi);
+                it.next();
+                return nodeBuiltInFunc;
+            }
         }
         default -> GenerateErrorMessage("Invalid token, expected string, found");
         }
