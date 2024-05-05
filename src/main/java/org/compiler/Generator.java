@@ -37,7 +37,6 @@ public class Generator {
     private int label_counter = 0;
     private final StringBuilder sbData = new StringBuilder();
     private int msgCounter = 1;
-    private boolean isFirstMsg = true;
 
     public Generator(NodeProgram program) {
         this.m_program = program;
@@ -54,7 +53,7 @@ public class Generator {
         sbData.append("     newline db 0x0a\n");
         sb.append("section .text\n");
         sb.append("     extern printf\n");
-        sb.append("     global _start\n\n_start:\n\n");
+        sb.append("     global main\n\nmain:\n\n");
         for (NodeStatement statement : m_program.getStmts()) {
             sb.append(generateStatement(statement));
         }
@@ -171,16 +170,6 @@ public class Generator {
             switch (nodeBuiltInFunc.getFunc()) {
             case BuiltInFunc.print -> {
                 if (nodeBuiltInFunc.getStmt().getExpr().getType() == TokenType.string_lit) {
-                    if (!isFirstMsg) {
-                        stmtSB.append("     ;;print newline\n");
-                        stmtSB.append("     mov rax, 1\n");
-                        stmtSB.append("     mov rdi, 1\n");
-                        stmtSB.append("     mov rsi, newline\n");
-                        stmtSB.append("     mov rdx, 1\n");
-                        stmtSB.append("     syscall\n");
-                        stmtSB.append("     ;;/print newline\n\n");
-                    }
-                    isFirstMsg = false;
                     TokenString content = (TokenString) nodeBuiltInFunc.getStmt().getExpr();
 
                     sbData.append("     msg").append(msgCounter).append(" db ").append("'").append(content.getContent())
@@ -193,6 +182,13 @@ public class Generator {
                     stmtSB.append("     mov rdx, ").append(content.getContent().length()).append("\n");
                     stmtSB.append("     syscall\n");
                     stmtSB.append("     ;;/print\n\n");
+                    stmtSB.append("     ;;print newline\n");
+                    stmtSB.append("     mov rax, 1\n");
+                    stmtSB.append("     mov rdi, 1\n");
+                    stmtSB.append("     mov rsi, newline\n");
+                    stmtSB.append("     mov rdx, 1\n");
+                    stmtSB.append("     syscall\n");
+                    stmtSB.append("     ;;/print newline\n\n");
                 } else if (nodeBuiltInFunc.getStmt().getExpr().getType() == TokenType.int_lit) {
                     NodeIntLit nodeIntLit = (NodeIntLit) nodeBuiltInFunc.getStmt();
                     sbData.append("     number dq ").append(nodeIntLit.getIntLit().getValue()).append("\n");
@@ -203,7 +199,17 @@ public class Generator {
                     stmtSB.append("     xor rax, rax\n");
                     stmtSB.append("     call printf\n");
                     stmtSB.append("     add rsp, 8\n");
-                    stmtSB.append("     xor eax, eax\n");
+                    stmtSB.append("     ;;/print\n\n");
+                } else if (nodeBuiltInFunc.getStmt().getExpr().getType() == TokenType.ident) {
+                    NodeTerm nodeTerm = (NodeTerm) nodeBuiltInFunc.getStmt();
+                    generateTerm(nodeTerm);
+                    stmtSB.append("     ;;print\n");
+                    stmtSB.append(pop("rsi"));
+                    stmtSB.append("     sub rsp, 8\n");
+                    stmtSB.append("     mov rdi, format\n");
+                    stmtSB.append("     xor rax, rax\n");
+                    stmtSB.append("     call printf\n");
+                    stmtSB.append("     add rsp, 8\n");
                     stmtSB.append("     ;;/print\n\n");
                 }
             }

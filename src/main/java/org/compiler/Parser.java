@@ -241,7 +241,7 @@ public class Parser {
                 CheckForType(TokenType.semi);
                 it.next();
                 return nodeBuiltInFunc;
-            } else if (it.peek().getType() == TokenType.int_lit){
+            } else if (it.peek().getType() == TokenType.int_lit || it.peek().getType() == TokenType.ident) {
                 NodeBuiltInFunc nodeBuiltInFunc = new NodeBuiltInFunc(parseTerm(), BuiltInFunc.print);
                 CheckForType(TokenType.close_paren);
                 it.next();

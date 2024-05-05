@@ -290,7 +290,7 @@ public class CompilerMZ {
             throw new FileNotFoundException("Invalid file path: " + fileOut);
         }
 
-        ProcessBuilder nasmProcessBuilder = new ProcessBuilder("nasm", "-f", "elf64", "-o", fileObj, fileOut);
+        ProcessBuilder nasmProcessBuilder = new ProcessBuilder("nasm", "-f", "elf64", fileOut, "-o", fileObj);
         runProcess(nasmProcessBuilder, "NASM assembler for elf x86_64 architecture");
     }
 
@@ -312,7 +312,7 @@ public class CompilerMZ {
             throw new FileNotFoundException("Invalid file path: " + fileObj);
         }
 
-        ProcessBuilder ldProcessBuilder = new ProcessBuilder("ld", "-o", fileExe, fileObj);
+        ProcessBuilder ldProcessBuilder = new ProcessBuilder("gcc", "-no-pie", fileObj, "-o", fileExe);
         runProcess(ldProcessBuilder, "ld linker");
     }
 
