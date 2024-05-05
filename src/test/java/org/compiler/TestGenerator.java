@@ -19,10 +19,11 @@ public class TestGenerator {
                      newline db 0x0a
 
                 section .text
-                \tglobal _start
+                     extern printf
+
+                global _start
 
                 _start:
-
                      ;;final exit
                      mov rax, 60
                      mov rdi, 0
@@ -42,10 +43,11 @@ public class TestGenerator {
                      newline db 0x0a
 
                 section .text
-                \tglobal _start
+                     extern printf
+
+                global _start
 
                 _start:
-
                      ;;value
                      mov rax, 42
                      push rax
@@ -70,10 +72,11 @@ public class TestGenerator {
                      newline db 0x0a
 
                 section .text
-                \tglobal _start
+                     extern printf
+
+                global _start
 
                 _start:
-
                      ;;value
                      mov rax, 0
                      push rax
@@ -108,23 +111,24 @@ public class TestGenerator {
         Generator generator = new Generator(parser.getTree());
         String res = generator.getGenerated();
         assertEquals("""
-                section .data
-                     newline db 0x0a
-
-                section .text
-                \tglobal _start
-
-                _start:
-
-                     ;;value
-                     mov rax, 42
-                     push rax
-
-                     ;;final exit
-                     mov rax, 60
-                     mov rdi, 0
-                     syscall
-                """, res);
+                        section .data
+                             newline db 0x0a
+                        
+                        section .text
+                             extern printf
+                        
+                        global _start
+                        
+                        _start:
+                             ;;value
+                             mov rax, 42
+                             push rax
+                        
+                             ;;final exit
+                             mov rax, 60
+                             mov rdi, 0
+                             syscall
+                        """, res);
         tokenizer = new Tokenizer("let x = 42; let y = 255;");
         parser = new Parser(tokenizer.getTokens());
         generator = new Generator(parser.getTree());
@@ -134,10 +138,11 @@ public class TestGenerator {
                      newline db 0x0a
 
                 section .text
-                \tglobal _start
+                     extern printf
+
+                global _start
 
                 _start:
-
                      ;;value
                      mov rax, 42
                      push rax
@@ -160,10 +165,11 @@ public class TestGenerator {
                      newline db 0x0a
 
                 section .text
-                \tglobal _start
+                     extern printf
+
+                global _start
 
                 _start:
-
                      ;;value
                      mov rax, 42
                      push rax
