@@ -65,6 +65,10 @@ public class Tokenizer {
                     } else {
                         AddToken(it.ignoreComment(word));
                     }
+                } else if (wordToTokenMap.get(word) == TokenType.quotes) {
+                    AddToken(of(buffer.toString(), line, column_start, column_start));
+                    AddToken(it.ignoreContent(word));
+                    AddToken(of(buffer.toString(), line, it.peek().getColumn(), it.peek().getColumn()));
                 } else {
                     AddToken(of(buffer.toString(), line, column_start, column_start));
                 }
@@ -81,7 +85,7 @@ public class Tokenizer {
                 buffer.append(it.next().getChar());
             }
             word = buffer.toString();
-            // Support for multi-char comment literals
+            // Support for multi-char comment/string literals
             if (wordToTokenMap.containsKey(buffer.toString())) {
                 if (wordToTokenMap.get(word) == TokenType.comment) {
                     if (forParsing) {
@@ -89,6 +93,13 @@ public class Tokenizer {
                     } else {
                         AddToken(it.ignoreComment(word));
                     }
+                    buffer.setLength(0);
+                    continue;
+                }
+                if (wordToTokenMap.get(word) == TokenType.quotes) {
+                    AddToken(new Token(TokenType.quotes));
+                    AddToken(it.ignoreContent(word));
+                    AddToken(new Token(TokenType.quotes));
                     buffer.setLength(0);
                     continue;
                 }

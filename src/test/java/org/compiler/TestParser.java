@@ -214,5 +214,4 @@ public class TestParser {
         assertThrows(TokenError.class, () -> new Parser(invalidIWhile2.getTokens()));
     }
 
-
 }

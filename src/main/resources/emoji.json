@@ -23,5 +23,7 @@
   "🔛": "logic_and",
   "🔗": "logic_or",
   "✅": "_true",
-  "❌": "_false"
+  "❌": "_false",
+  "🖨": "print",
+  "📜": "quotes"
 }

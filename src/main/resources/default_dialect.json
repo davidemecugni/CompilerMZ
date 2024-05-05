@@ -23,5 +23,7 @@
   "&": "logic_and",
   "|": "logic_or",
   "true": "_true",
-  "false": "_false"
+  "false": "_false",
+  "print": "print",
+  "\"": "quotes"
 }

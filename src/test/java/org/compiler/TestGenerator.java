@@ -14,8 +14,21 @@ public class TestGenerator {
         Parser parser = new Parser(tokenizer.getTokens());
         Generator generator = new Generator(parser.getTree());
         String res = generator.getGenerated();
-        assertEquals("global _start\n_start:\n\n     ;;final exit\n     mov rax, 60\n     mov rdi, 0\n     syscall\n",
-                res);
+        assertEquals("""
+                section .data
+                     newline db 0x0a
+
+                section .text
+                     extern printf
+
+                global _start
+
+                _start:
+                     ;;final exit
+                     mov rax, 60
+                     mov rdi, 0
+                     syscall
+                """, res);
 
     }
 
@@ -25,16 +38,70 @@ public class TestGenerator {
         Parser parser = new Parser(tokenizer.getTokens());
         Generator generator = new Generator(parser.getTree());
         String res = generator.getGenerated();
-        assertEquals(
-                "global _start\n_start:\n\n     ;;value\n     mov rax, 42\n     push rax\n\n     ;;exit\n     mov rax, 60\n     pop rdi\n     syscall\n     ;;/exit\n\n     ;;final exit\n     mov rax, 60\n     mov rdi, 0\n     syscall\n",
-                res);
+        assertEquals("""
+                section .data
+                     newline db 0x0a
+
+                section .text
+                     extern printf
+
+                global _start
+
+                _start:
+                     ;;value
+                     mov rax, 42
+                     push rax
+
+                     ;;exit
+                     mov rax, 60
+                     pop rdi
+                     syscall
+                     ;;/exit
+
+                     ;;final exit
+                     mov rax, 60
+                     mov rdi, 0
+                     syscall
+                """, res);
         tokenizer = new Tokenizer("exit(0); exit(255);");
         parser = new Parser(tokenizer.getTokens());
         generator = new Generator(parser.getTree());
         res = generator.getGenerated();
-        assertEquals(
-                "global _start\n_start:\n\n     ;;value\n     mov rax, 0\n     push rax\n\n     ;;exit\n     mov rax, 60\n     pop rdi\n     syscall\n     ;;/exit\n\n     ;;value\n     mov rax, 255\n     push rax\n\n     ;;exit\n     mov rax, 60\n     pop rdi\n     syscall\n     ;;/exit\n\n     ;;final exit\n     mov rax, 60\n     mov rdi, 0\n     syscall\n",
-                res);
+        assertEquals("""
+                section .data
+                     newline db 0x0a
+
+                section .text
+                     extern printf
+
+                global _start
+
+                _start:
+                     ;;value
+                     mov rax, 0
+                     push rax
+
+                     ;;exit
+                     mov rax, 60
+                     pop rdi
+                     syscall
+                     ;;/exit
+
+                     ;;value
+                     mov rax, 255
+                     push rax
+
+                     ;;exit
+                     mov rax, 60
+                     pop rdi
+                     syscall
+                     ;;/exit
+
+                     ;;final exit
+                     mov rax, 60
+                     mov rdi, 0
+                     syscall
+                """, res);
     }
 
     @Test
@@ -43,23 +110,78 @@ public class TestGenerator {
         Parser parser = new Parser(tokenizer.getTokens());
         Generator generator = new Generator(parser.getTree());
         String res = generator.getGenerated();
-        assertEquals(
-                "global _start\n_start:\n\n     ;;value\n     mov rax, 42\n     push rax\n\n     ;;final exit\n     mov rax, 60\n     mov rdi, 0\n     syscall\n",
-                res);
+        assertEquals("""
+                        section .data
+                             newline db 0x0a
+                        
+                        section .text
+                             extern printf
+                        
+                        global _start
+                        
+                        _start:
+                             ;;value
+                             mov rax, 42
+                             push rax
+                        
+                             ;;final exit
+                             mov rax, 60
+                             mov rdi, 0
+                             syscall
+                        """, res);
         tokenizer = new Tokenizer("let x = 42; let y = 255;");
         parser = new Parser(tokenizer.getTokens());
         generator = new Generator(parser.getTree());
         res = generator.getGenerated();
-        assertEquals(
-                "global _start\n_start:\n\n     ;;value\n     mov rax, 42\n     push rax\n\n     ;;value\n     mov rax, 255\n     push rax\n\n     ;;final exit\n     mov rax, 60\n     mov rdi, 0\n     syscall\n",
-                res);
+        assertEquals("""
+                section .data
+                     newline db 0x0a
+
+                section .text
+                     extern printf
+
+                global _start
+
+                _start:
+                     ;;value
+                     mov rax, 42
+                     push rax
+
+                     ;;value
+                     mov rax, 255
+                     push rax
+
+                     ;;final exit
+                     mov rax, 60
+                     mov rdi, 0
+                     syscall
+                """, res);
         tokenizer = new Tokenizer("let x = 42; let y = x;");
         parser = new Parser(tokenizer.getTokens());
         generator = new Generator(parser.getTree());
         res = generator.getGenerated();
-        assertEquals(
-                "global _start\n_start:\n\n     ;;value\n     mov rax, 42\n     push rax\n\n     ;;identifier\n     push QWORD [rsp + 0]\n\n     ;;final exit\n     mov rax, 60\n     mov rdi, 0\n     syscall\n",
-                res);
+        assertEquals("""
+                section .data
+                     newline db 0x0a
+
+                section .text
+                     extern printf
+
+                global _start
+
+                _start:
+                     ;;value
+                     mov rax, 42
+                     push rax
+
+                     ;;identifier
+                     push QWORD [rsp + 0]
+
+                     ;;final exit
+                     mov rax, 60
+                     mov rdi, 0
+                     syscall
+                """, res);
         tokenizer = new Tokenizer("let x = 42; let y = 255; let x = 0;");
         parser = new Parser(tokenizer.getTokens());
         Parser finalParser = parser;
