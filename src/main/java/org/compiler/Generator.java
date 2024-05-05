@@ -49,11 +49,11 @@ public class Generator {
     public void generateProgram() {
         StringBuilder sb = new StringBuilder();
         sbData.append("section .data\n");
-        sbData.append("     format db \"%d\", 10, 0\n");
         sbData.append("     newline db 0x0a\n");
         sb.append("section .text\n");
         sb.append("     extern printf\n");
-        sb.append("     global main\n\nmain:\n\n");
+        sb.append("\nglobal _start\n\n");
+        sb.append("_start:\n");
         for (NodeStatement statement : m_program.getStmts()) {
             sb.append(generateStatement(statement));
         }
@@ -171,46 +171,15 @@ public class Generator {
             case BuiltInFunc.print -> {
                 if (nodeBuiltInFunc.getStmt().getExpr().getType() == TokenType.string_lit) {
                     TokenString content = (TokenString) nodeBuiltInFunc.getStmt().getExpr();
-
-                    sbData.append("     msg").append(msgCounter).append(" db ").append("'").append(content.getContent())
-                            .append("'").append(", 0x0a\n");
-                    stmtSB.append("     ;;print\n");
-                    stmtSB.append("     mov rax, 1\n");
-                    stmtSB.append("     mov rdi, 1\n");
-                    stmtSB.append("     mov rsi, msg").append(msgCounter).append("\n");
-                    msgCounter++;
-                    stmtSB.append("     mov rdx, ").append(content.getContent().length()).append("\n");
-                    stmtSB.append("     syscall\n");
-                    stmtSB.append("     ;;/print\n\n");
-                    stmtSB.append("     ;;print newline\n");
-                    stmtSB.append("     mov rax, 1\n");
-                    stmtSB.append("     mov rdi, 1\n");
-                    stmtSB.append("     mov rsi, newline\n");
-                    stmtSB.append("     mov rdx, 1\n");
-                    stmtSB.append("     syscall\n");
-                    stmtSB.append("     ;;/print newline\n\n");
+                    String toPrint = content.getContent();
+                    printString(toPrint, stmtSB);
                 } else if (nodeBuiltInFunc.getStmt().getExpr().getType() == TokenType.int_lit) {
                     NodeIntLit nodeIntLit = (NodeIntLit) nodeBuiltInFunc.getStmt();
-                    sbData.append("     number dq ").append(nodeIntLit.getIntLit().getValue()).append("\n");
-                    stmtSB.append("     ;;print\n");
-                    stmtSB.append("     sub rsp, 8\n");
-                    stmtSB.append("     mov rdi, format\n");
-                    stmtSB.append("     mov rsi, [number]\n");
-                    stmtSB.append("     xor rax, rax\n");
-                    stmtSB.append("     call printf\n");
-                    stmtSB.append("     add rsp, 8\n");
-                    stmtSB.append("     ;;/print\n\n");
-                } else if (nodeBuiltInFunc.getStmt().getExpr().getType() == TokenType.ident) {
-                    NodeIdent nodeIdent = (NodeIdent) nodeBuiltInFunc.getStmt();
-                    stmtSB.append(generateTerm(nodeIdent));
-                    stmtSB.append("     ;;print\n");
-                    stmtSB.append(pop("rsi"));
-                    stmtSB.append("     sub rsp, 8\n");
-                    stmtSB.append("     mov rdi, format\n");
-                    stmtSB.append("     xor rax, rax\n");
-                    stmtSB.append("     call printf\n");
-                    stmtSB.append("     add rsp, 8\n");
-                    stmtSB.append("     ;;/print\n\n");
+                    int value = nodeIntLit.getIntLit().getValue();
+                    String toPrint = Integer.toString(value);
+                    printString(toPrint, stmtSB);
+                } else{
+                    throw new IllegalArgumentException("Unknown type in print statement");
                 }
             }
             }
@@ -220,6 +189,25 @@ public class Generator {
         return stmtSB.toString();
     }
 
+    void printString(String toPrint, StringBuilder stmtSB){
+        sbData.append("     msg").append(msgCounter).append(" db ").append("'").append(toPrint)
+                .append("'").append(", 0x0a\n");
+        stmtSB.append("     ;;print\n");
+        stmtSB.append("     mov rax, 1\n");
+        stmtSB.append("     mov rdi, 1\n");
+        stmtSB.append("     mov rsi, msg").append(msgCounter).append("\n");
+        msgCounter++;
+        stmtSB.append("     mov rdx, ").append(toPrint.length()).append("\n");
+        stmtSB.append("     syscall\n");
+        stmtSB.append("     ;;/print\n\n");
+        stmtSB.append("     ;;print newline\n");
+        stmtSB.append("     mov rax, 1\n");
+        stmtSB.append("     mov rdi, 1\n");
+        stmtSB.append("     mov rsi, newline\n");
+        stmtSB.append("     mov rdx, 1\n");
+        stmtSB.append("     syscall\n");
+        stmtSB.append("     ;;/print newline\n\n");
+    }
     /**
      * Generates the assembly code for a term
      *
