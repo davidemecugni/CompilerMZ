@@ -201,8 +201,8 @@ public class Generator {
                     stmtSB.append("     add rsp, 8\n");
                     stmtSB.append("     ;;/print\n\n");
                 } else if (nodeBuiltInFunc.getStmt().getExpr().getType() == TokenType.ident) {
-                    NodeTerm nodeTerm = (NodeTerm) nodeBuiltInFunc.getStmt();
-                    generateTerm(nodeTerm);
+                    NodeIdent nodeIdent = (NodeIdent) nodeBuiltInFunc.getStmt();
+                    stmtSB.append(generateTerm(nodeIdent));
                     stmtSB.append("     ;;print\n");
                     stmtSB.append(pop("rsi"));
                     stmtSB.append("     sub rsp, 8\n");
