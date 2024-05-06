@@ -102,6 +102,7 @@ public class CompilerMZ {
         Parser parser = new Parser(tokenizer.getTokens());
         NodeProgram tree = parser.getTree();
         System.out.println("2) Parsed!");
+        System.out.printf("Parsed tree: %s\n", tree.toString());
         // Generating
         Generator generator = new Generator(tree);
         String res = generator.getGenerated();
@@ -313,7 +314,8 @@ public class CompilerMZ {
             throw new FileNotFoundException("Invalid file path: " + fileObj);
         }
 
-        ProcessBuilder ldProcessBuilder = new ProcessBuilder("gcc", "-no-pie", fileObj, "-o", fileExe);
+        ProcessBuilder ldProcessBuilder = new ProcessBuilder("ld", "-o", fileExe, fileObj, "-lc", "-dynamic-linker",
+                "/lib64/ld-linux-x86-64.so.2");
         runProcess(ldProcessBuilder, "ld linker");
     }
 
