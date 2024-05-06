@@ -190,7 +190,7 @@ public class Tokenizer {
                     if (prec == TokenType.open_paren || prec == TokenType.eq || prec == TokenType.plus
                             || prec == TokenType.minus || prec == TokenType.star || prec == TokenType.slash) {
                         TokenIntLit number = (TokenIntLit) tokens.get(i + 1);
-                        tokenCopy.add(new TokenIntLit(Integer.toString(-number.getValue()), token.getLine(),
+                        tokenCopy.add(new TokenIntLit(Long.toString(-number.getValue()), token.getLine(),
                                 token.getColumnStart(), number.getColumnEnd()));
                         ++i;
                         continue;

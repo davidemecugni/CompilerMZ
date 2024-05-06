@@ -16,6 +16,7 @@ public class TestGenerator {
         String res = generator.getGenerated();
         assertEquals("""
                 section .data
+                     minus_sign db '-'
                      buffer db 20 dup(0)
                      newline db 0x0a
 
@@ -40,6 +41,7 @@ public class TestGenerator {
         String res = generator.getGenerated();
         assertEquals("""
                 section .data
+                     minus_sign db '-'
                      buffer db 20 dup(0)
                      newline db 0x0a
 
@@ -69,6 +71,7 @@ public class TestGenerator {
         res = generator.getGenerated();
         assertEquals("""
                 section .data
+                     minus_sign db '-'
                      buffer db 20 dup(0)
                      newline db 0x0a
 
@@ -112,6 +115,7 @@ public class TestGenerator {
         String res = generator.getGenerated();
         assertEquals("""
                 section .data
+                     minus_sign db '-'
                      buffer db 20 dup(0)
                      newline db 0x0a
 
@@ -135,6 +139,7 @@ public class TestGenerator {
         res = generator.getGenerated();
         assertEquals("""
                 section .data
+                     minus_sign db '-'
                      buffer db 20 dup(0)
                      newline db 0x0a
 
@@ -162,6 +167,7 @@ public class TestGenerator {
         res = generator.getGenerated();
         assertEquals("""
                 section .data
+                     minus_sign db '-'
                      buffer db 20 dup(0)
                      newline db 0x0a
 

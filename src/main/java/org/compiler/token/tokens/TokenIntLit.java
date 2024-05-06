@@ -9,11 +9,11 @@ import java.util.Objects;
  */
 
 public class TokenIntLit extends Token {
-    private final int value;
+    private final long value;
 
     public TokenIntLit(String value, int line, int column_start, int column_end) {
         super(TokenType.int_lit, line, column_start, column_end);
-        this.value = Integer.parseInt(value);
+        this.value = Long.parseLong(value);
     }
 
     public TokenIntLit(String value) {
@@ -21,7 +21,7 @@ public class TokenIntLit extends Token {
         this.value = Integer.parseInt(value);
     }
 
-    public int getValue() {
+    public long getValue() {
         return value;
     }
 

@@ -50,6 +50,7 @@ public class Generator {
     public void generateProgram() {
         StringBuilder sb = new StringBuilder();
         sbData.append("section .data\n");
+        sbData.append("     minus_sign db '-'\n");
         sbData.append("     buffer db 20 dup(0)\n");
         sbData.append("     newline db 0x0a\n");
         sb.append("section .text\n");
@@ -178,7 +179,7 @@ public class Generator {
                     toPrint(content.getContent(), stmtSB);
                 } else if (nodeBuiltInFunc.getStmt().getExpr().getType() == TokenType.int_lit) {
                     NodeIntLit nodeIntLit = (NodeIntLit) nodeBuiltInFunc.getStmt();
-                    String number = Integer.toString(nodeIntLit.getIntLit().getValue());
+                    String number = Long.toString(nodeIntLit.getIntLit().getValue());
                     toPrint(number, stmtSB);
                 } else if (nodeBuiltInFunc.getStmt().getExpr().getType() == TokenType.ident) {
                     NodeIdent nodeIdent = (NodeIdent) nodeBuiltInFunc.getStmt();
@@ -243,6 +244,19 @@ public class Generator {
      */
     private void printAssemblyFunc(StringBuilder sb) {
         sb.append("print_number:\n");
+        sb.append("     ;; check if number is negative\n");
+        sb.append(mov("rbx", "rax"));
+        sb.append("     cmp rax, 0\n");
+        sb.append("     jge .positive\n");
+        sb.append("     ;; if negative, print minus sign and make number positive\n");
+        sb.append(mov("rax", "1"));
+        sb.append(mov("rdi", "1"));
+        sb.append(mov("rsi", "minus_sign"));
+        sb.append(mov("rdx", "1"));
+        sb.append("     syscall\n");
+        sb.append(mov("rax", "rbx"));
+        sb.append("     neg rax\n");
+        sb.append(".positive:\n");
         sb.append(mov("rdi", "buffer + 19"));
         sb.append(mov("byte [rdi]", "0xA"));
         sb.append("     sub rdi, 1\n");
@@ -280,7 +294,7 @@ public class Generator {
         // Generate the term based on the type
         switch (expr) {
         case NodeIntLit nodeIntLit -> {
-            String value = Integer.toString(nodeIntLit.getIntLit().getValue());
+            String value = Long.toString(nodeIntLit.getIntLit().getValue());
             termSB.append("     ;;value\n");
             termSB.append(mov("rax", value));
             termSB.append(push("rax")).append("\n");
