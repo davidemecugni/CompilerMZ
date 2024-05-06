@@ -20,9 +20,9 @@ public class TestGenerator {
                      newline db 0x0a
 
                 section .text
-                     global _start
+                     global main
 
-                _start:
+                main:
                      ;;final exit
                      mov rax, 60
                      mov rdi, 0
@@ -44,9 +44,9 @@ public class TestGenerator {
                      newline db 0x0a
 
                 section .text
-                     global _start
+                     global main
 
-                _start:
+                main:
                      ;;value
                      mov rax, 42
                      push rax
@@ -73,9 +73,9 @@ public class TestGenerator {
                      newline db 0x0a
 
                 section .text
-                     global _start
+                     global main
 
-                _start:
+                main:
                      ;;value
                      mov rax, 0
                      push rax
@@ -116,9 +116,9 @@ public class TestGenerator {
                      newline db 0x0a
 
                 section .text
-                     global _start
+                     global main
 
-                _start:
+                main:
                      ;;value
                      mov rax, 42
                      push rax
@@ -139,9 +139,9 @@ public class TestGenerator {
                      newline db 0x0a
 
                 section .text
-                     global _start
+                     global main
 
-                _start:
+                main:
                      ;;value
                      mov rax, 42
                      push rax
@@ -166,9 +166,9 @@ public class TestGenerator {
                      newline db 0x0a
 
                 section .text
-                     global _start
+                     global main
 
-                _start:
+                main:
                      ;;value
                      mov rax, 42
                      push rax
