@@ -53,7 +53,7 @@ public class Generator {
         sbData.append("     buffer db 20 dup(0)\n");
         sbData.append("     newline db 0x0a\n");
         sb.append("section .text\n");
-        sb.append("     global main\n\nmain:\n");
+        sb.append("     global _start\n\n_start:\n");
         for (NodeStatement statement : m_program.getStmts()) {
             sb.append(generateStatement(statement));
         }
