@@ -1,5 +1,10 @@
 package org.compiler.errors;
 
+/**
+ * TokenError is a custom Java exception used for errors in a compiler. It contains line and column information of the
+ * problematic token.
+ */
+
 public class TokenError extends Exception {
     private final int line;
     private final int columnStart;

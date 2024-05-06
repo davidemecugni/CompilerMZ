@@ -5,6 +5,11 @@ import org.compiler.nodes.statements.NodeScope;
 
 import java.util.ArrayList;
 
+/**
+ * NodeIf represents an if statement in the AST. It contains the condition to be evaluated and the scope to be executed
+ * if the condition is true.
+ */
+
 public class NodeIf extends Conditional {
     final ArrayList<NodeElif> elifs;
     NodeScope nodeScopeElse;

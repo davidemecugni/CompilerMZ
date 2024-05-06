@@ -2,6 +2,10 @@ package org.compiler.token.tokens;
 
 import org.compiler.token.TokenType;
 
+/**
+ * TokenIdent is a class that represents an identifier token.
+ */
+
 public class TokenIdent extends Token {
     private final String name;
 

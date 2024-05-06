@@ -222,6 +222,17 @@ public class Parser {
         return new Conditional(expr, scope);
     }
 
+    /**
+     * Parses a built-in function (ex. print)
+     *
+     * @param func
+     *            the built-in function to parse
+     *
+     * @return the built-in function parsed
+     *
+     * @throws TokenError
+     *             if the built-in function is invalid
+     */
     private NodeBuiltInFunc parseBuiltInFunc(BuiltInFunc func) throws TokenError {
         CheckForType(TokenType.open_paren);
         it.next();

@@ -4,6 +4,11 @@ import org.compiler.token.tokens.Token;
 
 import java.util.List;
 
+/**
+ * PeekIteratorToken is a class that implements PeekIterator for Token objects. It is used to iterate over a list of
+ * Token objects and peek at the next Token
+ */
+
 public class PeekIteratorToken implements PeekIterator<Token> {
     private final List<Token> list;
     private int cursor;
@@ -42,10 +47,23 @@ public class PeekIteratorToken implements PeekIterator<Token> {
         return list.get(cursor + offset);
     }
 
+    /**
+     * Peeks at the previous Token
+     *
+     * @return the previous Token
+     */
     public Token peekPrevious() {
         return peekPrevious(1);
     }
 
+    /**
+     * Peeks at the previous Token with an offset
+     *
+     * @param offset
+     *            the offset to peek at
+     *
+     * @return the previous Token with the offset
+     */
     public Token peekPrevious(int offset) {
         if (cursor - offset < 0) {
             return null;

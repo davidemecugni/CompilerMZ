@@ -47,6 +47,15 @@ public class Tokenizer {
         substituteMultiTokenTokens(forParsing);
     }
 
+    /**
+     * Tokenizes the input string
+     *
+     * @param forParsing
+     *            if true, the tokenizer will substitute multi-token tokens
+     *
+     * @throws TokenError
+     *             if an error occurs during tokenization
+     */
     private void tokenize(boolean forParsing) throws TokenError {
         StringBuilder buffer = new StringBuilder();
         while (it.hasNext()) {
@@ -113,10 +122,19 @@ public class Tokenizer {
         }
     }
 
+    /**
+     * @return the list of tokens
+     */
     public ArrayList<Token> getTokens() {
         return tokens;
     }
 
+    /**
+     * Adds a token to the list of tokens
+     *
+     * @param token
+     *            the token to add
+     */
     private void AddToken(Token token) {
         tokens.add(token);
     }
@@ -126,6 +144,23 @@ public class Tokenizer {
         return "Tokenizer{" + "tokens=" + tokens + '}';
     }
 
+    /**
+     * Creates a token from a word
+     *
+     * @param word
+     *            the word to create a token from
+     * @param line
+     *            the line number
+     * @param column_start
+     *            the start column number
+     * @param column_end
+     *            the end column number
+     *
+     * @return the token
+     *
+     * @throws TokenError
+     *             if the token type is unrecognised
+     */
     private Token of(String word, int line, int column_start, int column_end) throws TokenError {
         if (wordToTokenMap.containsKey(word)) {
             return new Token(wordToTokenMap.get(word), line, column_start, column_end);
@@ -138,6 +173,12 @@ public class Tokenizer {
         }
     }
 
+    /**
+     * Substitutes multi-token tokens
+     *
+     * @param forParsing
+     *            if true, the tokenizer will substitute multi-token tokens
+     */
     private void substituteMultiTokenTokens(boolean forParsing) {
         ArrayList<Token> tokenCopy = new ArrayList<>();
         for (int i = 0; i < tokens.size(); i++) {

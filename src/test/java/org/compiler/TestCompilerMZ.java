@@ -40,13 +40,14 @@ public class TestCompilerMZ {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
 
-        CompilerMZ.callFullStackWithReturnCode(baseDir + inputFile, baseDir + "out.asm",
-                baseDir + "out.o", baseDir + "out");
+        CompilerMZ.callFullStackWithReturnCode(baseDir + inputFile, baseDir + "out.asm", baseDir + "out.o",
+                baseDir + "out");
 
         Assertions.assertEquals(expectedOutput, outContent.toString());
     }
 
     private static Stream<Object[]> providePrintTestCases() {
-        return Stream.of(new Object[] { "prints100.mz", "100\n" }, new Object[] { "printsCiao.mz", "Ciao\n"}, new Object[] { "prints1.mz", "1\n" });
+        return Stream.of(new Object[] { "prints100.mz", "100\n" }, new Object[] { "printsCiao.mz", "Ciao\n" },
+                new Object[] { "prints1.mz", "1\n" });
     }
 }

@@ -1,9 +1,0 @@
-let x = 1234 * 9 / 5;
-let y = 659 % 7 * 2;
-let z = 899712 - x + y;
-print(z);
-print(23456);
-print("dai ooo");
-print(x);
-print(y);
-exit(176);

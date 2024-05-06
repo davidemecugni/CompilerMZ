@@ -4,6 +4,10 @@ import org.compiler.nodes.NodeExpression;
 import org.compiler.nodes.NodeStatement;
 import org.compiler.nodes.statements.NodeScope;
 
+/**
+ * Represents a conditional statement in the AST. It has a condition and a scope.
+ */
+
 public class Conditional extends NodeStatement {
     final private NodeScope scope;
 

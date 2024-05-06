@@ -4,6 +4,10 @@ import org.compiler.token.TokenType;
 
 import java.util.Objects;
 
+/**
+ * TokenIntLit represents an integer literal token.
+ */
+
 public class TokenIntLit extends Token {
     private final int value;
 

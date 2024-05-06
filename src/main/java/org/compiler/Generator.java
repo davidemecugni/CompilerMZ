@@ -198,8 +198,11 @@ public class Generator {
 
     /**
      * It generates the assembly code for a string to print
-     * @param value the actual value to print
-     * @param sb the StringBuilder Object to append the assembly code
+     *
+     * @param value
+     *            the actual value to print
+     * @param sb
+     *            the StringBuilder Object to append the assembly code
      */
     private void toPrint(String value, StringBuilder sb) {
         sbData.append("     msg").append(msgCounter).append(" db ").append("'").append(value).append("'")
@@ -218,7 +221,9 @@ public class Generator {
 
     /**
      * It generates the assembly code to print a newline
-     * @param sb the StringBuilder Object to append the assembly code
+     *
+     * @param sb
+     *            the StringBuilder Object to append the assembly code
      */
     private void printNewLine(StringBuilder sb) {
         sb.append("     ;;print newline\n");
@@ -232,7 +237,9 @@ public class Generator {
 
     /**
      * It generates the assembly code to print an ident
-     * @param sb the StringBuilder Object to append the assembly code
+     *
+     * @param sb
+     *            the StringBuilder Object to append the assembly code
      */
     private void printAssemblyFunc(StringBuilder sb) {
         sb.append("print_number:\n");

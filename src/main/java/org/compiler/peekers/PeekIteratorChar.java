@@ -27,6 +27,10 @@ public class PeekIteratorChar implements PeekIterator<CharLineColumn> {
         this.charsUpToLastNewline = 0;
     }
 
+    /**
+     *
+     * @return if the iterator has a next element
+     */
     public boolean hasNext() {
         return cursor + spaces < list.size();
     }
@@ -66,6 +70,14 @@ public class PeekIteratorChar implements PeekIterator<CharLineColumn> {
         return new TokenComment(comment.toString().replace(comment_terminal, ""), multiline);
     }
 
+    /**
+     * Ignores the content in the input
+     *
+     * @param string_terminal
+     *            the string
+     *
+     * @return the content
+     */
     public TokenString ignoreContent(String string_terminal) {
         StringBuilder content = new StringBuilder();
         int column_start = getCurrentColumn() + 1;
@@ -104,6 +116,11 @@ public class PeekIteratorChar implements PeekIterator<CharLineColumn> {
         return generateCharLineColumn(list.get(cursor++));
     }
 
+    /**
+     * Returns the next element and moves the iterator
+     *
+     * @return the next element
+     */
     public CharLineColumn next() {
         if (!hasNext()) {
             return null;
@@ -111,6 +128,11 @@ public class PeekIteratorChar implements PeekIterator<CharLineColumn> {
         return getNextNonWhitespaceChar();
     }
 
+    /**
+     * Returns the next element without moving the iterator
+     *
+     * @return the next element
+     */
     public CharLineColumn peek() {
         if (!hasNext()) {
             return null;
@@ -118,6 +140,14 @@ public class PeekIteratorChar implements PeekIterator<CharLineColumn> {
         return new CharLineColumn(list.get(cursor), getLine(), getCurrentColumn() + 1);
     }
 
+    /**
+     * Returns the next element with an offset without moving the iterator
+     *
+     * @param offset
+     *            the offset
+     *
+     * @return the next element
+     */
     public CharLineColumn peek(int offset) {
         if (cursor + offset >= list.size()) {
             System.out.println("Cursor: " + cursor + " Offset: " + offset + " List size: " + list.size());
@@ -139,11 +169,17 @@ public class PeekIteratorChar implements PeekIterator<CharLineColumn> {
         return (int) str.chars().filter(Character::isWhitespace).count();
     }
 
+    /**
+     * Return the current cursor
+     */
     private void updateLineAndColumnCount(int cursor) {
         line++;
         charsUpToLastNewline = cursor;
     }
 
+    /**
+     * Return the current column
+     */
     private int getCurrentColumn() {
         if (line > 1) {
             return cursor - charsUpToLastNewline - 1;
@@ -151,14 +187,23 @@ public class PeekIteratorChar implements PeekIterator<CharLineColumn> {
         return cursor - charsUpToLastNewline;
     }
 
+    /**
+     * Return the current line
+     */
     public int getLine() {
         return line;
     }
 
+    /**
+     * Generate a CharLineColumn object
+     */
     private CharLineColumn generateCharLineColumn(char c) {
         return new CharLineColumn(c, getLine(), getCurrentColumn());
     }
 
+    /**
+     * Check for whitespace
+     */
     private void checkForWhitespace() {
         if (Character.isWhitespace(list.get(cursor))) {
             spaces--;
