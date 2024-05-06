@@ -2,6 +2,10 @@ package org.compiler.token.tokens;
 
 import java.util.Objects;
 
+/**
+ * CharLineColumn is a class that represents a character with its line and column in the source code.
+ */
+
 public class CharLineColumn {
     private final char c;
     private final int line;

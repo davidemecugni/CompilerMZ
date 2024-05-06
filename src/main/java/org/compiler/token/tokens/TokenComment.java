@@ -2,6 +2,11 @@ package org.compiler.token.tokens;
 
 import org.compiler.token.TokenType;
 
+/**
+ * Represents a comment token in the source code A comment token is a pair consisting of a token name and an optional
+ * token value
+ */
+
 public class TokenComment extends Token {
     private final String comment;
     private final boolean multiline;

@@ -47,6 +47,15 @@ public class Tokenizer {
         substituteMultiTokenTokens(forParsing);
     }
 
+    /**
+     * Tokenizes the input string
+     *
+     * @param forParsing
+     *            if true, the tokenizer will substitute multi-token tokens
+     *
+     * @throws TokenError
+     *             if an error occurs during tokenization
+     */
     private void tokenize(boolean forParsing) throws TokenError {
         StringBuilder buffer = new StringBuilder();
         while (it.hasNext()) {
@@ -80,6 +89,7 @@ public class Tokenizer {
                     && !wordToTokenMap.containsKey(String.valueOf(it.peek().getChar()))
                     && !(wordToTokenMap.containsKey(buffer.toString())
                             && (wordToTokenMap.get(buffer.toString()) == TokenType.comment
+                                    || wordToTokenMap.get(buffer.toString()) == TokenType.quotes
                                     || multiTokenTokens.contains(wordToTokenMap.get(buffer.toString()))))) {
                 column_end = it.peek().getColumn();
                 buffer.append(it.next().getChar());
@@ -112,10 +122,19 @@ public class Tokenizer {
         }
     }
 
+    /**
+     * @return the list of tokens
+     */
     public ArrayList<Token> getTokens() {
         return tokens;
     }
 
+    /**
+     * Adds a token to the list of tokens
+     *
+     * @param token
+     *            the token to add
+     */
     private void AddToken(Token token) {
         tokens.add(token);
     }
@@ -125,6 +144,23 @@ public class Tokenizer {
         return "Tokenizer{" + "tokens=" + tokens + '}';
     }
 
+    /**
+     * Creates a token from a word
+     *
+     * @param word
+     *            the word to create a token from
+     * @param line
+     *            the line number
+     * @param column_start
+     *            the start column number
+     * @param column_end
+     *            the end column number
+     *
+     * @return the token
+     *
+     * @throws TokenError
+     *             if the token type is unrecognised
+     */
     private Token of(String word, int line, int column_start, int column_end) throws TokenError {
         if (wordToTokenMap.containsKey(word)) {
             return new Token(wordToTokenMap.get(word), line, column_start, column_end);
@@ -137,7 +173,13 @@ public class Tokenizer {
         }
     }
 
-    private void substituteMultiTokenTokens(boolean forParsing) {
+    /**
+     * Substitutes multi-token tokens
+     *
+     * @param forParsing
+     *            if true, the tokenizer will substitute multi-token tokens
+     */
+    private void substituteMultiTokenTokens(boolean forParsing) throws TokenError {
         ArrayList<Token> tokenCopy = new ArrayList<>();
         for (int i = 0; i < tokens.size(); i++) {
             Token token = tokens.get(i);
@@ -148,7 +190,7 @@ public class Tokenizer {
                     if (prec == TokenType.open_paren || prec == TokenType.eq || prec == TokenType.plus
                             || prec == TokenType.minus || prec == TokenType.star || prec == TokenType.slash) {
                         TokenIntLit number = (TokenIntLit) tokens.get(i + 1);
-                        tokenCopy.add(new TokenIntLit(Integer.toString(-number.getValue()), token.getLine(),
+                        tokenCopy.add(new TokenIntLit(Long.toString(-number.getValue()), token.getLine(),
                                 token.getColumnStart(), number.getColumnEnd()));
                         ++i;
                         continue;

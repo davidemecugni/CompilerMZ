@@ -5,6 +5,10 @@ import org.compiler.nodes.NodeStatement;
 
 import java.util.ArrayList;
 
+/**
+ * NodeScope represents a scope in the AST. It contains a list of statements that are executed in the scope.
+ */
+
 public class NodeScope extends NodeStatement {
     final ArrayList<NodeStatement> stmts;
 

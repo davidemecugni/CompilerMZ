@@ -1,7 +1,7 @@
 # Grammar for CompilerMZ according to the EBNF ISO/IEC 14977:1996
 
 - prog = stmt*
-- stmt = scope | exit_stmt | let_stmt | if_stmt | comment_stmt | assignment | while_stmt
+- stmt = scope | exit_stmt | let_stmt | if_stmt | comment_stmt | assignment | while_stmt | func_built_in
 - scope = open_curly, ws*, stmt*, ws*, close_curly
 - if_stmt = if, ws*, open_par, ws*, expr, ws*, close_par, ws*, scope
 - elif_stmt = elif, ws*, open_par, ws*, expr, ws*, close_par, ws*, scope, ws*, elif_stmt, ws*, [else_stmt]
@@ -9,9 +9,12 @@
 - while_stmt = while, ws*, open_par, ws*, expr, ws*, close_par, ws*, scope
 - exit_stmt = exit, ws*, open_par, ws*, expr, ws*, close_par, semi
 - let_stmt = let, ws*, ident, ws*, eq, ws*, expr, semi
+- func_built_in = print_stmt
+- print_stmt = print, ws*, open_par, ws*, (ident | string_lit | int_lit), ws*, close_par, semi
 - expr = int_lit | ident | expr, ws*, operator, ws*, expr | open_par, ws*, expr, ws*, close_par
 - operator = add | sub | mul | div | mod | logic_gt | logic_ge | logic_lt | logic_ge | logic_and | logic_or
 - int_lit = digit+ | true | false
+- string_lit = quote, ((? UNICODE ?) -  quote)*, quote
 - ident = (valid_char - digit), valid_char*
 - assignment = ident, ws*, eq, vws*, expr, ws*, semi
 - comment_stmt = comment_stmt_single | comment_stmt_multi
@@ -51,6 +54,8 @@
 - logic_or = "|"
 - true = "true"
 - false = "false"
+- print = "print"
+- quote = "\""
 
 ### Notes
 - \* Zero or more 

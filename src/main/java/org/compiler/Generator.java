@@ -37,6 +37,7 @@ public class Generator {
     private int label_counter = 0;
     private final StringBuilder sbData = new StringBuilder();
     private int msgCounter = 1;
+    private boolean callPrintAssemblyFunc = false;
 
     public Generator(NodeProgram program) {
         this.m_program = program;
@@ -49,19 +50,23 @@ public class Generator {
     public void generateProgram() {
         StringBuilder sb = new StringBuilder();
         sbData.append("section .data\n");
+        sbData.append("     minus_sign db '-'\n");
+        sbData.append("     buffer db 20 dup(0)\n");
         sbData.append("     newline db 0x0a\n");
         sb.append("section .text\n");
-        sb.append("     extern printf\n");
-        sb.append("\nglobal _start\n\n");
-        sb.append("_start:\n");
+        sb.append("     global main\n\nmain:\n");
         for (NodeStatement statement : m_program.getStmts()) {
             sb.append(generateStatement(statement));
         }
         // Exits 0 by default
         sb.append("     ;;final exit\n");
-        sb.append("     mov rax, 60\n");
-        sb.append("     mov rdi, 0\n");
-        sb.append("     syscall\n");
+        sb.append(mov("rax", "60"));
+        sb.append(mov("rdi", "0"));
+        sb.append("     syscall\n\n");
+
+        if (callPrintAssemblyFunc) {
+            printAssemblyFunc(sb);
+        }
 
         sbData.append("\n");
         sbData.append(sb);
@@ -83,7 +88,7 @@ public class Generator {
         case NodeExit ignored -> {
             stmtSB.append(generateExpression(stmt.getStmt()));
             stmtSB.append("     ;;exit\n");
-            stmtSB.append("     mov rax, 60\n");
+            stmtSB.append(mov("rax", "60"));
             stmtSB.append(pop("rdi"));
             stmtSB.append("     syscall\n");
             stmtSB.append("     ;;/exit\n\n");
@@ -102,7 +107,7 @@ public class Generator {
             long offset = (stack_size - variables.get(nodeAssign.getTokenIdent().getName()) - 1) * 8L;
             stmtSB.append(generateExpression(nodeAssign.getStmt()));
             stmtSB.append(pop("rax"));
-            stmtSB.append("     mov [rsp + ").append(offset).append("], rax\n");
+            stmtSB.append(mov("[rsp + " + offset + "]", "rax"));
         }
         case NodeScope nodeScope -> {
             beginScope();
@@ -171,15 +176,18 @@ public class Generator {
             case BuiltInFunc.print -> {
                 if (nodeBuiltInFunc.getStmt().getExpr().getType() == TokenType.string_lit) {
                     TokenString content = (TokenString) nodeBuiltInFunc.getStmt().getExpr();
-                    String toPrint = content.getContent();
-                    printString(toPrint, stmtSB);
+                    toPrint(content.getContent(), stmtSB);
                 } else if (nodeBuiltInFunc.getStmt().getExpr().getType() == TokenType.int_lit) {
                     NodeIntLit nodeIntLit = (NodeIntLit) nodeBuiltInFunc.getStmt();
-                    int value = nodeIntLit.getIntLit().getValue();
-                    String toPrint = Integer.toString(value);
-                    printString(toPrint, stmtSB);
-                } else{
-                    throw new IllegalArgumentException("Unknown type in print statement");
+                    String number = Long.toString(nodeIntLit.getIntLit().getValue());
+                    toPrint(number, stmtSB);
+                } else if (nodeBuiltInFunc.getStmt().getExpr().getType() == TokenType.ident) {
+                    NodeIdent nodeIdent = (NodeIdent) nodeBuiltInFunc.getStmt();
+                    long offset = findOffset(nodeIdent, stmtSB);
+                    stmtSB.append(mov("rax", "[rsp + " + offset + "]"));
+                    callPrintAssemblyFunc = true;
+                    stmtSB.append("     call print_number\n\n");
+                    printNewLine(stmtSB);
                 }
             }
             }
@@ -189,25 +197,90 @@ public class Generator {
         return stmtSB.toString();
     }
 
-    void printString(String toPrint, StringBuilder stmtSB){
-        sbData.append("     msg").append(msgCounter).append(" db ").append("'").append(toPrint)
-                .append("'").append(", 0x0a\n");
-        stmtSB.append("     ;;print\n");
-        stmtSB.append("     mov rax, 1\n");
-        stmtSB.append("     mov rdi, 1\n");
-        stmtSB.append("     mov rsi, msg").append(msgCounter).append("\n");
+    /**
+     * It generates the assembly code for a string to print
+     *
+     * @param value
+     *            the actual value to print
+     * @param sb
+     *            the StringBuilder Object to append the assembly code
+     */
+    private void toPrint(String value, StringBuilder sb) {
+        sbData.append("     msg").append(msgCounter).append(" db ").append("'").append(value).append("'")
+                .append(", 0x0a\n");
+        sb.append("     ;;print\n");
+        sb.append(mov("rax", "1"));
+        sb.append(mov("rdi", "1"));
+        sb.append(mov("rsi", "msg" + msgCounter));
         msgCounter++;
-        stmtSB.append("     mov rdx, ").append(toPrint.length()).append("\n");
-        stmtSB.append("     syscall\n");
-        stmtSB.append("     ;;/print\n\n");
-        stmtSB.append("     ;;print newline\n");
-        stmtSB.append("     mov rax, 1\n");
-        stmtSB.append("     mov rdi, 1\n");
-        stmtSB.append("     mov rsi, newline\n");
-        stmtSB.append("     mov rdx, 1\n");
-        stmtSB.append("     syscall\n");
-        stmtSB.append("     ;;/print newline\n\n");
+        String length = Integer.toString(value.length());
+        sb.append(mov("rdx", length));
+        sb.append("     syscall\n");
+        sb.append("     ;;/print\n\n");
+        printNewLine(sb);
     }
+
+    /**
+     * It generates the assembly code to print a newline
+     *
+     * @param sb
+     *            the StringBuilder Object to append the assembly code
+     */
+    private void printNewLine(StringBuilder sb) {
+        sb.append("     ;;print newline\n");
+        sb.append(mov("rax", "1"));
+        sb.append(mov("rdi", "1"));
+        sb.append(mov("rsi", "newline"));
+        sb.append(mov("rdx", "1"));
+        sb.append("     syscall\n");
+        sb.append("     ;;/print newline\n\n");
+    }
+
+    /**
+     * It generates the assembly code to print an ident
+     *
+     * @param sb
+     *            the StringBuilder Object to append the assembly code
+     */
+    private void printAssemblyFunc(StringBuilder sb) {
+        sb.append("print_number:\n");
+        sb.append("     ;; check if number is negative\n");
+        sb.append(mov("rbx", "rax"));
+        sb.append("     cmp rax, 0\n");
+        sb.append("     jge .positive\n");
+        sb.append("     ;; if negative, print minus sign and make number positive\n");
+        sb.append(mov("rax", "1"));
+        sb.append(mov("rdi", "1"));
+        sb.append(mov("rsi", "minus_sign"));
+        sb.append(mov("rdx", "1"));
+        sb.append("     syscall\n");
+        sb.append(mov("rax", "rbx"));
+        sb.append("     neg rax\n");
+        sb.append(".positive:\n");
+        sb.append(mov("rdi", "buffer + 19"));
+        sb.append(mov("byte [rdi]", "0xA"));
+        sb.append("     sub rdi, 1\n");
+        sb.append(".next_digit:\n");
+        sb.append("     xor rdx, rdx\n");
+        sb.append(mov("rcx", "10"));
+        sb.append("     div rcx\n");
+        sb.append("     add dl, '0'\n");
+        sb.append(mov("[rdi]", "dl"));
+        sb.append("     sub rdi, 1\n");
+        sb.append("     test rax, rax\n");
+        sb.append("     jnz .next_digit\n\n");
+        sb.append("     ;;print\n");
+        sb.append("     add rdi, 1\n");
+        sb.append(mov("rsi", "rdi"));
+        sb.append(mov("rdi", "1"));
+        sb.append(mov("rdx", "buffer + 19"));
+        sb.append("     sub rdx, rsi\n");
+        sb.append(mov("rax", "1"));
+        sb.append("     syscall\n");
+        sb.append("     ;;/print\n\n");
+        sb.append("     ret\n\n");
+    }
+
     /**
      * Generates the assembly code for a term
      *
@@ -221,25 +294,31 @@ public class Generator {
         // Generate the term based on the type
         switch (expr) {
         case NodeIntLit nodeIntLit -> {
+            String value = Long.toString(nodeIntLit.getIntLit().getValue());
             termSB.append("     ;;value\n");
-            termSB.append("     mov rax, ").append(nodeIntLit.getIntLit().getValue()).append("\n");
+            termSB.append(mov("rax", value));
             termSB.append(push("rax")).append("\n");
         }
         case NodeIdent nodeIdent -> {
-            if (!variables.containsKey(nodeIdent.getIdent().getName())) {
-                throw new IllegalArgumentException("Identifier " + nodeIdent.getIdent().getName() + " not found");
-            }
-            termSB.append("     ;;identifier\n");
-            long offset = (stack_size - variables.get(nodeIdent.getIdent().getName()) - 1) * 8L;
-            if (offset < 0) {
-                throw new IllegalArgumentException("Variable might not have been initialized");
-            }
+            long offset = findOffset(nodeIdent, termSB);
             termSB.append(push("QWORD [rsp + " + offset + "]")).append("\n");
         }
         case NodeTermParen nodeTermParen -> termSB.append(generateExpression(nodeTermParen.getExprParen()));
         case null, default -> throw new IllegalArgumentException("Unknown term type in generator");
         }
         return termSB.toString();
+    }
+
+    private long findOffset(NodeIdent nodeIdent, StringBuilder sb) {
+        if (!variables.containsKey(nodeIdent.getIdent().getName())) {
+            throw new IllegalArgumentException("Identifier " + nodeIdent.getIdent().getName() + " not found");
+        }
+        sb.append("     ;;identifier\n");
+        long offset = (stack_size - variables.get(nodeIdent.getIdent().getName()) - 1) * 8L;
+        if (offset < 0) {
+            throw new IllegalArgumentException("Variable might not have been initialized");
+        }
+        return offset;
     }
 
     /**
@@ -452,6 +531,10 @@ public class Generator {
     public String pop(String reg) {
         stack_size--;
         return "     pop " + reg + "\n";
+    }
+
+    private String mov(String reg, String par) {
+        return "     mov " + reg + ", " + par + "\n";
     }
 
     /**

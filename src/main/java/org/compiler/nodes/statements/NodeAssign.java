@@ -4,6 +4,11 @@ import org.compiler.nodes.NodeExpression;
 import org.compiler.nodes.NodeStatement;
 import org.compiler.token.tokens.TokenIdent;
 
+/**
+ * NodeAssign is a NodeStatement subclass representing an assign statement in the AST. It contains a single
+ * NodeExpression and a TokenIdent
+ */
+
 public class NodeAssign extends NodeStatement {
     final TokenIdent tokenIdent;
 

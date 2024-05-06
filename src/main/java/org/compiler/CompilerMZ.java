@@ -8,6 +8,7 @@ import org.compiler.token.Tokenizer;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Map;
 
 /**
  * The main class of the compiler
@@ -313,8 +314,7 @@ public class CompilerMZ {
             throw new FileNotFoundException("Invalid file path: " + fileObj);
         }
 
-        ProcessBuilder ldProcessBuilder = new ProcessBuilder("ld", "-o", fileExe, fileObj, "-lc", "-dynamic-linker",
-                "/lib64/ld-linux-x86-64.so.2");
+        ProcessBuilder ldProcessBuilder = new ProcessBuilder("gcc", "-no-pie", fileObj, "-o", fileExe);
         runProcess(ldProcessBuilder, "ld linker");
     }
 

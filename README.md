@@ -6,6 +6,9 @@ CompilerMZ is a custom compiler and cross-compiler for multiple languages! \
 It generates an x86_64 assembly file. The program is then executed by using nasm \
 and ld.
 
+Fast AF! \
+![C vs MZ](READMESOURCES/CvsMZ.png)
+
 ## Table of Contents
 - [Features](#features-sparkles)
 - [Inner workings](#inner-workings-gear)
@@ -59,6 +62,10 @@ and ld.
 - While loop :repeat:
   - Condition expression
   - Scope
+- Print :printer:
+  - Print a variable
+  - Print a string
+  - Print a number
 
 ## Inner workings :gear:
 To compile the .mz file, the steps made by the compiler are:
