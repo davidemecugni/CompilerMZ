@@ -53,7 +53,7 @@ public class Generator {
         sbData.append("     buffer db 20 dup(0)\n");
         sbData.append("     newline db 0x0a\n");
         sb.append("section .text\n");
-        sb.append("     global _start\n\n_start:\n");
+        sb.append("     global main\n\nmain:\n");
         for (NodeStatement statement : m_program.getStmts()) {
             sb.append(generateStatement(statement));
         }
@@ -106,7 +106,7 @@ public class Generator {
             long offset = (stack_size - variables.get(nodeAssign.getTokenIdent().getName()) - 1) * 8L;
             stmtSB.append(generateExpression(nodeAssign.getStmt()));
             stmtSB.append(pop("rax"));
-            stmtSB.append("     mov [rsp + ").append(offset).append("], rax\n");
+            stmtSB.append(mov("[rsp + " + offset + "]", "rax"));
         }
         case NodeScope nodeScope -> {
             beginScope();
@@ -196,30 +196,44 @@ public class Generator {
         return stmtSB.toString();
     }
 
+    /**
+     * It generates the assembly code for a string to print
+     * @param value the actual value to print
+     * @param sb the StringBuilder Object to append the assembly code
+     */
     private void toPrint(String value, StringBuilder sb) {
         sbData.append("     msg").append(msgCounter).append(" db ").append("'").append(value).append("'")
                 .append(", 0x0a\n");
         sb.append("     ;;print\n");
-        sb.append("     mov rax, 1\n");
-        sb.append("     mov rdi, 1\n");
-        sb.append("     mov rsi, msg").append(msgCounter).append("\n");
+        sb.append(mov("rax", "1"));
+        sb.append(mov("rdi", "1"));
+        sb.append(mov("rsi", "msg" + msgCounter));
         msgCounter++;
-        sb.append("     mov rdx, ").append(value.length()).append("\n");
+        String length = Integer.toString(value.length());
+        sb.append(mov("rdx", length));
         sb.append("     syscall\n");
         sb.append("     ;;/print\n\n");
         printNewLine(sb);
     }
 
+    /**
+     * It generates the assembly code to print a newline
+     * @param sb the StringBuilder Object to append the assembly code
+     */
     private void printNewLine(StringBuilder sb) {
         sb.append("     ;;print newline\n");
-        sb.append("     mov rax, 1\n");
-        sb.append("     mov rdi, 1\n");
-        sb.append("     mov rsi, newline\n");
-        sb.append("     mov rdx, 1\n");
+        sb.append(mov("rax", "1"));
+        sb.append(mov("rdi", "1"));
+        sb.append(mov("rsi", "newline"));
+        sb.append(mov("rdx", "1"));
         sb.append("     syscall\n");
         sb.append("     ;;/print newline\n\n");
     }
 
+    /**
+     * It generates the assembly code to print an ident
+     * @param sb the StringBuilder Object to append the assembly code
+     */
     private void printAssemblyFunc(StringBuilder sb) {
         sb.append("print_number:\n");
         sb.append(mov("rdi", "buffer + 19"));
@@ -259,8 +273,9 @@ public class Generator {
         // Generate the term based on the type
         switch (expr) {
         case NodeIntLit nodeIntLit -> {
+            String value = Integer.toString(nodeIntLit.getIntLit().getValue());
             termSB.append("     ;;value\n");
-            termSB.append("     mov rax, ").append(nodeIntLit.getIntLit().getValue()).append("\n");
+            termSB.append(mov("rax", value));
             termSB.append(push("rax")).append("\n");
         }
         case NodeIdent nodeIdent -> {
