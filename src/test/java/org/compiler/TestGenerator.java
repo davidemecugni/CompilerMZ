@@ -16,17 +16,18 @@ public class TestGenerator {
         String res = generator.getGenerated();
         assertEquals("""
                 section .data
+                     buffer db 20 dup(0)
                      newline db 0x0a
 
                 section .text
-                \tglobal _start
+                     global main
 
-                _start:
-
+                main:
                      ;;final exit
                      mov rax, 60
                      mov rdi, 0
                      syscall
+
                 """, res);
 
     }
@@ -39,13 +40,13 @@ public class TestGenerator {
         String res = generator.getGenerated();
         assertEquals("""
                 section .data
+                     buffer db 20 dup(0)
                      newline db 0x0a
 
                 section .text
-                \tglobal _start
+                     global main
 
-                _start:
-
+                main:
                      ;;value
                      mov rax, 42
                      push rax
@@ -60,6 +61,7 @@ public class TestGenerator {
                      mov rax, 60
                      mov rdi, 0
                      syscall
+
                 """, res);
         tokenizer = new Tokenizer("exit(0); exit(255);");
         parser = new Parser(tokenizer.getTokens());
@@ -67,13 +69,13 @@ public class TestGenerator {
         res = generator.getGenerated();
         assertEquals("""
                 section .data
+                     buffer db 20 dup(0)
                      newline db 0x0a
 
                 section .text
-                \tglobal _start
+                     global main
 
-                _start:
-
+                main:
                      ;;value
                      mov rax, 0
                      push rax
@@ -98,6 +100,7 @@ public class TestGenerator {
                      mov rax, 60
                      mov rdi, 0
                      syscall
+
                 """, res);
     }
 
@@ -109,13 +112,13 @@ public class TestGenerator {
         String res = generator.getGenerated();
         assertEquals("""
                 section .data
+                     buffer db 20 dup(0)
                      newline db 0x0a
 
                 section .text
-                \tglobal _start
+                     global main
 
-                _start:
-
+                main:
                      ;;value
                      mov rax, 42
                      push rax
@@ -124,6 +127,7 @@ public class TestGenerator {
                      mov rax, 60
                      mov rdi, 0
                      syscall
+
                 """, res);
         tokenizer = new Tokenizer("let x = 42; let y = 255;");
         parser = new Parser(tokenizer.getTokens());
@@ -131,13 +135,13 @@ public class TestGenerator {
         res = generator.getGenerated();
         assertEquals("""
                 section .data
+                     buffer db 20 dup(0)
                      newline db 0x0a
 
                 section .text
-                \tglobal _start
+                     global main
 
-                _start:
-
+                main:
                      ;;value
                      mov rax, 42
                      push rax
@@ -150,6 +154,7 @@ public class TestGenerator {
                      mov rax, 60
                      mov rdi, 0
                      syscall
+
                 """, res);
         tokenizer = new Tokenizer("let x = 42; let y = x;");
         parser = new Parser(tokenizer.getTokens());
@@ -157,13 +162,13 @@ public class TestGenerator {
         res = generator.getGenerated();
         assertEquals("""
                 section .data
+                     buffer db 20 dup(0)
                      newline db 0x0a
 
                 section .text
-                \tglobal _start
+                     global main
 
-                _start:
-
+                main:
                      ;;value
                      mov rax, 42
                      push rax
@@ -175,6 +180,7 @@ public class TestGenerator {
                      mov rax, 60
                      mov rdi, 0
                      syscall
+
                 """, res);
         tokenizer = new Tokenizer("let x = 42; let y = 255; let x = 0;");
         parser = new Parser(tokenizer.getTokens());
