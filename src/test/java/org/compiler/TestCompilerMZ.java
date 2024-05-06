@@ -48,6 +48,8 @@ public class TestCompilerMZ {
 
     private static Stream<Object[]> providePrintTestCases() {
         return Stream.of(new Object[] { "prints100.mz", "100\n" }, new Object[] { "printsCiao.mz", "Ciao\n" },
-                new Object[] { "prints1.mz", "1\n" });
+                new Object[] { "prints1.mz", "1\n" }, new Object[] { "prints-10000000000.mz", "-10000000000\n" },
+                new Object[] { "printsEmpty.mz", "\n" },
+                new Object[] { "printsLimits.mz", "9223372036854775807\n-9223372036854775808\n" });
     }
 }

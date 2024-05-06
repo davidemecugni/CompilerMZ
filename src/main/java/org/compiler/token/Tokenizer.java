@@ -179,7 +179,7 @@ public class Tokenizer {
      * @param forParsing
      *            if true, the tokenizer will substitute multi-token tokens
      */
-    private void substituteMultiTokenTokens(boolean forParsing) {
+    private void substituteMultiTokenTokens(boolean forParsing) throws TokenError {
         ArrayList<Token> tokenCopy = new ArrayList<>();
         for (int i = 0; i < tokens.size(); i++) {
             Token token = tokens.get(i);

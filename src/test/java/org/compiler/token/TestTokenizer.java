@@ -5,7 +5,6 @@ import org.compiler.token.tokens.Token;
 import org.compiler.token.tokens.TokenIdent;
 import org.compiler.token.tokens.TokenIntLit;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -199,5 +198,21 @@ public class TestTokenizer {
         assertEquals(validLogicLe.getTokens(),
                 List.of(new Token(TokenType.let), new TokenIdent("a"), new Token(TokenType.eq), new TokenIntLit("10"),
                         new Token(TokenType.logic_le), new TokenIntLit("20"), new Token(TokenType.semi)));
+    }
+
+    @Test
+    public void testTokenizerNegativeNumber() throws TokenError {
+        Tokenizer validNegativeNumber = new Tokenizer("let a = -10;");
+        assertEquals(validNegativeNumber.getTokens(), List.of(new Token(TokenType.let), new TokenIdent("a"),
+                new Token(TokenType.eq), new TokenIntLit("-10"), new Token(TokenType.semi)));
+    }
+
+    @Test
+    public void testTokenizerOverflow() {
+        assertThrows(TokenError.class, () -> new Tokenizer("let a = 9223372036854775808;"));
+        assertThrows(TokenError.class, () -> new Tokenizer("let a = -9223372036854775808;"));
+        assertDoesNotThrow(() -> new Tokenizer("let a = 9223372036854775807;"));
+        assertDoesNotThrow(() -> new Tokenizer("let a = -9223372036854775807;"));
+
     }
 }
