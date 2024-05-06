@@ -80,6 +80,7 @@ public class Tokenizer {
                     && !wordToTokenMap.containsKey(String.valueOf(it.peek().getChar()))
                     && !(wordToTokenMap.containsKey(buffer.toString())
                             && (wordToTokenMap.get(buffer.toString()) == TokenType.comment
+                                    || wordToTokenMap.get(buffer.toString()) == TokenType.quotes
                                     || multiTokenTokens.contains(wordToTokenMap.get(buffer.toString()))))) {
                 column_end = it.peek().getColumn();
                 buffer.append(it.next().getChar());
