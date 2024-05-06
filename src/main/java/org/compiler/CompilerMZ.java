@@ -8,7 +8,6 @@ import org.compiler.token.Tokenizer;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Map;
 
 /**
  * The main class of the compiler
@@ -33,7 +32,7 @@ public class CompilerMZ {
     public static void main(String[] args) throws IOException, ParseException, TokenError {
         CommandLine cmd = getCmd(args);
         if (cmd.hasOption("version")) {
-            System.out.println("0.5.0-Alpha\nMZ Compiler by Davide Mecugni, Andrea Zanasi\n(C) 2024");
+            System.out.println("0.6.0-Alpha\nMZ Compiler by Davide Mecugni, Andrea Zanasi\n(C) 2024");
             return;
         }
         if (cmd.hasOption("h")) {
