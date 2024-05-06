@@ -1,1 +1,38 @@
-stampadóor ( "Ciao" ) ;
+🗨️🗨️
+Finds the nth prime(considering 2 the first prime number)
+🗨️🗨️
+⬇️
+    🗨️Starts the count at 1
+    🔰 count ⏸ 1 📝
+    🔰 number ⏸ 2 📝
+    🔰 nThPrime ⏸ 54 📝
+    🗨️Should be 251
+    🖨 ➡️ 📜DEBUG: Looking for the Xth prime number📜 ⬅️ 📝
+    🖨 ➡️ nThPrime ⬅️ 📝
+    🔄 ➡️ count ⏪ nThPrime ➕ 1 ⬅️ ⬇️
+        🔰 is_prime ⏸ ✅ 📝
+        🔰 divisor ⏸ 2 📝
+        🗨️ Checks whether a number is prime
+        🔄 ➡️ divisor ✖️ divisor ⏪⏸ number 🔛 is_prime ⬅️ ⬇️
+            ❓ ➡️ number 🔢 divisor ⏸⏸ 0 ⬅️ ⬇️
+                is_prime ⏸ ❌ 📝
+            ⬆️
+            divisor ⏸ divisor ➕ 1 📝
+        ⬆️
+        ❓ ➡️ is_prime ⬅️ ⬇️
+            ❓ ➡️ count ⏸⏸ nThPrime ⬅️ ⬇️
+                🗨️🗨️
+                If the nTh prime is found it exits with that number
+                Note that 251 is the last prime before 255(max exit number on UNIX systems
+                🗨️🗨️
+                🖨 ➡️ 📜DEBUG: Found the Xth prime number📜 ⬅️ 📝
+                🖨 ➡️ number ⬅️ 📝
+                👿 ➡️ number ⬅️ 📝
+            ⬆️
+            🖨 ➡️ 📜DEBUG: Prime number found📜 ⬅️ 📝
+            🖨 ➡️ number ⬅️ 📝
+            count ⏸ count ➕ 1 📝
+        ⬆️
+        number ⏸ number ➕ 1 📝
+    ⬆️
+⬆️

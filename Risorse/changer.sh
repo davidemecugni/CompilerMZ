@@ -24,7 +24,7 @@ while true; do
 
         # Translate the code
         java -jar "$jar" -i "$f" -o "$f" -t "$currentDialect,$nextDialect" 2&> /dev/null
-        java -jar "$jar" -i "$f" -v -d "$nextDialect"
+        java -jar "$jar" -i "$f" -d "$nextDialect"
         if [ $? -ne 0 ]; then
             echo "One language does not support the other language's code. Exiting..."
             exit 1

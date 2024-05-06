@@ -1,10 +1,14 @@
 package org.compiler;
 
 import org.compiler.errors.TokenError;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,5 +32,17 @@ public class TestCompilerMZ {
                 new Object[] { "exits69.mz", 69 }, new Object[] { "exits100.mz", 100 },
                 new Object[] { "exits111.mz", 111 }, new Object[] { "exits130.mz", 130 },
                 new Object[] { "exits251.mz", 251 });
+    }
+
+    @Test
+    public void testPrints100() throws IOException, TokenError {
+        String baseDir = "src/test/java/org/compiler/testCompilerMZResources/";
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outContent));
+
+        CompilerMZ.callFullStackWithReturnCode(baseDir + "prints100.mz", baseDir + "out.asm",
+                baseDir + "out.o", baseDir + "out");
+
+        Assertions.assertEquals("100\n", outContent.toString());
     }
 }

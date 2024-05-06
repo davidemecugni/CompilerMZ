@@ -1,0 +1,5 @@
+let x = 1;
+let y = 2;
+let z = 3;
+let hundred =  y * y * y * y * y * y * y - z * 10 + x * 2;
+print(hundred);
