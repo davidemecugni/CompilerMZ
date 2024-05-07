@@ -101,7 +101,8 @@ public class Generator {
         case NodeLet nodeLet -> {
             if (variables.containsKey(nodeLet.getIdentifier().getIdent().getName())) {
                 throw new TokenError("Redeclared Identifier: " + nodeLet.getIdentifier().getIdent().getName(),
-                        nodeLet.getIdentifier().getIdent().getLine(), nodeLet.getIdentifier().getIdent().getColumnStart(),
+                        nodeLet.getIdentifier().getIdent().getLine(),
+                        nodeLet.getIdentifier().getIdent().getColumnStart(),
                         nodeLet.getIdentifier().getIdent().getColumnEnd());
             }
             variables.put(nodeLet.getIdentifier().getIdent().getName(), stack_size);
@@ -316,6 +317,7 @@ public class Generator {
         sb.append("     xor rax, rax\n");
         sb.append("     xor rcx, rcx\n");
         sb.append("     xor rdi, rdi\n");
+        sb.append("     xor rbx, rbx\n");
         sb.append("     mov dl, byte [rsi]\n");
         sb.append("     cmp dl, '-'\n");
         sb.append("     jne .not_negative\n");
@@ -323,6 +325,7 @@ public class Generator {
         sb.append("     mov rdi, 1\n");
         sb.append(".not_negative:\n");
         sb.append(".next_char:\n");
+        sb.append("     add rbx, 1\n");
         sb.append(mov("cl", "byte [rsi]"));
         sb.append("     inc rsi\n");
         sb.append("     cmp cl, '0'\n");
@@ -333,7 +336,12 @@ public class Generator {
         sb.append("     imul rax, rax, 10\n");
         sb.append("     add rax, rcx\n");
         sb.append("     jmp .next_char\n\n");
+        sb.append(".error:\n");
+        sb.append(mov("rax", "-1"));
+        sb.append("     ret\n\n");
         sb.append(".done:\n");
+        sb.append("     cmp rbx, 1\n");
+        sb.append("     je .error\n");
         sb.append("     test rdi, rdi\n");
         sb.append("     jz .not_negative_result\n");
         sb.append("     neg rax\n");
@@ -371,14 +379,16 @@ public class Generator {
 
     private long findOffset(NodeIdent nodeIdent, StringBuilder sb) throws TokenError {
         if (!variables.containsKey(nodeIdent.getIdent().getName())) {
-            throw new TokenError("Undeclared Identifier: " + nodeIdent.getIdent().getName(), nodeIdent.getIdent().getLine(),
-                    nodeIdent.getIdent().getColumnStart(), nodeIdent.getIdent().getColumnEnd());
+            throw new TokenError("Undeclared Identifier: " + nodeIdent.getIdent().getName(),
+                    nodeIdent.getIdent().getLine(), nodeIdent.getIdent().getColumnStart(),
+                    nodeIdent.getIdent().getColumnEnd());
         }
         sb.append("     ;;identifier\n");
         long offset = (stack_size - variables.get(nodeIdent.getIdent().getName()) - 1) * 8L;
         if (offset < 0) {
-            throw new TokenError("Variable might not have been initialized: " + nodeIdent.getIdent().getName(), nodeIdent.getIdent().getLine(),
-                    nodeIdent.getIdent().getColumnStart(), nodeIdent.getIdent().getColumnEnd());
+            throw new TokenError("Variable might not have been initialized: " + nodeIdent.getIdent().getName(),
+                    nodeIdent.getIdent().getLine(), nodeIdent.getIdent().getColumnStart(),
+                    nodeIdent.getIdent().getColumnEnd());
         }
         return offset;
     }

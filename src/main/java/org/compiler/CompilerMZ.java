@@ -80,6 +80,9 @@ public class CompilerMZ {
         String fileExe = getCmdFileOption(cmd, "e", removeExtension(fileObj, ".o"), "");
         if (!cmd.hasOption("v") && !cmd.hasOption("c")) {
             callFullStack(fileIn, fileOut, fileObj, fileExe, dialect);
+            if(cmd.hasOption("x")) {
+                callExecutable(fileExe);
+            }
             return;
         }
         if (!cmd.hasOption("v") && cmd.hasOption("c")) {
@@ -95,7 +98,7 @@ public class CompilerMZ {
         Tokenizer tokenizer = new Tokenizer(content, dialect);
         System.out.println("1) Tokenized!");
         // for debugging
-        System.out.println(tokenizer.getTokens());
+        System.out.printf("Tokens: %s\n", tokenizer.getTokens());
 
         // Parsing
         Parser parser = new Parser(tokenizer.getTokens());
@@ -124,6 +127,9 @@ public class CompilerMZ {
         callLinker(fileObj, fileExe);
         System.out.println("6) ld: linked file!");
 
+        if (!cmd.hasOption("x")) {
+            return;
+        }
         // Executing
         int returnCode = callExecutable(fileExe);
         System.out.println("7) Executed file!");
@@ -171,7 +177,6 @@ public class CompilerMZ {
         makeAssembly(fileIn, fileOut, dialect);
         callAssembler(fileOut, fileObj);
         callLinker(fileObj, fileExe);
-        callExecutable(fileExe);
     }
 
     /**
@@ -474,6 +479,7 @@ public class CompilerMZ {
         group.addOption(new Option("c", "compile", false, "compile only, no assembly and linking"));
         group.addOption(new Option("V", "version", false, "print version"));
         group.addOption(new Option("h", "help", false, "print this message"));
+        group.addOption(new Option("x", "execute", false, "executes the newly created file"));
 
         options.addOptionGroup(group);
 

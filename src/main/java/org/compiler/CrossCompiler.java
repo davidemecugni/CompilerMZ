@@ -32,7 +32,6 @@ public class CrossCompiler {
         }
         addMultiTokenTokens(tokenToWordMap);
         StringBuilder crossCompiledCodeSB = new StringBuilder();
-        System.out.println(tokens);
         for (Token token : tokens) {
             TokenType type = token.getType();
             if (type == TokenType.open_curly || type == TokenType.close_curly) {
