@@ -482,7 +482,7 @@ public class CompilerMZ {
 
         options.addOptionGroup(group);
 
-        options.addOption("i", "input", true, "input .mz manz file");
+        options.addRequiredOption("i", "input", true, "input .mz manz file");
         options.addOption("o", "output", true, "output .asm assembly file");
         options.addOption("O", "object", true, ".o object file(assembled .asm file)");
         options.addOption("e", "executable", true, "final executable file");
