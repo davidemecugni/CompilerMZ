@@ -9,8 +9,9 @@
 - while_stmt = while, ws*, open_par, ws*, expr, ws*, close_par, ws*, scope
 - exit_stmt = exit, ws*, open_par, ws*, expr, ws*, close_par, semi
 - let_stmt = let, ws*, ident, ws*, eq, ws*, expr, semi
-- func_built_in = print_stmt
+- func_built_in = print_stmt | read_stmt
 - print_stmt = print, ws*, open_par, ws*, (ident | string_lit | int_lit), ws*, close_par, semi
+- read_stmt = read, ws*, open_par, ws*, ident, ws*, close_par, semi
 - expr = int_lit | ident | expr, ws*, operator, ws*, expr | open_par, ws*, expr, ws*, close_par
 - operator = add | sub | mul | div | mod | logic_gt | logic_ge | logic_lt | logic_ge | logic_and | logic_or
 - int_lit = digit+ | true | false

@@ -25,7 +25,6 @@ public class CompilerMZ {
      *             On any error parsing the command line
      * @throws TokenError
      *             Can be thrown by the tokenizer and parser if the code is not correct
-     *
      * @throws IllegalArgumentException
      *             If the -t flag is not used correctly with 2 dialects provided
      */

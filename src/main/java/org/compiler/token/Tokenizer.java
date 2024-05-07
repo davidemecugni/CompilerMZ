@@ -14,7 +14,6 @@ import java.util.Set;
 
 /**
  * Generates a list of tokens from a string input
- *
  */
 public class Tokenizer {
     private ArrayList<Token> tokens = new ArrayList<>();

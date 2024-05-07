@@ -66,6 +66,9 @@ Fast AF! \
   - Print a variable
   - Print a string
   - Print a number
+- Read :reader:
+  - Read a number
+  - Store the number in a variable
 
 ## Inner workings :gear:
 To compile the .mz file, the steps made by the compiler are:

@@ -4,7 +4,6 @@ import org.compiler.token.TokenType;
 
 /**
  * TokenString represents a string literal token.
- *
  */
 
 public class TokenString extends Token {

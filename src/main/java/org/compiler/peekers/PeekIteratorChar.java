@@ -28,7 +28,6 @@ public class PeekIteratorChar implements PeekIterator<CharLineColumn> {
     }
 
     /**
-     *
      * @return if the iterator has a next element
      */
     public boolean hasNext() {

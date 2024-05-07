@@ -377,6 +377,19 @@ public class Generator {
         return termSB.toString();
     }
 
+    /**
+     * Finds the offset of a variable in the stack
+     *
+     * @param nodeIdent
+     *            the identifier to find the offset for
+     * @param sb
+     *            the StringBuilder object to append the assembly code
+     *
+     * @return the offset of the variable in the stack
+     *
+     * @throws TokenError
+     *             if the variable is not declared
+     */
     private long findOffset(NodeIdent nodeIdent, StringBuilder sb) throws TokenError {
         if (!variables.containsKey(nodeIdent.getIdent().getName())) {
             throw new TokenError("Undeclared Identifier: " + nodeIdent.getIdent().getName(),
