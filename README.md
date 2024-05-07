@@ -94,7 +94,7 @@ To get the compiler working, you need to install `nasm` and `ld`:
 
 ```shell
 sudo apt-get install nasm
-sudo apt-get install ld
+sudo apt-get install gcc
 ```
 
 ## Usage :hammer_and_wrench:
