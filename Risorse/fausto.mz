@@ -1,2 +1,8 @@
-let x = 9223372036854775807;
+let x = 1;
 print(x);
+let y = 3;
+read(x);
+print(x);
+print(y);
+read(y);
+print(y);

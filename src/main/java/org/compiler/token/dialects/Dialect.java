@@ -42,8 +42,8 @@ public class Dialect {
             }
             trie.insert(key);
         }
-        if (data.size() != 27) {
-            throw new IllegalArgumentException("Dialect must contain 27 tokens");
+        if (data.size() != 28) {
+            throw new IllegalArgumentException("Dialect must contain 28 tokens");
         }
         wordToTokenMap = new HashMap<>(data);
         checkDialectCompleteness();

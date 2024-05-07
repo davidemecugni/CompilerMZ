@@ -5,6 +5,7 @@ import org.compiler.token.tokens.Token;
 import org.compiler.token.tokens.TokenIdent;
 import org.compiler.token.tokens.TokenIntLit;
 import org.junit.jupiter.api.Test;
+
 import java.util.List;
 import java.util.NoSuchElementException;
 

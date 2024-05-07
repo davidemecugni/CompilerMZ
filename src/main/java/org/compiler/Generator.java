@@ -38,6 +38,7 @@ public class Generator {
     private final StringBuilder sbData = new StringBuilder();
     private int msgCounter = 1;
     private boolean callPrintAssemblyFunc = false;
+    private boolean callAtoi = false;
 
     public Generator(NodeProgram program) {
         this.m_program = program;
@@ -66,6 +67,9 @@ public class Generator {
 
         if (callPrintAssemblyFunc) {
             printAssemblyFunc(sb);
+        }
+        if (callAtoi) {
+            atoiAssemblyFunc(sb);
         }
 
         sbData.append("\n");
@@ -190,6 +194,21 @@ public class Generator {
                     printNewLine(stmtSB);
                 }
             }
+            case BuiltInFunc.read -> {
+                NodeIdent nodeIdent = (NodeIdent) nodeBuiltInFunc.getStmt();
+                long offset = findOffset(nodeIdent, stmtSB);
+                callAtoi = true;
+                stmtSB.append("     ;;read\n");
+                stmtSB.append(mov("rax", "0"));
+                stmtSB.append(mov("rdi", "0"));
+                stmtSB.append(mov("rsi", "buffer"));
+                stmtSB.append(mov("rdx", "20"));
+                stmtSB.append("     syscall\n\n");
+                stmtSB.append(mov("rdi", "buffer"));
+                stmtSB.append("     call atoi\n");
+                stmtSB.append(mov("QWORD[rsp + " + offset + "]", "rax"));
+                stmtSB.append("     ;;/read\n\n");
+            }
             }
         }
         case null, default -> throw new IllegalArgumentException("Unknown statement type in generator");
@@ -278,6 +297,31 @@ public class Generator {
         sb.append(mov("rax", "1"));
         sb.append("     syscall\n");
         sb.append("     ;;/print\n\n");
+        sb.append("     ret\n\n");
+    }
+
+    /**
+     * It generates the assembly code to convert a string to an integer
+     *
+     * @param sb
+     *            the StringBuilder Object to append the assembly code
+     */
+    private void atoiAssemblyFunc(StringBuilder sb) {
+        sb.append("atoi:\n");
+        sb.append("     xor rax, rax\n");
+        sb.append("     xor rcx, rcx\n\n");
+        sb.append(".next_char:\n");
+        sb.append(mov("cl", "byte [rdi]"));
+        sb.append("     inc rdi\n");
+        sb.append("     cmp cl, '0'\n");
+        sb.append("     jl .done\n");
+        sb.append("     cmp cl, '9'\n");
+        sb.append("     jg .done\n");
+        sb.append("     sub cl, '0'\n");
+        sb.append("     imul rax, rax, 10\n");
+        sb.append("     add rax, rcx\n");
+        sb.append("     jmp .next_char\n\n");
+        sb.append(".done:\n");
         sb.append("     ret\n\n");
     }
 

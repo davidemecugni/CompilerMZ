@@ -98,6 +98,9 @@ public class Parser {
         } else if (it.peek().getType() == TokenType.print) {
             it.next();
             return parseBuiltInFunc(BuiltInFunc.print);
+        } else if (it.peek().getType() == TokenType.read) {
+            it.next();
+            return parseBuiltInFunc(BuiltInFunc.read);
         } else {
             GenerateErrorMessage("Invalid token in statement of type ");
             return null;
@@ -260,6 +263,16 @@ public class Parser {
                 it.next();
                 return nodeBuiltInFunc;
             }
+        }
+        case BuiltInFunc.read -> {
+            CheckForType(TokenType.ident);
+            NodeIdent nodeIdent = new NodeIdent((TokenIdent) it.next());
+            NodeBuiltInFunc nodeBuiltInFunc = new NodeBuiltInFunc(nodeIdent, BuiltInFunc.read);
+            CheckForType(TokenType.close_paren);
+            it.next();
+            CheckForType(TokenType.semi);
+            it.next();
+            return nodeBuiltInFunc;
         }
         default -> GenerateErrorMessage("Invalid token, expected string, found");
         }

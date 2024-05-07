@@ -25,5 +25,6 @@
   "true": "_true",
   "false": "_false",
   "print": "print",
-  "\"": "quotes"
+  "\"": "quotes",
+  "read": "read"
 }
