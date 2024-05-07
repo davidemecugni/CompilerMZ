@@ -3,8 +3,8 @@
 ![Compiler logo](READMESOURCES/logo.png)
 
 CompilerMZ is a custom compiler and cross-compiler for multiple languages! \
-It generates an x86_64 assembly file. The program is then executed by using nasm \
-and ld.
+It generates an x86_64 assembly file. The program is then executed by using nasm(assembler) \
+and gcc(linker).
 
 Fast AF! \
 ![C vs MZ](READMESOURCES/CvsMZ.png)
@@ -66,7 +66,7 @@ Fast AF! \
   - Print a variable
   - Print a string
   - Print a number
-- Read :reader:
+- Read :blue_book:
   - Read a number
   - Store the number in a variable
   - Returns -1 if the input is not a number
