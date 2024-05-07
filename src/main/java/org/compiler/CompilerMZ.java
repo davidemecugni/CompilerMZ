@@ -476,9 +476,9 @@ public class CompilerMZ {
                 "cross-compiles a dialect to another one, requires \"dialectIn,dialectOut\""));
         group.addOption(new Option("f", "format", false, "format the code, specify the dialect with -d flag"));
         group.addOption(new Option("c", "compile", false, "compile only, no assembly and linking"));
+        group.addOption(new Option("x", "execute", false, "executes the newly created file"));
         group.addOption(new Option("V", "version", false, "print version"));
         group.addOption(new Option("h", "help", false, "print this message"));
-        group.addOption(new Option("x", "execute", false, "executes the newly created file"));
 
         options.addOptionGroup(group);
 

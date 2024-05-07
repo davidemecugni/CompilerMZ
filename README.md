@@ -24,7 +24,7 @@ Fast AF! \
   - Current dialects supported:
     - default_dialect : a C vibe dialect :keyboard:
     - zanna : an italian dialect :it:
-    - emilian : a dialect from Emilia-Romagna :spaghetti:
+    - emilian[^1] : a dialect from Emilia-Romagna :spaghetti:
     - emoji : an emoji dialect, for the brave ones :smiley:
   - Full support for UNICODE characters, feel free to add yours!
 - Comments :speech_balloon:
@@ -69,13 +69,14 @@ Fast AF! \
 - Read :reader:
   - Read a number
   - Store the number in a variable
+  - Returns -1 if the input is not a number
 
 ## Inner workings :gear:
 To compile the .mz file, the steps made by the compiler are:
 - Tokenization :scissors:
   - reads the input file and creates a list of tokens according to the dialect chosen 
   - transforms the chars present in the input file to tokens such as EXIT token
-  - checks for unclosed multiline comments
+  - checks for unclosed comments or strings
 - Parsing :deciduous_tree:
   - transforms the tokens list into a list of trees that represent the code
   - checks for syntax errors
@@ -115,6 +116,7 @@ usage: CompilerMZ
                          "dialectIn,dialectOut"
  -V,--version            print version
  -v,--verbose            verbose output
+ -x,--execute            executes the newly created file
 ```
 
 ## Grammar :book:
@@ -124,3 +126,5 @@ For more details about the [EBNF](https://en.wikipedia.org/wiki/Extended_Backus%
 ## The Idea :bulb:
 The project was born during a OOP course at the University of Modena and Reggio Emilia. The idea was to create a compiler for a custom language, the .mz language.  
 <img src="READMESOURCES/warning.png" alt="CompilerMZ"></img>
+
+[^1]: Emilian is a group of dialects of the Emilian language spoken in the region of Emilia-Romagna, Italy. The specific dialect followed is specified in "Dizionario del dialetto carpigiano" by Graziano Malagoli and Anna Maria Ori (Modena, 2011).
