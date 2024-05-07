@@ -31,6 +31,7 @@ Fast AF! \
   - Single line comments
   - Multi line comments
 - Variables :abacus:
+  - All variables are 64bit signed numbers   
   - Initialization
   - Declaration
   - Automatic check for already declared variables
@@ -44,6 +45,7 @@ Fast AF! \
   - Division
   - Modulus
   - Parenthesis operations
+  - Negative numbers
 - Logical operations :mag:
   - Equal
   - Not equal
@@ -90,7 +92,7 @@ CompilerMZ by default compiles the .asm file provided(-i) and generates the exec
 If not specified it will also generate the intermediate .asm assembly file(with comments!) and the object .o file.
 ## Getting Started :rocket:
 
-To get the compiler working, you need to install `nasm` and `ld`:
+To get the compiler working, you need to install `nasm` and `gcc`:
 
 ```shell
 sudo apt-get install nasm
