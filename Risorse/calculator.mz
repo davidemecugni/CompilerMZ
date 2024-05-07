@@ -20,34 +20,26 @@ while ( choice != 6 ) {
     else {
         print ( "Enter first number: " ) ;
         read ( num1 ) ;
-        print ( "First number: " ) ;
-        print ( num1 ) ;
         print ( "Enter second number: " ) ;
         read ( num2 ) ;
-        print ( "Second number: " ) ;
-        print ( num2 ) ;
+        print ( "Result: " ) ;
         if ( choice == 1 ) {
-            print ( "Result: " ) ;
             result = num1 + num2 ;
             print ( result ) ;
         }
         elif ( choice == 2 ) {
-            print ( "Result: " ) ;
             result = num1 - num2 ;
             print ( result ) ;
         }
         elif ( choice == 3 ) {
-            print ( "Result: " ) ;
             result = num1 * num2 ;
             print ( result ) ;
         }
         elif ( choice == 4 ) {
-            print ( "Result: " ) ;
             result = num1 / num2 ;
             print ( result ) ;
         }
         elif ( choice == 5 ) {
-            print ( "Result: " ) ;
             result = num1 % num2 ;
             print ( result ) ;
         }
