@@ -3,7 +3,7 @@
 # Script to show the change between codes
 
 jar="../target/CompilerMZ-0.5.0-Alpha-jar-with-dependencies.jar"
-sleepTime=2
+sleepTime=1
 f=fausto.mz
 
 # Find all .json files in the resources directory, remove the .json extension
@@ -24,7 +24,7 @@ while true; do
 
         # Translate the code
         java -jar "$jar" -i "$f" -o "$f" -t "$currentDialect,$nextDialect" 2&> /dev/null
-        java -jar "$jar" -i "$f" -d "$nextDialect"
+        java -jar "$jar" -i "$f" -d "$nextDialect" 2&> /dev/null
         if [ $? -ne 0 ]; then
             echo "One language does not support the other language's code. Exiting..."
             exit 1
