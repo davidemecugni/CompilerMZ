@@ -16,7 +16,7 @@ Fast AF! \
 - [Usage](#usage-hammer_and_wrench)
 - [Grammar](#grammar-book)
 - [The Idea](#the-idea-bulb)
-
+- [Examples](examples.md)
 ## Features :sparkles:
 
 - Multi dialect support :earth_africa:
@@ -126,5 +126,7 @@ For more details about the [EBNF](https://en.wikipedia.org/wiki/Extended_Backus%
 ## The Idea :bulb:
 The project was born during a OOP course at the University of Modena and Reggio Emilia. The idea was to create a compiler for a custom language, the .mz language.  
 <img src="READMESOURCES/warning.png" alt="CompilerMZ"></img>
+
+## Footnotes
 
 [^1]: Emilian is a group of dialects of the Emilian language spoken in the region of Emilia-Romagna, Italy. The specific dialect followed is specified in "Dizionario del dialetto carpigiano" by Graziano Malagoli and Anna Maria Ori (Modena, 2011).
