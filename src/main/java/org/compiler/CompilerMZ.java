@@ -80,7 +80,7 @@ public class CompilerMZ {
         String fileExe = getCmdFileOption(cmd, "e", removeExtension(fileObj, ".o"), "");
         if (!cmd.hasOption("v") && !cmd.hasOption("c")) {
             callFullStack(fileIn, fileOut, fileObj, fileExe, dialect);
-            if(cmd.hasOption("x")) {
+            if (cmd.hasOption("x")) {
                 callExecutable(fileExe);
             }
             return;
