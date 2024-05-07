@@ -309,10 +309,17 @@ public class Generator {
     private void atoiAssemblyFunc(StringBuilder sb) {
         sb.append("atoi:\n");
         sb.append("     xor rax, rax\n");
-        sb.append("     xor rcx, rcx\n\n");
+        sb.append("     xor rcx, rcx\n");
+        sb.append("     xor rdi, rdi\n");
+        sb.append("     mov dl, byte [rsi]\n");
+        sb.append("     cmp dl, '-'\n");
+        sb.append("     jne .not_negative\n");
+        sb.append("     inc rsi\n");
+        sb.append("     mov rdi, 1\n");
+        sb.append(".not_negative:\n");
         sb.append(".next_char:\n");
-        sb.append(mov("cl", "byte [rdi]"));
-        sb.append("     inc rdi\n");
+        sb.append(mov("cl", "byte [rsi]"));
+        sb.append("     inc rsi\n");
         sb.append("     cmp cl, '0'\n");
         sb.append("     jl .done\n");
         sb.append("     cmp cl, '9'\n");
@@ -322,6 +329,10 @@ public class Generator {
         sb.append("     add rax, rcx\n");
         sb.append("     jmp .next_char\n\n");
         sb.append(".done:\n");
+        sb.append("     test rdi, rdi\n");
+        sb.append("     jz .not_negative_result\n");
+        sb.append("     neg rax\n");
+        sb.append(".not_negative_result:\n");
         sb.append("     ret\n\n");
     }
 
