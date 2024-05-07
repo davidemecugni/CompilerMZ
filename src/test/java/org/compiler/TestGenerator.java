@@ -191,7 +191,7 @@ public class TestGenerator {
         tokenizer = new Tokenizer("let x = 42; let y = 255; let x = 0;");
         parser = new Parser(tokenizer.getTokens());
         Parser finalParser = parser;
-        assertThrows(IllegalArgumentException.class, () -> new Generator(finalParser.getTree()));
+        assertThrows(TokenError.class, () -> new Generator(finalParser.getTree()));
     }
 
     @Test
@@ -199,16 +199,16 @@ public class TestGenerator {
         Tokenizer tokenizer = new Tokenizer("exit(x);");
         Parser parser = new Parser(tokenizer.getTokens());
         Parser finalParser = parser;
-        assertThrows(IllegalArgumentException.class, () -> new Generator(finalParser.getTree()));
+        assertThrows(TokenError.class, () -> new Generator(finalParser.getTree()));
 
         tokenizer = new Tokenizer("let x = x;");
         parser = new Parser(tokenizer.getTokens());
         Parser finalParser1 = parser;
-        assertThrows(IllegalArgumentException.class, () -> new Generator(finalParser1.getTree()));
+        assertThrows(TokenError.class, () -> new Generator(finalParser1.getTree()));
 
         tokenizer = new Tokenizer("let x = 42; let variable = variable;");
         parser = new Parser(tokenizer.getTokens());
         Parser finalParser2 = parser;
-        assertThrows(IllegalArgumentException.class, () -> new Generator(finalParser2.getTree()));
+        assertThrows(TokenError.class, () -> new Generator(finalParser2.getTree()));
     }
 }

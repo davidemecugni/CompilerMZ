@@ -25,5 +25,6 @@
   "vero": "_true",
   "falso": "_false",
   "stampa": "print",
-  "\"": "quotes"
+  "\"": "quotes",
+  "leggi": "read"
 }

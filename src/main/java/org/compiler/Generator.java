@@ -1,5 +1,6 @@
 package org.compiler;
 
+import org.compiler.errors.TokenError;
 import org.compiler.nodes.NodeExpression;
 import org.compiler.nodes.NodeProgram;
 import org.compiler.nodes.NodeStatement;
@@ -40,7 +41,7 @@ public class Generator {
     private boolean callPrintAssemblyFunc = false;
     private boolean callAtoi = false;
 
-    public Generator(NodeProgram program) {
+    public Generator(NodeProgram program) throws TokenError {
         this.m_program = program;
         generateProgram();
     }
@@ -48,7 +49,7 @@ public class Generator {
     /**
      * Generates the assembly code for the program Exit code is 0 by default if no exit statement is present
      */
-    public void generateProgram() {
+    public void generateProgram() throws TokenError {
         StringBuilder sb = new StringBuilder();
         sbData.append("section .data\n");
         sbData.append("     minus_sign db '-'\n");
@@ -85,7 +86,7 @@ public class Generator {
      *
      * @return the generated assembly code
      */
-    public String generateStatement(NodeStatement stmt) {
+    public String generateStatement(NodeStatement stmt) throws TokenError {
 
         StringBuilder stmtSB = new StringBuilder();
         switch (stmt) {
@@ -99,14 +100,18 @@ public class Generator {
         }
         case NodeLet nodeLet -> {
             if (variables.containsKey(nodeLet.getIdentifier().getIdent().getName())) {
-                throw new IllegalArgumentException("Identifier already used");
+                throw new TokenError("Redeclared Identifier: " + nodeLet.getIdentifier().getIdent().getName(),
+                        nodeLet.getIdentifier().getIdent().getLine(), nodeLet.getIdentifier().getIdent().getColumnStart(),
+                        nodeLet.getIdentifier().getIdent().getColumnEnd());
             }
             variables.put(nodeLet.getIdentifier().getIdent().getName(), stack_size);
             stmtSB.append(generateExpression(stmt.getStmt()));
         }
         case NodeAssign nodeAssign -> {
             if (!variables.containsKey(nodeAssign.getTokenIdent().getName())) {
-                throw new IllegalArgumentException("Undeclared Identifier");
+                throw new TokenError("Undeclared Identifier: " + nodeAssign.getTokenIdent().getName(),
+                        nodeAssign.getTokenIdent().getLine(), nodeAssign.getTokenIdent().getColumnStart(),
+                        nodeAssign.getTokenIdent().getColumnEnd());
             }
             long offset = (stack_size - variables.get(nodeAssign.getTokenIdent().getName()) - 1) * 8L;
             stmtSB.append(generateExpression(nodeAssign.getStmt()));
@@ -344,7 +349,7 @@ public class Generator {
      *
      * @return the generated assembly code
      */
-    public String generateTerm(NodeTerm expr) {
+    public String generateTerm(NodeTerm expr) throws TokenError {
         StringBuilder termSB = new StringBuilder();
         // Generate the term based on the type
         switch (expr) {
@@ -364,14 +369,16 @@ public class Generator {
         return termSB.toString();
     }
 
-    private long findOffset(NodeIdent nodeIdent, StringBuilder sb) {
+    private long findOffset(NodeIdent nodeIdent, StringBuilder sb) throws TokenError {
         if (!variables.containsKey(nodeIdent.getIdent().getName())) {
-            throw new IllegalArgumentException("Identifier " + nodeIdent.getIdent().getName() + " not found");
+            throw new TokenError("Undeclared Identifier: " + nodeIdent.getIdent().getName(), nodeIdent.getIdent().getLine(),
+                    nodeIdent.getIdent().getColumnStart(), nodeIdent.getIdent().getColumnEnd());
         }
         sb.append("     ;;identifier\n");
         long offset = (stack_size - variables.get(nodeIdent.getIdent().getName()) - 1) * 8L;
         if (offset < 0) {
-            throw new IllegalArgumentException("Variable might not have been initialized");
+            throw new TokenError("Variable might not have been initialized: " + nodeIdent.getIdent().getName(), nodeIdent.getIdent().getLine(),
+                    nodeIdent.getIdent().getColumnStart(), nodeIdent.getIdent().getColumnEnd());
         }
         return offset;
     }
@@ -384,7 +391,7 @@ public class Generator {
      *
      * @return the generated assembly code
      */
-    public String generateExpression(NodeExpression expr) {
+    public String generateExpression(NodeExpression expr) throws TokenError {
         StringBuilder exprSB = new StringBuilder();
 
         // If it's a term, generate the term, otherwise generate the binary expression
@@ -404,7 +411,7 @@ public class Generator {
      *
      * @return the generated assembly code
      */
-    public String generateBinaryExpression(NodeBin bin_expr) {
+    public String generateBinaryExpression(NodeBin bin_expr) throws TokenError {
         StringBuilder bin_exprSB = new StringBuilder();
 
         switch (bin_expr.getType()) {
