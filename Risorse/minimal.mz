@@ -1,14 +1,30 @@
-> x = 5;
-> y = 10;
-$ (x) {
-    x = 9;
-} € (x - 5) {
-    x = x - 5;
-} £ {
-    x = 0;
+##
+Finds the nth prime(considering 2 the first prime number)
+##
+{
+    #Starts the count at 1
+    $ count = 1 ;
+    $ number = 2 ;
+    $ nThPrime = 0 ;
+    @ ( nThPrime ) ;
+    § ( count < nThPrime + 1 ) {
+        $ is_prime = ^ ;
+        $ divisor = 2 ;
+        # Checks whether a number is prime
+        § ( divisor * divisor <= number & is_prime ) {
+            ? ( number % divisor == 0 ) {
+                is_prime = ç ;
+            }
+            divisor = divisor + 1 ;
+        }
+        ? ( is_prime ) {
+            ? ( count == nThPrime ) {
+                # Prints the nt prime
+                £ ( number ) ;
+                ° ( 0 ) ;
+            }
+            count = count + 1 ;
+        }
+        number = number + 1 ;
+    }
 }
-^ (y) {
-    y = y - 1;
-    x = x + 1;
-}
-\(x); @19

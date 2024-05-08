@@ -1,17 +1,30 @@
-giuro variabile è 5 e_basta
-giuro altra_variabile è 7 e_basta
-se apro variabile chiudo inizio
-variabile è 7 e_basta
+comunquecomunque
+Finds the nth prime(considering 2 the first prime number)
+comunquecomunque
+inizio
+    comunqueStarts the count at 1
+    giuro count è 1 e_basta
+    giuro number è 2 e_basta
+    giuro nThPrime è 0 e_basta
+    leggi apro nThPrime chiudo e_basta
+    finche apro count minore nThPrime più 1 chiudo inizio
+        giuro is_prime è vero e_basta
+        giuro divisor è 2 e_basta
+        comunque Checks whether a number is prime
+        finche apro divisor per divisor minoreè number anche is_prime chiudo inizio
+            se apro number modulo divisor èè 0 chiudo inizio
+                is_prime è falso e_basta
+            finisco
+            divisor è divisor più 1 e_basta
+        finisco
+        se apro is_prime chiudo inizio
+            se apro count èè nThPrime chiudo inizio
+                comunque Prints the nt prime
+                scrivi apro number chiudo e_basta
+                esco apro 0 chiudo e_basta
+            finisco
+            count è count più 1 e_basta
+        finisco
+        number è number più 1 e_basta
+    finisco
 finisco
-oppure apro variabile meno 5 chiudo inizio
-variabile è 2 e_basta
-finisco
-altrimenti inizio
-variabile è 12 e_basta
-finisco
-finche apro altra_variabile chiudo inizio
-altra_variabile è altra_variabile meno 1 e_basta
-variabile è variabile più 1 e_basta
-finisco
-esco apro variabile chiudo e_basta
-comunque in teoria esce con 14
