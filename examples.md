@@ -1,7 +1,9 @@
-
 ## Examples
+
 Here are some examples of the .mz language:
+
 ### Default dialect
+
 ```manz
 @@
 Finds the nth prime(considering 2 the first prime number)
@@ -34,7 +36,9 @@ Finds the nth prime(considering 2 the first prime number)
     }
 }
 ```
+
 ### Zanna dialect
+
 ```manz
 comunquecomunque
 Finds the nth prime(considering 2 the first prime number)
@@ -67,7 +71,9 @@ inizio
     finisco
 finisco
 ```
+
 ### Emilian dialect
+
 ```manz
 comèintcomèint
 Finds the nth prime(considering 2 the first prime number)
@@ -100,7 +106,9 @@ comèintcomèint
     }
 }
 ```
+
 ### Emoji dialect
+
 ```manz
 🗨️🗨️
 Finds the nth prime(considering 2 the first prime number)
@@ -133,7 +141,9 @@ Finds the nth prime(considering 2 the first prime number)
     ⬆️
 ⬆️
 ```
+
 ### Minimal dialect
+
 ```manz
 ##
 Finds the nth prime(considering 2 the first prime number)
