@@ -17,9 +17,10 @@ public class TestCompilerMZ {
     @ParameterizedTest
     @MethodSource("provideTestCases")
     public void testCompilerMZ(String inputFile, int expectedExitCode) throws IOException, TokenError {
-        String baseDir = "src/test/java/org/compiler/testCompilerMZResources/";
-        int exitCode = CompilerMZ.callFullStackWithReturnCode(baseDir + inputFile, baseDir + "out.asm",
-                baseDir + "out.o", baseDir + "out");
+        String baseDir = "src/test/java/org/compiler/testCompilerMZResources/exits/";
+        String outDir = "src/test/java/org/compiler/testCompilerMZResources/";
+        int exitCode = CompilerMZ.callFullStackWithReturnCode(baseDir + inputFile, outDir + "out.asm", outDir + "out.o",
+                outDir + "out");
         assertEquals(expectedExitCode, exitCode);
     }
 
@@ -36,12 +37,13 @@ public class TestCompilerMZ {
     @ParameterizedTest
     @MethodSource("providePrintTestCases")
     public void testPrints(String inputFile, String expectedOutput) throws IOException, TokenError {
-        String baseDir = "src/test/java/org/compiler/testCompilerMZResources/";
+        String baseDir = "src/test/java/org/compiler/testCompilerMZResources/prints/";
+        String outDir = "src/test/java/org/compiler/testCompilerMZResources/";
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
 
-        CompilerMZ.callFullStackWithReturnCode(baseDir + inputFile, baseDir + "out.asm", baseDir + "out.o",
-                baseDir + "out");
+        CompilerMZ.callFullStackWithReturnCode(baseDir + inputFile, outDir + "out.asm", outDir + "out.o",
+                outDir + "out");
 
         Assertions.assertEquals(expectedOutput, outContent.toString());
     }

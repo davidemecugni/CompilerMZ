@@ -1,5 +1,6 @@
 package org.compiler;
 
+import org.compiler.errors.TokenError;
 import org.compiler.nodes.NodeExpression;
 import org.compiler.nodes.NodeProgram;
 import org.compiler.nodes.NodeStatement;
@@ -38,8 +39,9 @@ public class Generator {
     private final StringBuilder sbData = new StringBuilder();
     private int msgCounter = 1;
     private boolean callPrintAssemblyFunc = false;
+    private boolean callAtoi = false;
 
-    public Generator(NodeProgram program) {
+    public Generator(NodeProgram program) throws TokenError {
         this.m_program = program;
         generateProgram();
     }
@@ -47,7 +49,7 @@ public class Generator {
     /**
      * Generates the assembly code for the program Exit code is 0 by default if no exit statement is present
      */
-    public void generateProgram() {
+    public void generateProgram() throws TokenError {
         StringBuilder sb = new StringBuilder();
         sbData.append("section .data\n");
         sbData.append("     minus_sign db '-'\n");
@@ -67,6 +69,9 @@ public class Generator {
         if (callPrintAssemblyFunc) {
             printAssemblyFunc(sb);
         }
+        if (callAtoi) {
+            atoiAssemblyFunc(sb);
+        }
 
         sbData.append("\n");
         sbData.append(sb);
@@ -81,7 +86,7 @@ public class Generator {
      *
      * @return the generated assembly code
      */
-    public String generateStatement(NodeStatement stmt) {
+    public String generateStatement(NodeStatement stmt) throws TokenError {
 
         StringBuilder stmtSB = new StringBuilder();
         switch (stmt) {
@@ -95,14 +100,19 @@ public class Generator {
         }
         case NodeLet nodeLet -> {
             if (variables.containsKey(nodeLet.getIdentifier().getIdent().getName())) {
-                throw new IllegalArgumentException("Identifier already used");
+                throw new TokenError("Redeclared Identifier: " + nodeLet.getIdentifier().getIdent().getName(),
+                        nodeLet.getIdentifier().getIdent().getLine(),
+                        nodeLet.getIdentifier().getIdent().getColumnStart(),
+                        nodeLet.getIdentifier().getIdent().getColumnEnd());
             }
             variables.put(nodeLet.getIdentifier().getIdent().getName(), stack_size);
             stmtSB.append(generateExpression(stmt.getStmt()));
         }
         case NodeAssign nodeAssign -> {
             if (!variables.containsKey(nodeAssign.getTokenIdent().getName())) {
-                throw new IllegalArgumentException("Undeclared Identifier");
+                throw new TokenError("Undeclared Identifier: " + nodeAssign.getTokenIdent().getName(),
+                        nodeAssign.getTokenIdent().getLine(), nodeAssign.getTokenIdent().getColumnStart(),
+                        nodeAssign.getTokenIdent().getColumnEnd());
             }
             long offset = (stack_size - variables.get(nodeAssign.getTokenIdent().getName()) - 1) * 8L;
             stmtSB.append(generateExpression(nodeAssign.getStmt()));
@@ -127,25 +137,25 @@ public class Generator {
             stmtSB.append(pop("rax"));
             stmtSB.append("     test rax, rax\n");
             if (numberOfElifs != 0) {
-                stmtSB.append("     jz ").append(label).append(0).append("\n\n");
+                stmtSB.append("     jz ").append(label).append("x0").append("\n\n");
             }
-            stmtSB.append("     jz ").append(label).append(numberOfElifs).append("\n");
+            stmtSB.append("     jz ").append(label).append("x").append(numberOfElifs).append("\n");
             stmtSB.append(generateStatement(nodeIf.getIfScope()));
             stmtSB.append("     jmp ").append(finalLabel).append("\n\n");
             int i;
             for (i = 0; i < numberOfElifs; i++) {
                 stmtSB.append("     ;;elif(label: ").append(label).append(")\n");
-                stmtSB.append(label).append(i).append(":\n\n");
+                stmtSB.append(label).append("x").append(i).append(":\n\n");
                 stmtSB.append("     ;;elif condition\n");
                 stmtSB.append(generateExpression(nodeIf.getNthScopeElif(i).getStmt()));
                 stmtSB.append(pop("rax"));
                 stmtSB.append("     test rax, rax\n");
-                stmtSB.append("     jz ").append(label).append(i + 1).append("\n");
+                stmtSB.append("     jz ").append(label).append("x").append(i + 1).append("\n");
                 stmtSB.append("     ;;/elif condition\n");
                 stmtSB.append(generateStatement(nodeIf.getNthScopeElif(i).getScope()));
                 stmtSB.append("     ;;/elif(label: ").append(label).append(")\n");
             }
-            stmtSB.append(label).append(i).append(":\n\n");
+            stmtSB.append(label).append("x").append(i).append(":\n\n");
             if (nodeIf.hasElse()) {
                 stmtSB.append("     ;;else(label: ").append(label).append(")\n");
                 stmtSB.append(generateStatement(nodeIf.getScopeElse()));
@@ -189,6 +199,21 @@ public class Generator {
                     stmtSB.append("     call print_number\n\n");
                     printNewLine(stmtSB);
                 }
+            }
+            case BuiltInFunc.read -> {
+                NodeIdent nodeIdent = (NodeIdent) nodeBuiltInFunc.getStmt();
+                long offset = findOffset(nodeIdent, stmtSB);
+                callAtoi = true;
+                stmtSB.append("     ;;read\n");
+                stmtSB.append(mov("rax", "0"));
+                stmtSB.append(mov("rdi", "0"));
+                stmtSB.append(mov("rsi", "buffer"));
+                stmtSB.append(mov("rdx", "20"));
+                stmtSB.append("     syscall\n\n");
+                stmtSB.append(mov("rdi", "buffer"));
+                stmtSB.append("     call atoi\n");
+                stmtSB.append(mov("QWORD[rsp + " + offset + "]", "rax"));
+                stmtSB.append("     ;;/read\n\n");
             }
             }
         }
@@ -282,6 +307,49 @@ public class Generator {
     }
 
     /**
+     * It generates the assembly code to convert a string to an integer
+     *
+     * @param sb
+     *            the StringBuilder Object to append the assembly code
+     */
+    private void atoiAssemblyFunc(StringBuilder sb) {
+        sb.append("atoi:\n");
+        sb.append("     xor rax, rax\n");
+        sb.append("     xor rcx, rcx\n");
+        sb.append("     xor rdi, rdi\n");
+        sb.append("     xor rbx, rbx\n");
+        sb.append("     mov dl, byte [rsi]\n");
+        sb.append("     cmp dl, '-'\n");
+        sb.append("     jne .not_negative\n");
+        sb.append("     inc rsi\n");
+        sb.append("     mov rdi, 1\n");
+        sb.append(".not_negative:\n");
+        sb.append(".next_char:\n");
+        sb.append("     add rbx, 1\n");
+        sb.append(mov("cl", "byte [rsi]"));
+        sb.append("     inc rsi\n");
+        sb.append("     cmp cl, '0'\n");
+        sb.append("     jl .done\n");
+        sb.append("     cmp cl, '9'\n");
+        sb.append("     jg .done\n");
+        sb.append("     sub cl, '0'\n");
+        sb.append("     imul rax, rax, 10\n");
+        sb.append("     add rax, rcx\n");
+        sb.append("     jmp .next_char\n\n");
+        sb.append(".error:\n");
+        sb.append(mov("rax", "-1"));
+        sb.append("     ret\n\n");
+        sb.append(".done:\n");
+        sb.append("     cmp rbx, 1\n");
+        sb.append("     je .error\n");
+        sb.append("     test rdi, rdi\n");
+        sb.append("     jz .not_negative_result\n");
+        sb.append("     neg rax\n");
+        sb.append(".not_negative_result:\n");
+        sb.append("     ret\n\n");
+    }
+
+    /**
      * Generates the assembly code for a term
      *
      * @param expr
@@ -289,7 +357,7 @@ public class Generator {
      *
      * @return the generated assembly code
      */
-    public String generateTerm(NodeTerm expr) {
+    public String generateTerm(NodeTerm expr) throws TokenError {
         StringBuilder termSB = new StringBuilder();
         // Generate the term based on the type
         switch (expr) {
@@ -309,14 +377,31 @@ public class Generator {
         return termSB.toString();
     }
 
-    private long findOffset(NodeIdent nodeIdent, StringBuilder sb) {
+    /**
+     * Finds the offset of a variable in the stack
+     *
+     * @param nodeIdent
+     *            the identifier to find the offset for
+     * @param sb
+     *            the StringBuilder object to append the assembly code
+     *
+     * @return the offset of the variable in the stack
+     *
+     * @throws TokenError
+     *             if the variable is not declared
+     */
+    private long findOffset(NodeIdent nodeIdent, StringBuilder sb) throws TokenError {
         if (!variables.containsKey(nodeIdent.getIdent().getName())) {
-            throw new IllegalArgumentException("Identifier " + nodeIdent.getIdent().getName() + " not found");
+            throw new TokenError("Undeclared Identifier: " + nodeIdent.getIdent().getName(),
+                    nodeIdent.getIdent().getLine(), nodeIdent.getIdent().getColumnStart(),
+                    nodeIdent.getIdent().getColumnEnd());
         }
         sb.append("     ;;identifier\n");
         long offset = (stack_size - variables.get(nodeIdent.getIdent().getName()) - 1) * 8L;
         if (offset < 0) {
-            throw new IllegalArgumentException("Variable might not have been initialized");
+            throw new TokenError("Variable might not have been initialized: " + nodeIdent.getIdent().getName(),
+                    nodeIdent.getIdent().getLine(), nodeIdent.getIdent().getColumnStart(),
+                    nodeIdent.getIdent().getColumnEnd());
         }
         return offset;
     }
@@ -329,7 +414,7 @@ public class Generator {
      *
      * @return the generated assembly code
      */
-    public String generateExpression(NodeExpression expr) {
+    public String generateExpression(NodeExpression expr) throws TokenError {
         StringBuilder exprSB = new StringBuilder();
 
         // If it's a term, generate the term, otherwise generate the binary expression
@@ -349,7 +434,7 @@ public class Generator {
      *
      * @return the generated assembly code
      */
-    public String generateBinaryExpression(NodeBin bin_expr) {
+    public String generateBinaryExpression(NodeBin bin_expr) throws TokenError {
         StringBuilder bin_exprSB = new StringBuilder();
 
         switch (bin_expr.getType()) {

@@ -15,15 +15,16 @@
   "finisco": "close_curly",
   "se": "_if",
   "altrimenti": "_else",
-  "oppure": "elif",
+  "o_invece": "elif",
   "finche": "_while",
   "non": "not",
-  "maggiore" : "logic_gt",
+  "maggiore": "logic_gt",
   "minore": "logic_lt",
-  "e_anche": "logic_and",
-  "o_anche": "logic_or",
+  "anche": "logic_and",
+  "oppure": "logic_or",
   "vero": "_true",
   "falso": "_false",
-  "stampa": "print",
-  "\"": "quotes"
+  "scrivi": "print",
+  "\"": "quotes",
+  "leggi": "read"
 }

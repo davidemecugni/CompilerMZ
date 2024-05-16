@@ -1,0 +1,51 @@
+@@
+Complete I/O calculator:
+1. Addition
+2. Subtraction
+3. Multiplication
+4. Division
+5. Modulus
+6. Exit
+@@
+let choice = 0 ;
+let result = 0 ;
+print ( "Enter your choice(1:+, 2:-, 3:*, 4:/, 5:%, 6:exit): " ) ;
+read ( choice ) ;
+while ( choice != 6 ) {
+    let num1 = 0 ;
+    let num2 = 0 ;
+    if ( ( choice <= 0 ) | ( choice > 6 ) ) {
+        print ( "Invalid choice" ) ;
+    }
+    else {
+        print ( "Enter first number: " ) ;
+        read ( num1 ) ;
+        print ( "Enter second number: " ) ;
+        read ( num2 ) ;
+        print ( "Result: " ) ;
+        if ( choice == 1 ) {
+            result = num1 + num2 ;
+            print ( result ) ;
+        }
+        elif ( choice == 2 ) {
+            result = num1 - num2 ;
+            print ( result ) ;
+        }
+        elif ( choice == 3 ) {
+            result = num1 * num2 ;
+            print ( result ) ;
+        }
+        elif ( choice == 4 ) {
+            result = num1 / num2 ;
+            print ( result ) ;
+        }
+        elif ( choice == 5 ) {
+            result = num1 % num2 ;
+            print ( result ) ;
+        }
+    }
+    print ( "Enter your choice(1:+, 2:-, 3:*, 4:/, 5:%, 6:exit): " ) ;
+    read ( choice ) ;
+}
+print ( "Goodbye!" ) ;
+exit ( 0 ) ;
