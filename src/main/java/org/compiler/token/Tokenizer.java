@@ -76,7 +76,11 @@ public class Tokenizer {
                 } else if (wordToTokenMap.get(word) == TokenType.quotes) {
                     AddToken(of(buffer.toString(), line, column_start, column_start));
                     AddToken(it.ignoreContent(word));
-                    AddToken(of(buffer.toString(), line, it.peek().getColumn(), it.peek().getColumn()));
+                    if(it.hasNext()) {
+                        AddToken(of(buffer.toString(), line, it.peek().getColumn(), it.peek().getColumn()));
+                    }else{
+                        throw new TokenError("Expected closing quotes or parenthesis", line, column_start, column_start);
+                    }
                 } else {
                     AddToken(of(buffer.toString(), line, column_start, column_start));
                 }
