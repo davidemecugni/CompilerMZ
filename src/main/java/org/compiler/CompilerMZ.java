@@ -31,7 +31,7 @@ public class CompilerMZ {
     public static void main(String[] args) throws IOException, ParseException, TokenError {
         CommandLine cmd = getCmd(args);
         if (cmd.hasOption("version")) {
-            System.out.println("0.6.0-Alpha\nMZ Compiler by Davide Mecugni, Andrea Zanasi\n(C) 2024");
+            System.out.println("1.0.0-Stable\nMZ Compiler by Davide Mecugni, Andrea Zanasi\n(C) 2024");
             return;
         }
         if (cmd.hasOption("h")) {
@@ -39,6 +39,9 @@ public class CompilerMZ {
             System.out.println("MZ Compiler by Davide Mecugni, Andrea Zanasi\n(C) 2024\n");
             formatter.printHelp("CompilerMZ", getOptions());
             return;
+        }
+        if (!cmd.hasOption("i")) {
+            throw new IllegalArgumentException("No input file provided! Use -i flag to provide a file.");
         }
         if (cmd.hasOption("f")) {
             String fileIn = getCmdFileOption(cmd, "i", "", ".mz");
@@ -482,7 +485,7 @@ public class CompilerMZ {
 
         options.addOptionGroup(group);
 
-        options.addRequiredOption("i", "input", true, "input .mz manz file");
+        options.addOption("i", "input", true, "input .mz manz file");
         options.addOption("o", "output", true, "output .asm assembly file");
         options.addOption("O", "object", true, ".o object file(assembled .asm file)");
         options.addOption("e", "executable", true, "final executable file");
