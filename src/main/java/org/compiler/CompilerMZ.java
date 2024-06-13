@@ -31,7 +31,7 @@ public class CompilerMZ {
     public static void main(String[] args) throws IOException, ParseException, TokenError {
         CommandLine cmd = getCmd(args);
         if (cmd.hasOption("version")) {
-            System.out.println("1.0.0-Stable\nMZ Compiler by Davide Mecugni, Andrea Zanasi\n(C) 2024");
+            System.out.println("1.0.1-Fix\nMZ Compiler by Davide Mecugni, Andrea Zanasi\n(C) 2024");
             return;
         }
         if (cmd.hasOption("h")) {

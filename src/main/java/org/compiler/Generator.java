@@ -427,7 +427,7 @@ public class Generator {
     }
 
     /**
-     * Generates the assembly code for a binary expression(+,-,*,/,%,==,!=,>,<,>=,<=)
+     * Generates the assembly code for a binary expression(+,-,*,/,%,==,!=,>,\<,>=,\<=)
      *
      * @param bin_expr
      *            the binary expression to generate code for
@@ -620,8 +620,12 @@ public class Generator {
 
     /**
      * Utility function to move a value to a register
-     * @param reg the register to move the value to
-     * @param par the value to move
+     *
+     * @param reg
+     *            the register to move the value to
+     * @param par
+     *            the value to move
+     *
      * @return an ASM string
      */
     private String mov(String reg, String par) {

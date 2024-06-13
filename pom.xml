@@ -6,7 +6,7 @@
 
     <groupId>org.compiler</groupId>
     <artifactId>CompilerMZ</artifactId>
-    <version>1.0.0-Stable</version>
+    <version>1.0.1-Fix</version>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>

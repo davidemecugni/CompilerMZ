@@ -25,6 +25,7 @@ public class PeekIteratorToken implements PeekIterator<Token> {
 
     /**
      * Returns the next Token consuming it
+     *
      * @return the next Token
      */
     @Override
@@ -37,6 +38,7 @@ public class PeekIteratorToken implements PeekIterator<Token> {
 
     /**
      * Peeks at the next Token
+     *
      * @return the peeked Token
      */
     @Override
@@ -49,6 +51,7 @@ public class PeekIteratorToken implements PeekIterator<Token> {
 
     /**
      * Peeks at the next Token with an offset
+     *
      * @param offset
      *            the offset
      *

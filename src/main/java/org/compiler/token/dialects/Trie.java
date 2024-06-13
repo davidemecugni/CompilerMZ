@@ -1,8 +1,8 @@
 package org.compiler.token.dialects;
 
 /**
- * A trie data structure for storing words.
- * It is used by the Dialect class to check for substrings inside the keys of the dialect.
+ * A trie data structure for storing words. It is used by the Dialect class to check for substrings inside the keys of
+ * the dialect.
  */
 class Trie {
     private final TrieNode root;

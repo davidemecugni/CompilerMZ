@@ -21,8 +21,8 @@ public class Dialect {
     }
 
     /**
-     * Retrieves the dialect from the JSON file.
-     * It checks for duplicate keys, duplicate values, whitespace in keys, and substrings in keys.
+     * Retrieves the dialect from the JSON file. It checks for duplicate keys, duplicate values, whitespace in keys, and
+     * substrings in keys.
      */
     private void retrieveDialect() {
         Map<String, TokenType> data = retrieveJson();
