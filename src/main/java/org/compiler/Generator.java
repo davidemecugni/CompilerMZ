@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Generates the assembly code from the AST Checks for undeclared identifiers Checks for redeclaration of identifiers
+ * Generates the assembly code from the AST. Checks for undeclared identifiers. Checks for redeclaration of identifiers
  */
 public class Generator {
     private String generated = "";
@@ -47,7 +47,7 @@ public class Generator {
     }
 
     /**
-     * Generates the assembly code for the program Exit code is 0 by default if no exit statement is present
+     * Generates the assembly code for the program. Exit code is 0 by default if no exit statement is present
      */
     public void generateProgram() throws TokenError {
         StringBuilder sb = new StringBuilder();
@@ -307,7 +307,7 @@ public class Generator {
     }
 
     /**
-     * It generates the assembly code to convert a string to an integer
+     * It generates the assembly code to convert a string to an integer(atoi)
      *
      * @param sb
      *            the StringBuilder Object to append the assembly code
@@ -350,10 +350,10 @@ public class Generator {
     }
 
     /**
-     * Generates the assembly code for a term
+     * Generates the assembly code for an expr
      *
      * @param expr
-     *            the term to generate code for
+     *            the expression to generate code for
      *
      * @return the generated assembly code
      */
@@ -427,7 +427,7 @@ public class Generator {
     }
 
     /**
-     * Generates the assembly code for a binary expression
+     * Generates the assembly code for a binary expression(+,-,*,/,%,==,!=,>,<,>=,<=)
      *
      * @param bin_expr
      *            the binary expression to generate code for
@@ -593,7 +593,7 @@ public class Generator {
     }
 
     /**
-     * increase stack location
+     * increase stack location, used to store variables
      *
      * @param reg
      *            asm register
@@ -606,7 +606,7 @@ public class Generator {
     }
 
     /**
-     * reduces stack location
+     * reduces stack location, used to remove variables
      *
      * @param reg
      *            asm register
@@ -618,6 +618,12 @@ public class Generator {
         return "     pop " + reg + "\n";
     }
 
+    /**
+     * Utility function to move a value to a register
+     * @param reg the register to move the value to
+     * @param par the value to move
+     * @return an ASM string
+     */
     private String mov(String reg, String par) {
         return "     mov " + reg + ", " + par + "\n";
     }

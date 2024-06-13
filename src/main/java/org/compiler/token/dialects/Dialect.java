@@ -20,6 +20,10 @@ public class Dialect {
         retrieveDialect();
     }
 
+    /**
+     * Retrieves the dialect from the JSON file.
+     * It checks for duplicate keys, duplicate values, whitespace in keys, and substrings in keys.
+     */
     private void retrieveDialect() {
         Map<String, TokenType> data = retrieveJson();
         Set<String> uniqueKeys = new HashSet<>(data.keySet());
@@ -64,6 +68,9 @@ public class Dialect {
         return gson.fromJson(reader, type);
     }
 
+    /**
+     * Checks if the dialect is complete in accordance to the EBNF.
+     */
     private void checkDialectCompleteness() {
         Map<String, TokenType> defaultDialect = retrieveJson();
 

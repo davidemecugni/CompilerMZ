@@ -112,9 +112,6 @@ public class CompilerMZ {
         String res = generator.getGenerated();
         System.out.println("3) Generated assembly!");
 
-        // for debugging
-        // generator.printStmt();
-
         // Writing file
         writeFile(fileOut, res);
         System.out.println("4) Generated file!");

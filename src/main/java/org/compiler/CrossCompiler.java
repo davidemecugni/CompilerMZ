@@ -13,6 +13,11 @@ public class CrossCompiler {
     private final Dialect dialect;
     private String crossCompiledCode;
 
+    /**
+     * Constructor for the CrossCompiler class.
+     * @param tokens the tokens to cross-compile
+     * @param dialect the dialect to use for the cross-compilation
+     */
     public CrossCompiler(ArrayList<Token> tokens, String dialect) {
         this.tokens = tokens;
         this.dialect = new Dialect(dialect);
@@ -117,6 +122,12 @@ public class CrossCompiler {
         return "    ".repeat(Math.max(0, indentation));
     }
 
+    /**
+     * Corrects the indentation of the code.
+     * @param code the code to correct the indentation of
+     * @param indentation the indentation to correct to
+     * @return the corrected code
+     */
     private String correctIndentation(String code, int indentation) {
         return code.replaceAll("(?m)^ +", getIndentation(indentation));
     }

@@ -23,6 +23,10 @@ public class PeekIteratorToken implements PeekIterator<Token> {
         return cursor < list.size();
     }
 
+    /**
+     * Returns the next Token consuming it
+     * @return the next Token
+     */
     @Override
     public Token next() {
         if (!hasNext()) {
@@ -31,6 +35,10 @@ public class PeekIteratorToken implements PeekIterator<Token> {
         return list.get(cursor++);
     }
 
+    /**
+     * Peeks at the next Token
+     * @return the peeked Token
+     */
     @Override
     public Token peek() {
         if (!hasNext()) {
@@ -39,6 +47,13 @@ public class PeekIteratorToken implements PeekIterator<Token> {
         return list.get(cursor);
     }
 
+    /**
+     * Peeks at the next Token with an offset
+     * @param offset
+     *            the offset
+     *
+     * @return the peeked Token with the offset
+     */
     @Override
     public Token peek(int offset) {
         if (cursor + offset >= list.size()) {
