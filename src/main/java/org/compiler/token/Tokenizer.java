@@ -22,6 +22,11 @@ public class Tokenizer {
     private static final Set<TokenType> multiTokenTokens = Set.of(TokenType.not, TokenType.eq, TokenType.logic_gt,
             TokenType.logic_lt, TokenType.comment);
 
+    /**
+     * Constructor for the Tokenizer class
+     * @param input the input text from file
+     * @throws TokenError if an error occurs during tokenization
+     */
     public Tokenizer(String input) throws TokenError {
         this.it = new PeekIteratorChar(input);
         Dialect defaultDialect = new Dialect("default_dialect");
@@ -30,6 +35,12 @@ public class Tokenizer {
         substituteMultiTokenTokens(true);
     }
 
+    /**
+     * Constructor for the Tokenizer class
+     * @param input the input text from file
+     * @param dialectName the name of the dialect to use to tokenize
+     * @throws TokenError if an error occurs during tokenization
+     */
     public Tokenizer(String input, String dialectName) throws TokenError {
         this.it = new PeekIteratorChar(input);
         Dialect dialect = new Dialect(dialectName);
@@ -38,6 +49,13 @@ public class Tokenizer {
         substituteMultiTokenTokens(true);
     }
 
+    /**
+     * Constructor for the Tokenizer class
+     * @param input the input text from file
+     * @param dialectName the name of the dialect to use to tokenize
+     * @param forParsing if true, the tokenizer will substitute multi-token tokens, false is used to translate cross-dialect
+     * @throws TokenError if an error occurs during tokenization
+     */
     public Tokenizer(String input, String dialectName, boolean forParsing) throws TokenError {
         this.it = new PeekIteratorChar(input);
         Dialect dialect = new Dialect(dialectName);
@@ -76,7 +94,11 @@ public class Tokenizer {
                 } else if (wordToTokenMap.get(word) == TokenType.quotes) {
                     AddToken(of(buffer.toString(), line, column_start, column_start));
                     AddToken(it.ignoreContent(word));
-                    AddToken(of(buffer.toString(), line, it.peek().getColumn(), it.peek().getColumn()));
+                    if(it.hasNext()) {
+                        AddToken(of(buffer.toString(), line, it.peek().getColumn(), it.peek().getColumn()));
+                    }else{
+                        throw new TokenError("Expected closing quotes or parenthesis", line, column_start, column_start);
+                    }
                 } else {
                     AddToken(of(buffer.toString(), line, column_start, column_start));
                 }

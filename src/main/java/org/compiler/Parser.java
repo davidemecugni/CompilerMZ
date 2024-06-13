@@ -27,6 +27,7 @@ import java.util.ArrayList;
 
 /**
  * Represents a parser used to parse a list of tokens into a list of statements(nodes)
+ * It checks for the correctness of the structure of the program
  *
  * @see PeekIteratorToken
  */
@@ -121,6 +122,7 @@ public class Parser {
 
     /**
      * Parses an expression using the Precedence Climbing Algorithm
+     * This is to ensure the correct order of operations
      *
      * @param minPrec
      *            the minimum precedence of the expression
@@ -226,7 +228,7 @@ public class Parser {
     }
 
     /**
-     * Parses a built-in function (ex. print)
+     * Parses a built-in function (ex. print or read)
      *
      * @param func
      *            the built-in function to parse
@@ -239,8 +241,6 @@ public class Parser {
     private NodeBuiltInFunc parseBuiltInFunc(BuiltInFunc func) throws TokenError {
         CheckForType(TokenType.open_paren);
         it.next();
-
-        // lascio lo switch nel caso volessimo aggiungere altre funzioni built-in
 
         switch (func) {
         case BuiltInFunc.print -> {
@@ -274,7 +274,7 @@ public class Parser {
             it.next();
             return nodeBuiltInFunc;
         }
-        default -> GenerateErrorMessage("Invalid token, expected string, found");
+        default -> GenerateErrorMessage("Invalid token, expected string, found ");
         }
         // unreachable
         return null;
@@ -319,7 +319,7 @@ public class Parser {
     }
 
     /**
-     * Parses a term of an expression(eg. 5, x, (5+5))
+     * Parses a term of an expression(ex. 5, x, (5+5))
      *
      * @return the term parsed
      *

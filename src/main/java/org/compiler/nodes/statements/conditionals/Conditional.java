@@ -6,6 +6,7 @@ import org.compiler.nodes.statements.NodeScope;
 
 /**
  * Represents a conditional statement in the AST. It has a condition and a scope.
+ * Examples are: if, else, while, etc.
  */
 
 public class Conditional extends NodeStatement {
