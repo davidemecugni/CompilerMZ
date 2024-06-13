@@ -427,7 +427,7 @@ public class Generator {
     }
 
     /**
-     * Generates the assembly code for a binary expression(+,-,*,/,%,==,!=,>,<,>=,<=)
+     * Generates the assembly code for a binary expression(+,-,*,/,%,==,!=,>,\<,>=,\<=)
      *
      * @param bin_expr
      *            the binary expression to generate code for
