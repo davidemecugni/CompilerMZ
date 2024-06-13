@@ -26,8 +26,8 @@ import org.compiler.token.tokens.TokenIntLit;
 import java.util.ArrayList;
 
 /**
- * Represents a parser used to parse a list of tokens into a list of statements(nodes)
- * It checks for the correctness of the structure of the program
+ * Represents a parser used to parse a list of tokens into a list of statements(nodes) It checks for the correctness of
+ * the structure of the program
  *
  * @see PeekIteratorToken
  */
@@ -121,8 +121,7 @@ public class Parser {
     }
 
     /**
-     * Parses an expression using the Precedence Climbing Algorithm
-     * This is to ensure the correct order of operations
+     * Parses an expression using the Precedence Climbing Algorithm This is to ensure the correct order of operations
      *
      * @param minPrec
      *            the minimum precedence of the expression

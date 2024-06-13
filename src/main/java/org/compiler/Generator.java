@@ -620,8 +620,12 @@ public class Generator {
 
     /**
      * Utility function to move a value to a register
-     * @param reg the register to move the value to
-     * @param par the value to move
+     *
+     * @param reg
+     *            the register to move the value to
+     * @param par
+     *            the value to move
+     *
      * @return an ASM string
      */
     private String mov(String reg, String par) {

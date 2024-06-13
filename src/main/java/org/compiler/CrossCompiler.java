@@ -15,8 +15,11 @@ public class CrossCompiler {
 
     /**
      * Constructor for the CrossCompiler class.
-     * @param tokens the tokens to cross-compile
-     * @param dialect the dialect to use for the cross-compilation
+     *
+     * @param tokens
+     *            the tokens to cross-compile
+     * @param dialect
+     *            the dialect to use for the cross-compilation
      */
     public CrossCompiler(ArrayList<Token> tokens, String dialect) {
         this.tokens = tokens;
@@ -124,8 +127,12 @@ public class CrossCompiler {
 
     /**
      * Corrects the indentation of the code.
-     * @param code the code to correct the indentation of
-     * @param indentation the indentation to correct to
+     *
+     * @param code
+     *            the code to correct the indentation of
+     * @param indentation
+     *            the indentation to correct to
+     *
      * @return the corrected code
      */
     private String correctIndentation(String code, int indentation) {
