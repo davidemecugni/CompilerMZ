@@ -1,5 +1,7 @@
 # CompilerMZ :computer:
-
+<div align="left">
+  <img src="https://visitor-badge.laobi.icu/badge?page_id=DavideMecugni.CompilerMZ.&" alt="badge" />
+</div>
 ![Compiler logo](READMESOURCES/logo.png)
 
 CompilerMZ is a custom compiler and cross-compiler for multiple languages! \
