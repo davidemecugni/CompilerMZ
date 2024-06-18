@@ -1,6 +1,6 @@
 # CompilerMZ :computer:
 <div align="left">
-  <img src="https://visitor-badge.laobi.icu/badge?page_id=DavideMecugni.CompilerMZ.&" alt="badge" />
+  <img src="https://visitor-badge.laobi.icu/badge?page_id=davideecugni.CompilerMZ.&" alt="badge" />
 </div>
 ![Compiler logo](READMESOURCES/logo.png)
 
