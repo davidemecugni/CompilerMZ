@@ -18,6 +18,7 @@ Fast AF! \
 - [Grammar](#grammar-book)
 - [The Idea](#the-idea-bulb)
 - [Examples](examples.md)
+- [UML](#UML)
 
 ## Features :sparkles:
 
@@ -139,6 +140,8 @@ The project was born during a OOP course at the University of Modena and Reggio 
 compiler for a custom language, the .mz language.  
 <img src="READMESOURCES/warning.png" alt="CompilerMZ"></img>
 
+## UML
+![UML Image](READMESOURCES/CompilerMZUML.jpg)
 ## Footnotes
 
 [^1]: Emilian is a group of dialects of the Emilian language spoken in the region of Emilia-Romagna, Italy. The specific
