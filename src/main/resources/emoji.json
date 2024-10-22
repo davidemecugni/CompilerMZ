@@ -26,5 +26,7 @@
   "❌": "_false",
   "🖨": "print",
   "📜": "quotes",
-  "📖": "read"
+  "📖": "read",
+  "『" : "open_bracket",
+  "』" : "close_bracket"
 }

@@ -195,6 +195,38 @@ public class TestGenerator {
     }
 
     @Test
+    public void testGeneratorSquareAssignment() throws TokenError{
+        Tokenizer tokenizer = new Tokenizer("let x = 42; let x[10];");
+        Parser finalParser = new Parser(tokenizer.getTokens());
+        assertThrows(TokenError.class, () -> new Generator(finalParser.getTree()));
+    }
+
+    @Test
+    public void testGeneratorSquareDataSection() throws TokenError{
+        Tokenizer tokenizer = new Tokenizer("let x[10];");
+        Parser parser = new Parser(tokenizer.getTokens());
+        Generator generator = new Generator(parser.getTree());
+        String res = generator.getGenerated();
+        assertEquals("""
+                section .data
+                     minus_sign db '-'
+                     buffer db 20 dup(0)
+                     newline db 0x0a
+                     x times 10 db 0
+
+                section .text
+                     global main
+
+                main:
+                     ;;final exit
+                     mov rax, 60
+                     mov rdi, 0
+                     syscall
+
+                """, res);
+    }
+
+    @Test
     public void testGeneratorIdentity() throws TokenError {
         Tokenizer tokenizer = new Tokenizer("exit(x);");
         Parser parser = new Parser(tokenizer.getTokens());

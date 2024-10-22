@@ -14,8 +14,8 @@
   "{": "open_curly",
   "}": "close_curly",
   "?": "_if",
-  "]": "_else",
-  "[": "elif",
+  "¡": "_else",
+  "¿": "elif",
   "§": "_while",
   "!": "not",
   ">": "logic_gt",
@@ -26,5 +26,7 @@
   "ç": "_false",
   "£": "print",
   "\"": "quotes",
-  "@": "read"
+  "@": "read",
+  "[": "open_square",
+  "]": "close_square"
 }

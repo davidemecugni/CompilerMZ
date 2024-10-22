@@ -6,14 +6,8 @@ import org.compiler.nodes.NodeProgram;
 import org.compiler.nodes.NodeStatement;
 import org.compiler.nodes.expressions.binary_expressions.BinType;
 import org.compiler.nodes.expressions.binary_expressions.NodeBin;
-import org.compiler.nodes.expressions.terms.NodeIdent;
-import org.compiler.nodes.expressions.terms.NodeIntLit;
-import org.compiler.nodes.expressions.terms.NodeTerm;
-import org.compiler.nodes.expressions.terms.NodeTermParen;
-import org.compiler.nodes.statements.NodeAssign;
-import org.compiler.nodes.statements.NodeExit;
-import org.compiler.nodes.statements.NodeLet;
-import org.compiler.nodes.statements.NodeScope;
+import org.compiler.nodes.expressions.terms.*;
+import org.compiler.nodes.statements.*;
 import org.compiler.nodes.statements.conditionals.NodeIf;
 import org.compiler.nodes.statements.conditionals.NodeWhile;
 import org.compiler.nodes.statements.functions.BuiltInFunc;
@@ -216,6 +210,16 @@ public class Generator {
                 stmtSB.append("     ;;/read\n\n");
             }
             }
+        }
+        case NodeSquare nodeSquare -> {
+            if (variables.containsKey(nodeSquare.getIdentifier().getIdent().getName())) {
+                throw new TokenError("Redeclared Identifier: " + nodeSquare.getIdentifier().getIdent().getName(),
+                        nodeSquare.getIdentifier().getIdent().getLine(),
+                        nodeSquare.getIdentifier().getIdent().getColumnStart(),
+                        nodeSquare.getIdentifier().getIdent().getColumnEnd());
+            }
+            variables.put(nodeSquare.getIdentifier().getIdent().getName(), -1);
+            sbData.append(nodeSquare.generateDataSection());
         }
         case null, default -> throw new IllegalArgumentException("Unknown statement type in generator");
         }
@@ -427,7 +431,7 @@ public class Generator {
     }
 
     /**
-     * Generates the assembly code for a binary expression(+,-,*,/,%,==,!=,>,\<,>=,\<=)
+     * Generates the assembly code for a binary expression(+,-,*,/,%,==,!=,>,<,>=,<=)
      *
      * @param bin_expr
      *            the binary expression to generate code for

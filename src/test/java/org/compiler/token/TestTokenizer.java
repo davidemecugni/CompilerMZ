@@ -216,4 +216,12 @@ public class TestTokenizer {
         assertDoesNotThrow(() -> new Tokenizer("let a = -9223372036854775807;"));
 
     }
+
+    @Test
+    public void testTokenizerSquareBrackets() throws TokenError{
+        Tokenizer validSquareBrackets = new Tokenizer("let a[10];");
+        assertEquals(validSquareBrackets.getTokens(), List.of(new Token(TokenType.let), new TokenIdent("a"),
+                new Token(TokenType.open_square), new TokenIntLit("10"), new Token(TokenType.close_square),
+                new Token(TokenType.semi)));
+    }
 }

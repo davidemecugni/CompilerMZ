@@ -26,5 +26,7 @@
   "falso": "_false",
   "scrivi": "print",
   "\"": "quotes",
-  "leggi": "read"
+  "leggi": "read",
+  "[": "open_square",
+  "]": "close_square"
 }

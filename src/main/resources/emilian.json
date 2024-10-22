@@ -26,5 +26,7 @@
   "fèls": "_false",
   "stampadóor": "print",
   "\"": "quotes",
-  "léeṡer": "read"
+  "léeṡer": "read",
+  "[": "open_square",
+  "]": "close_square"
 }

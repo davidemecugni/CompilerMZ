@@ -7,10 +7,7 @@ import org.compiler.nodes.NodeStatement;
 import org.compiler.nodes.expressions.binary_expressions.BinType;
 import org.compiler.nodes.expressions.binary_expressions.NodeBin;
 import org.compiler.nodes.expressions.terms.*;
-import org.compiler.nodes.statements.NodeAssign;
-import org.compiler.nodes.statements.NodeExit;
-import org.compiler.nodes.statements.NodeLet;
-import org.compiler.nodes.statements.NodeScope;
+import org.compiler.nodes.statements.*;
 import org.compiler.nodes.statements.conditionals.Conditional;
 import org.compiler.nodes.statements.conditionals.NodeElif;
 import org.compiler.nodes.statements.conditionals.NodeIf;
@@ -67,7 +64,7 @@ public class Parser {
         if (it.peek().getType() == TokenType._exit) {
             it.next();
             return parseExit();
-        } else if (it.peek().getType() == TokenType.let) {
+        } else if (it.peek().getType() == TokenType.let && it.peek(2) != null && it.peek(2).getType() != TokenType.open_square){
             it.next();
             return parseLet();
         } else if (it.peek().getType() == TokenType.ident && it.peek(1) != null
@@ -102,6 +99,9 @@ public class Parser {
         } else if (it.peek().getType() == TokenType.read) {
             it.next();
             return parseBuiltInFunc(BuiltInFunc.read);
+        } else if (it.peek().getType() == TokenType.let && it.peek(2) != null && it.peek(2).getType() == TokenType.open_square) {
+            it.next();
+            return parseSquare();
         } else {
             GenerateErrorMessage("Invalid token in statement of type ");
             return null;
@@ -315,6 +315,21 @@ public class Parser {
         CheckForType(TokenType.semi);
         it.next();
         return new NodeLet(expr, ident);
+    }
+
+    public NodeSquare parseSquare() throws TokenError {
+        NodeIdent ident;
+        CheckForType(TokenType.ident);
+        ident = new NodeIdent((TokenIdent) it.next());
+        CheckForType(TokenType.open_square);
+        it.next();
+        CheckForType(TokenType.int_lit);
+        NodeExpression expr = new NodeIntLit((TokenIntLit) it.next());
+        CheckForType(TokenType.close_square);
+        it.next();
+        CheckForType(TokenType.semi);
+        it.next();
+        return new NodeSquare(expr, ident);
     }
 
     /**
