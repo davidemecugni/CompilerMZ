@@ -28,6 +28,7 @@ public class Generator {
     private final NodeProgram m_program;
     private int stack_size = 0;
     private final Map<String, Integer> variables = new HashMap<>();
+    private final ArrayList<String> arrays = new ArrayList<>();
     private final ArrayList<Integer> scopes = new ArrayList<>();
     private int label_counter = 0;
     private final StringBuilder sbData = new StringBuilder();
@@ -58,7 +59,7 @@ public class Generator {
         sb.append("     ;;final exit\n");
         sb.append(mov("rax", "60"));
         sb.append(mov("rdi", "0"));
-        sb.append("     syscall\n\n");
+        sb.append("     syscall\n");
 
         if (callPrintAssemblyFunc) {
             printAssemblyFunc(sb);
@@ -93,7 +94,7 @@ public class Generator {
             stmtSB.append("     ;;/exit\n\n");
         }
         case NodeLet nodeLet -> {
-            if (variables.containsKey(nodeLet.getIdentifier().getIdent().getName())) {
+            if (checkIdentifier(nodeLet.getIdentifier().getIdent().getName())) {
                 throw new TokenError("Redeclared Identifier: " + nodeLet.getIdentifier().getIdent().getName(),
                         nodeLet.getIdentifier().getIdent().getLine(),
                         nodeLet.getIdentifier().getIdent().getColumnStart(),
@@ -211,16 +212,43 @@ public class Generator {
             }
             }
         }
-        case NodeSquare nodeSquare -> {
-            if (variables.containsKey(nodeSquare.getIdentifier().getIdent().getName())) {
-                throw new TokenError("Redeclared Identifier: " + nodeSquare.getIdentifier().getIdent().getName(),
-                        nodeSquare.getIdentifier().getIdent().getLine(),
-                        nodeSquare.getIdentifier().getIdent().getColumnStart(),
-                        nodeSquare.getIdentifier().getIdent().getColumnEnd());
+        case NodeArrayAssignment nodeArrayAssignment -> {
+            if (!arrays.contains(nodeArrayAssignment.getIdentifier().getIdent().getName())) {
+                throw new TokenError("Undeclared Identifier: " + nodeArrayAssignment.getIdentifier().getIdent().getName(),
+                        nodeArrayAssignment.getIdentifier().getIdent().getLine(),
+                        nodeArrayAssignment.getIdentifier().getIdent().getColumnStart(),
+                        nodeArrayAssignment.getIdentifier().getIdent().getColumnEnd());
             }
-            variables.put(nodeSquare.getIdentifier().getIdent().getName(), -1);
-            sbData.append(nodeSquare.generateDataSection());
+            //Generate the first expression, the second one and then store the second expression in the array
+            //at the index of the first expression
+            stmtSB.append(generateExpression(nodeArrayAssignment.getExpr1()));
+            stmtSB.append(generateExpression(nodeArrayAssignment.getExpr2()));
+            stmtSB.append("     ;;array assignment\n");
+            stmtSB.append(pop("rax"));
+            stmtSB.append(pop("rbx"));
+            stmtSB.append("     mov QWORD [rsp + rax * 8], rbx\n");
+            stmtSB.append("     ;;/array assignment\n\n");
         }
+        case NodeArrayRetrieval nodeArrayRetrieval -> {
+            if (!arrays.contains(nodeArrayRetrieval.getIdentifier().getIdent().getName())) {
+                throw new TokenError("Undeclared Identifier: " + nodeArrayRetrieval.getIdentifier().getIdent().getName(),
+                        nodeArrayRetrieval.getIdentifier().getIdent().getLine(),
+                        nodeArrayRetrieval.getIdentifier().getIdent().getColumnStart(),
+                        nodeArrayRetrieval.getIdentifier().getIdent().getColumnEnd());
+            }
+            //TODO: Implement array retrieval
+        }
+        case NodeArray nodeArray -> {
+            if (checkIdentifier(nodeArray.getIdentifier().getIdent().getName())) {
+                throw new TokenError("Redeclared Identifier: " + nodeArray.getIdentifier().getIdent().getName(),
+                        nodeArray.getIdentifier().getIdent().getLine(),
+                        nodeArray.getIdentifier().getIdent().getColumnStart(),
+                        nodeArray.getIdentifier().getIdent().getColumnEnd());
+            }
+            arrays.add(nodeArray.getIdentifier().getIdent().getName());
+            sbData.append(nodeArray.generateDataSection());
+        }
+
         case null, default -> throw new IllegalArgumentException("Unknown statement type in generator");
         }
         return stmtSB.toString();
@@ -596,6 +624,9 @@ public class Generator {
         return bin_exprSB.toString();
     }
 
+    private boolean checkIdentifier(String identifier) {
+        return arrays.contains(identifier) || variables.containsKey(identifier);
+    }
     /**
      * increase stack location, used to store variables
      *

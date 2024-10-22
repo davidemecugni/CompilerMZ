@@ -4,8 +4,7 @@ import org.compiler.errors.TokenError;
 import org.compiler.token.Tokenizer;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestGenerator {
     @Test
@@ -28,7 +27,6 @@ public class TestGenerator {
                      mov rax, 60
                      mov rdi, 0
                      syscall
-
                 """, res);
 
     }
@@ -63,7 +61,6 @@ public class TestGenerator {
                      mov rax, 60
                      mov rdi, 0
                      syscall
-
                 """, res);
         tokenizer = new Tokenizer("exit(0); exit(255);");
         parser = new Parser(tokenizer.getTokens());
@@ -103,7 +100,6 @@ public class TestGenerator {
                      mov rax, 60
                      mov rdi, 0
                      syscall
-
                 """, res);
     }
 
@@ -131,7 +127,6 @@ public class TestGenerator {
                      mov rax, 60
                      mov rdi, 0
                      syscall
-
                 """, res);
         tokenizer = new Tokenizer("let x = 42; let y = 255;");
         parser = new Parser(tokenizer.getTokens());
@@ -159,7 +154,6 @@ public class TestGenerator {
                      mov rax, 60
                      mov rdi, 0
                      syscall
-
                 """, res);
         tokenizer = new Tokenizer("let x = 42; let y = x;");
         parser = new Parser(tokenizer.getTokens());
@@ -186,7 +180,6 @@ public class TestGenerator {
                      mov rax, 60
                      mov rdi, 0
                      syscall
-
                 """, res);
         tokenizer = new Tokenizer("let x = 42; let y = 255; let x = 0;");
         parser = new Parser(tokenizer.getTokens());
@@ -195,14 +188,14 @@ public class TestGenerator {
     }
 
     @Test
-    public void testGeneratorSquareAssignment() throws TokenError{
+    public void testGeneratorArrayAssignment() throws TokenError{
         Tokenizer tokenizer = new Tokenizer("let x = 42; let x[10];");
         Parser finalParser = new Parser(tokenizer.getTokens());
         assertThrows(TokenError.class, () -> new Generator(finalParser.getTree()));
     }
 
     @Test
-    public void testGeneratorSquareDataSection() throws TokenError{
+    public void testGeneratorArrayDataSection() throws TokenError{
         Tokenizer tokenizer = new Tokenizer("let x[10];");
         Parser parser = new Parser(tokenizer.getTokens());
         Generator generator = new Generator(parser.getTree());
@@ -222,8 +215,51 @@ public class TestGenerator {
                      mov rax, 60
                      mov rdi, 0
                      syscall
-
                 """, res);
+    }
+
+    @Test
+    public void testGeneratorUnknownArrayAssignment() throws TokenError {
+        Tokenizer tokenizer = new Tokenizer("let x[10]; y[0] = 20;");
+        Parser finalParser = new Parser(tokenizer.getTokens());
+        assertThrows(TokenError.class, () -> new Generator(finalParser.getTree()));
+    }
+
+    @Test void testGeneratorArray() throws TokenError{
+        Tokenizer tokenizer = new Tokenizer("let x[10]; x[0] = 20;");
+        Parser parser = new Parser(tokenizer.getTokens());
+        Generator generator = new Generator(parser.getTree());
+        String res = generator.getGenerated();
+        assertEquals("""
+            section .data
+                 minus_sign db '-'
+                 buffer db 20 dup(0)
+                 newline db 0x0a
+                 x times 10 db 0
+            
+            section .text
+                 global main
+            
+            main:
+                 ;;value
+                 mov rax, 0
+                 push rax
+            
+                 ;;value
+                 mov rax, 20
+                 push rax
+            
+                 ;;array assignment
+                 pop rax
+                 pop rbx
+                 mov QWORD [rsp + rax * 8], rbx
+                 ;;/array assignment
+            
+                 ;;final exit
+                 mov rax, 60
+                 mov rdi, 0
+                 syscall
+            """, res);
     }
 
     @Test

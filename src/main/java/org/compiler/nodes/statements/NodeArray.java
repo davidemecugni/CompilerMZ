@@ -5,10 +5,10 @@ import org.compiler.nodes.NodeStatement;
 import org.compiler.nodes.expressions.terms.NodeIdent;
 import org.compiler.nodes.expressions.terms.NodeIntLit;
 
-public class NodeSquare extends NodeStatement {
+public class NodeArray extends NodeStatement {
     private final NodeIdent identifier;
 
-    public NodeSquare(NodeExpression expr, NodeIdent identifier) {
+    public NodeArray(NodeExpression expr, NodeIdent identifier) {
         super(expr);
         this.identifier = identifier;
     }
@@ -28,7 +28,7 @@ public class NodeSquare extends NodeStatement {
     }
     @Override
     public String toString() {
-        return "NodeSquare{" +
+        return "NodeArray{" +
                 "identifier=" + identifier +
                 '}';
     }

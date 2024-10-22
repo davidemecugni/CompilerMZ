@@ -101,7 +101,9 @@ public class Parser {
             return parseBuiltInFunc(BuiltInFunc.read);
         } else if (it.peek().getType() == TokenType.let && it.peek(2) != null && it.peek(2).getType() == TokenType.open_square) {
             it.next();
-            return parseSquare();
+            return parseArrayAllocation();
+        } else if(it.peek().getType() == TokenType.ident && it.peek(1) != null && it.peek(1).getType() == TokenType.open_square) {
+            return parseArray();
         } else {
             GenerateErrorMessage("Invalid token in statement of type ");
             return null;
@@ -123,7 +125,7 @@ public class Parser {
     /**
      * Parses an expression using the Precedence Climbing Algorithm This is to ensure the correct order of operations
      *
-     * @param minPrec
+     * @param minPrev
      *            the minimum precedence of the expression
      *
      * @return the expression parsed
@@ -131,16 +133,16 @@ public class Parser {
      * @throws TokenError
      *             if the expression is invalid
      */
-    private NodeExpression parseExpr(int minPrec) throws TokenError {
+    private NodeExpression parseExpr(int minPrev) throws TokenError {
         // Saves the left term
         NodeExpression left = parseTerm();
         // Precedence Climbing Algorithm
         while (it.hasNext()) {
             Token curr_token = it.peek();
-            int prec;
+            int prev;
             if (curr_token != null) {
-                prec = curr_token.getPrecedence();
-                if (prec < minPrec) {
+                prev = curr_token.getPrecedence();
+                if (prev < minPrev) {
                     break;
                 }
             } else {
@@ -148,8 +150,8 @@ public class Parser {
             }
             checkForNext();
             Token op = it.next();
-            int nextMinPrec = prec + 1;
-            NodeExpression right = parseExpr(nextMinPrec);
+            int nextMinPrev = prev + 1;
+            NodeExpression right = parseExpr(nextMinPrev);
             switch (op.getType()) {
             case TokenType.plus -> left = new NodeBin(curr_token, left, right, BinType.Add);
             case TokenType.minus -> left = new NodeBin(curr_token, left, right, BinType.Sub);
@@ -317,7 +319,7 @@ public class Parser {
         return new NodeLet(expr, ident);
     }
 
-    public NodeSquare parseSquare() throws TokenError {
+    public NodeArray parseArrayAllocation() throws TokenError {
         NodeIdent ident;
         CheckForType(TokenType.ident);
         ident = new NodeIdent((TokenIdent) it.next());
@@ -329,8 +331,41 @@ public class Parser {
         it.next();
         CheckForType(TokenType.semi);
         it.next();
-        return new NodeSquare(expr, ident);
+        return new NodeArray(expr, ident);
     }
+
+    public NodeArray parseArray() throws TokenError {
+        NodeIdent ident;
+        CheckForType(TokenType.ident);
+        ident = new NodeIdent((TokenIdent) it.next());
+        CheckForType(TokenType.open_square);
+        it.next();
+        NodeExpression expr = parseExpr();
+        CheckForType(TokenType.close_square);
+        it.next();
+        if(it.peek() != null && it.peek().getType() == TokenType.eq){
+            return parseArrayAssignment(expr, ident);
+        }else{
+            return parseArrayRetrieval(expr, ident);
+        }
+    }
+
+    private NodeArrayAssignment parseArrayAssignment(NodeExpression expr, NodeIdent ident) throws TokenError{
+        CheckForType(TokenType.eq);
+        it.next();
+        NodeExpression expr2 = parseExpr();
+        CheckForType(TokenType.semi);
+        it.next();
+        return new NodeArrayAssignment(expr, expr2, ident);
+    }
+
+    private NodeArrayRetrieval parseArrayRetrieval(NodeExpression expr, NodeIdent ident) throws TokenError{
+        CheckForType(TokenType.semi);
+        it.next();
+        return new NodeArrayRetrieval(expr, ident);
+    }
+
+
 
     /**
      * Parses a term of an expression(ex. 5, x, (5+5))
